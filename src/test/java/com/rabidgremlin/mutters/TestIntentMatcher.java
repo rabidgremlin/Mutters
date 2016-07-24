@@ -12,6 +12,13 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.Intent;
+import com.rabidgremlin.mutters.core.IntentMatch;
+import com.rabidgremlin.mutters.core.IntentMatcher;
+import com.rabidgremlin.mutters.core.NumberSlot;
+import com.rabidgremlin.mutters.core.SlotMatch;
+import com.rabidgremlin.mutters.core.Utterance;
+
 public class TestIntentMatcher {
 
 	@Test

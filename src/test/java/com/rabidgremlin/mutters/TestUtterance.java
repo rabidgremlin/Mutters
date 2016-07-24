@@ -12,6 +12,13 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CustomSlot;
+import com.rabidgremlin.mutters.core.SlotMatch;
+import com.rabidgremlin.mutters.core.Slots;
+import com.rabidgremlin.mutters.core.Utterance;
+import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.util.Utils;
+
 public class TestUtterance {
 
 	@Test
