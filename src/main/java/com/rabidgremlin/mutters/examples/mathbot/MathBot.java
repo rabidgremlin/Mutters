@@ -44,6 +44,7 @@ public class MathBot {
 		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));
+		additionIntent.addUtterance(new Utterance("Add {number1}"));
 
 		NumberSlot number1 = new NumberSlot("number1");
 		NumberSlot number2 = new NumberSlot("number2");

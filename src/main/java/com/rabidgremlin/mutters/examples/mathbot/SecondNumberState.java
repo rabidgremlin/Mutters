@@ -6,10 +6,10 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class AddNumbersState extends State {
+public class SecondNumberState extends State {
 
-	public AddNumbersState() {
-		super("AddNumbersState");
+	public SecondNumberState() {
+		super("SecondNumberState");
 	}
 
 	@Override
@@ -20,9 +20,9 @@ public class AddNumbersState extends State {
 
 		// get the numbers
 		Integer number1 = SessionUtils.getIntegerFromSlotOrSession(intentMatch, session, "number1", null);
-		Integer number2 = SessionUtils.getIntegerFromSlotOrSession(intentMatch, session, "number2", null);
 
-		return IntentResponse.newTellResponse(String.format("%d + %d is %d", number1, number2, number1 + number2));
+		return IntentResponse.newAskResponse(String.format("Add %d to which number?", number1));
+
 	}
 
 }

@@ -8,11 +8,11 @@ public class Session {
 
 	public Object getAttribute(String attributeName)
 	{
-	   return attributes.get(attributeName);
+	   return attributes.get(attributeName.toLowerCase());
 	}
 	
 	public void setAttribute(String attributeName,Object value)
 	{
-	   attributes.put(attributeName, value);
+	   attributes.put(attributeName.toLowerCase(), value);
 	}
 }
