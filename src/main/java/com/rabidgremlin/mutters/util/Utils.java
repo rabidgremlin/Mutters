@@ -12,7 +12,10 @@ public class Utils {
 	
 	public static List<String> tokenize(String text)
 	{
-		 return Arrays.asList(text.split(
-					"[ \\n\\r\\t,\\!`\\(\\)\\[\\]:;\\\"\\?\\/\\\\\\<\\-\\+\\=>]+"));
+		 //return Arrays.asList(text.split(
+		 //			"[ \\n\\r\\t,\\!`\\(\\)\\[\\]:;\\\"\\?\\/\\\\\\<\\-\\+\\=>]+"));
+		
+		// TODO fix this
+		return Arrays.asList(text.split("\\s+"));
 	}
 }

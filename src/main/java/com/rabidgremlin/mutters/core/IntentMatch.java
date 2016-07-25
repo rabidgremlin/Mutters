@@ -1,6 +1,8 @@
 package com.rabidgremlin.mutters.core;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class IntentMatch {
 
@@ -17,8 +19,17 @@ public class IntentMatch {
 		return intent;
 	}
 
-	public HashMap<Slot, SlotMatch> getSlotMatches() {
-		return slotMatches;
+	public Map<Slot, SlotMatch> getSlotMatches() {
+		return Collections.unmodifiableMap(slotMatches);
+	}
+
+	public SlotMatch getSlotMatch(String slotName) {
+		for (SlotMatch match : slotMatches.values()) {
+			if (match.getSlot().getName().equalsIgnoreCase(slotName)) {
+				return match;
+			}
+		}
+		return null;
 	}
 
 }

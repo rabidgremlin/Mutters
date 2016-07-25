@@ -14,6 +14,10 @@ public class Intent {
 		this.name = name;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void addSlot(Slot slot) {
 		slots.add(slot);
 	}
@@ -24,15 +28,13 @@ public class Intent {
 
 	public UtteranceMatch matches(List<String> inputTokens) {
 
-		for (Utterance utterance:utterances)
-		{
+		for (Utterance utterance : utterances) {
 			UtteranceMatch match = utterance.matches(inputTokens, slots);
-			if (match.isMatched())
-			{
+			if (match.isMatched()) {
 				return match;
 			}
 		}
-		
+
 		return new UtteranceMatch(false);
 	}
 }
