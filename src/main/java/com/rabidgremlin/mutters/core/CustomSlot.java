@@ -19,7 +19,7 @@ public class CustomSlot implements Slot {
 	}
 
 	@Override
-	public SlotMatch match(String token) {
+	public SlotMatch match(String token,Context context) {
 		if (options.containsKey(token.toLowerCase()))
 		{
 			return new SlotMatch(this, token,options.get(token.toLowerCase()));

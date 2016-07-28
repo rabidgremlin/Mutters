@@ -12,7 +12,7 @@ public class NumberSlot implements Slot {
 	}
 
 	@Override
-	public SlotMatch match(String token) {
+	public SlotMatch match(String token,Context context) {
 		try
 		{
 			Integer value = Integer.parseInt(token);

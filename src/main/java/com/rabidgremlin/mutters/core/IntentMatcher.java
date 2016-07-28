@@ -13,14 +13,12 @@ public class IntentMatcher {
 		intents.add(intent);
 	}
 
-	public IntentMatch match(String utterance) {
-		return match(Utils.tokenize(utterance));
-	}
-
-	public IntentMatch match(List<String> utteranceTokens) {
+	public IntentMatch match(String utterance, Context context) {
+		
+		String cleanedUtterance = Utils.cleanInput(utterance);
 
 		for (Intent intent : intents) {
-			UtteranceMatch utteranceMatch = intent.matches(utteranceTokens);
+			UtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
 			if (utteranceMatch.isMatched()) {
 				return new IntentMatch(intent, utteranceMatch.getSlotMatches());
 			}

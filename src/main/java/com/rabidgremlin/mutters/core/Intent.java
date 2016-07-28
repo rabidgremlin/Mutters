@@ -26,10 +26,10 @@ public class Intent {
 		utterances.add(utterance);
 	}
 
-	public UtteranceMatch matches(List<String> inputTokens) {
+	public UtteranceMatch matches(String input, Context context) {
 
 		for (Utterance utterance : utterances) {
-			UtteranceMatch match = utterance.matches(inputTokens, slots);
+			UtteranceMatch match = utterance.matches(input, slots, context);
 			if (match.isMatched()) {
 				return match;
 			}
