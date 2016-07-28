@@ -1,4 +1,7 @@
-apply plugin: 'java' 
+apply plugin: 'java'
+apply plugin: 'maven-publish' 
+
+version="1.0.0-snapshot"
 
 repositories {
     mavenCentral()
@@ -7,4 +10,15 @@ repositories {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     testCompile 'junit:junit:4.11'
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.rabidgremlin.mutters'
+            artifactId 'mutters'
+            from components.java
+        }
+    }
 }

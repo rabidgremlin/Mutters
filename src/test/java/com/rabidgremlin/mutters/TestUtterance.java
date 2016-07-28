@@ -151,4 +151,26 @@ public class TestUtterance {
 		assertThat(match.isMatched(), is(false));
 		assertThat(match.getSlotMatches().size(), is(0));
 	}
+	
+	@Test
+	public void testMultiWordSlotMatch() {
+		Utterance utterance = new Utterance("What is the time in {City}");
+		
+		List<String> inputTokens = Utils.tokenize("What is the time in San francisco");
+		Slots slots = new Slots();
+		
+		CustomSlot color = new CustomSlot("City", new String[]{"Wellington","San Francisco","Auckland"});
+		slots.add(color);
+		
+		UtteranceMatch match = utterance.matches(inputTokens, slots);		
+		
+		assertThat(match,is(notNullValue()));
+		assertThat(match.isMatched(), is(true));
+		assertThat(match.getSlotMatches().size(), is(1));
+		
+		SlotMatch colorMatch = match.getSlotMatches().get(color);
+		assertThat(colorMatch,is(notNullValue()));		
+		assertThat(colorMatch.getOrginalValue(), is("San francisco"));
+		assertThat(colorMatch.getValue(), is("San Francisco"));
+	}
 }
