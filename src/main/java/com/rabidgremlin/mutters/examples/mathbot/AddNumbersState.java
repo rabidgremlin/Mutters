@@ -6,14 +6,17 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class AddNumbersState extends State {
+public class AddNumbersState extends State
+{
 
-	public AddNumbersState() {
+	public AddNumbersState()
+	{
 		super("AddNumbersState");
 	}
 
 	@Override
-	public IntentResponse execute(IntentMatch intentMatch, Session session) {
+	public IntentResponse execute(IntentMatch intentMatch, Session session)
+	{
 
 		// save or slots into session
 		SessionUtils.saveSlotsToSession(intentMatch, session);

@@ -18,8 +18,9 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.UtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
-public class TestDateTimeSlot {
-	
+public class TestDateTimeSlot
+{
+
 	@Test
 	public void testBasicMatch()
 	{
@@ -28,8 +29,7 @@ public class TestDateTimeSlot {
 		String input = Utils.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
 		Context context = new Context();
-		
-		
+
 		DateTimeSlot slot = new DateTimeSlot("datetime");
 		slots.add(slot);
 
@@ -42,10 +42,9 @@ public class TestDateTimeSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-		assertThat(slotMatch.getValue(), is(new DateTime(1974,5,30,22,0,0)));		
+		assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0)));
 	}
-	
-	
+
 	@Test
 	public void testMatchWithTimeZone()
 	{
@@ -53,9 +52,9 @@ public class TestDateTimeSlot {
 
 		String input = Utils.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
-		Context context = new Context();	
+		Context context = new Context();
 		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
-		
+
 		DateTimeSlot slot = new DateTimeSlot("datetime");
 		slots.add(slot);
 
@@ -68,10 +67,9 @@ public class TestDateTimeSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-		assertThat(slotMatch.getValue(), is(new DateTime(1974,5,30,22,0,0,DateTimeZone.forTimeZone(context.getTimeZone()))));		
+		assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
 	}
-	
-	
+
 	@Test
 	public void testLastWeek()
 	{
@@ -80,8 +78,7 @@ public class TestDateTimeSlot {
 		String input = Utils.cleanInput("Give me the report for last week");
 		Slots slots = new Slots();
 		Context context = new Context();
-		
-		
+
 		DateTimeSlot slot = new DateTimeSlot("datetime");
 		slots.add(slot);
 
@@ -94,11 +91,11 @@ public class TestDateTimeSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("last week"));
-		
+
 		long lastWeekInMillis = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000;
-		long parsedLastWeekInMills = ((DateTime)slotMatch.getValue()).getMillis();
-		
-		assertThat((double)parsedLastWeekInMills, is(closeTo(lastWeekInMillis, 1000)));		
+		long parsedLastWeekInMills = ((DateTime) slotMatch.getValue()).getMillis();
+
+		assertThat((double) parsedLastWeekInMills, is(closeTo(lastWeekInMillis, 1000)));
 	}
 
 }

@@ -22,8 +22,9 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.UtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
-public class TestTimeSlot {
-	
+public class TestTimeSlot
+{
+
 	@Test
 	public void testBasicMatch()
 	{
@@ -32,8 +33,7 @@ public class TestTimeSlot {
 		String input = Utils.cleanInput("at 6:45am");
 		Slots slots = new Slots();
 		Context context = new Context();
-		
-		
+
 		TimeSlot slot = new TimeSlot("time");
 		slots.add(slot);
 
@@ -46,10 +46,9 @@ public class TestTimeSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("6:45am"));
-		assertThat(slotMatch.getValue(), is(new LocalTime(6,45)));		
+		assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
 	}
-	
-	
+
 	@Test
 	public void testMatchWithTimeZone()
 	{
@@ -57,9 +56,9 @@ public class TestTimeSlot {
 
 		String input = Utils.cleanInput("at 6:45am");
 		Slots slots = new Slots();
-		Context context = new Context();	
+		Context context = new Context();
 		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
-		
+
 		TimeSlot slot = new TimeSlot("time");
 		slots.add(slot);
 
@@ -72,8 +71,7 @@ public class TestTimeSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("6:45am"));
-		assertThat(slotMatch.getValue(), is(new LocalTime(6,45)));		
+		assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
 	}
-	
-	
+
 }

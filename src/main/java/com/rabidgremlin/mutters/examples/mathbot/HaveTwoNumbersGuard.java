@@ -5,10 +5,12 @@ import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.state.Guard;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class HaveTwoNumbersGuard implements Guard {
+public class HaveTwoNumbersGuard implements Guard
+{
 
 	@Override
-	public boolean passes(final IntentMatch match, final Session session) {
+	public boolean passes(final IntentMatch match, final Session session)
+	{
 
 		// save or slots into session
 		SessionUtils.saveSlotsToSession(match, session);
@@ -22,7 +24,8 @@ public class HaveTwoNumbersGuard implements Guard {
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription()
+	{
 		return "Has two numbers";
 	}
 

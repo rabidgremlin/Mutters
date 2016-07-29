@@ -14,10 +14,12 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.Context;
 
-public class TestIntentMatcher {
+public class TestIntentMatcher
+{
 
 	@Test
-	public void testBasicMatching() {
+	public void testBasicMatching()
+	{
 		Intent additionIntent = new Intent("Addition");
 
 		additionIntent.addUtterance(new Utterance("What's {number1} + {number2}"));
@@ -42,11 +44,11 @@ public class TestIntentMatcher {
 
 		SlotMatch number1Match = intentMatch.getSlotMatches().get(number1);
 		assertThat(number1Match, is(notNullValue()));
-		assertThat(number1Match.getValue(), is(1));
+		assertThat(number1Match.getValue(), is(1l));
 
 		SlotMatch number2Match = intentMatch.getSlotMatches().get(number2);
 		assertThat(number2Match, is(notNullValue()));
-		assertThat(number2Match.getValue(), is(5));
+		assertThat(number2Match.getValue(), is(5l));
 
 	}
 

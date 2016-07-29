@@ -12,18 +12,21 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.state.IntentResponse;
 
-public class MathBot {
+public class MathBot
+{
 
 	IntentMatcher matcher;
 	Session session;
 	MathBotStateMachine stateMachine;
 	Context context;
 
-	public MathBot() {
+	public MathBot()
+	{
 		setUpIntents();
 	}
 
-	private void setUpIntents() {
+	private void setUpIntents()
+	{
 		session = new Session();
 		context = new Context();
 
@@ -35,7 +38,8 @@ public class MathBot {
 		stateMachine = new MathBotStateMachine();
 	}
 
-	private Intent createAdditionIntent() {
+	private Intent createAdditionIntent()
+	{
 		Intent additionIntent = new Intent("Addition");
 
 		additionIntent.addUtterance(new Utterance("What's {number1} + {number2}"));
@@ -44,8 +48,8 @@ public class MathBot {
 		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));
-		//TODO tweak Utterance so it can handle tokens not separated by spaces
-		//additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
+		// TODO tweak Utterance so it can handle tokens not separated by spaces
+		// additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
 		additionIntent.addUtterance(new Utterance("Add {number1}"));
 
 		NumberSlot number1 = new NumberSlot("number1");
@@ -57,7 +61,8 @@ public class MathBot {
 		return additionIntent;
 	}
 
-	private Intent createNumberIntent() {
+	private Intent createNumberIntent()
+	{
 		Intent numberIntent = new Intent("Number");
 
 		numberIntent.addUtterance(new Utterance("{number}"));
@@ -68,7 +73,8 @@ public class MathBot {
 		return numberIntent;
 	}
 
-	private Intent createGenerateGraphIntent() {
+	private Intent createGenerateGraphIntent()
+	{
 		Intent graphIntent = new Intent("GenerateGraph");
 
 		graphIntent.addUtterance(new Utterance("dump graph"));
@@ -78,25 +84,31 @@ public class MathBot {
 		return graphIntent;
 	}
 
-	public void run() throws Exception {
+	public void run() throws Exception
+	{
 		BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
 
 		System.out.println("Hi, I'm MathBot\nYou can ask me to add two numbers together.");
 
 		System.out.print("> ");
 		String input = null;
-		while ((input = inReader.readLine()) != null) {
-			IntentMatch intentMatch = matcher.match(input,context);
+		while ((input = inReader.readLine()) != null)
+		{
+			IntentMatch intentMatch = matcher.match(input, context);
 
-			if (intentMatch != null) {
+			if (intentMatch != null)
+			{
 				IntentResponse response = stateMachine.trigger(intentMatch, session);
 				System.out.println(response.getResponse());
 
-				if (response.isSessionEnded()) {
+				if (response.isSessionEnded())
+				{
 					session = new Session();
 				}
 
-			} else {
+			}
+			else
+			{
 				System.out.println("Pardon?");
 			}
 
@@ -106,13 +118,17 @@ public class MathBot {
 
 	}
 
-	public static void main(String[] args) {
-		try {
+	public static void main(String[] args)
+	{
+		try
+		{
 			MathBot mathBot = new MathBot();
 
 			mathBot.run();
 
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 

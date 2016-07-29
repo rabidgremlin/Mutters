@@ -17,10 +17,12 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.UtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
-public class TestUtterance {
+public class TestUtterance
+{
 
 	@Test
-	public void testTokens() {
+	public void testTokens()
+	{
 		Utterance utterance = new Utterance("What's the time");
 		List<String> tokens = utterance.getTokens();
 		assertNotNull(tokens);
@@ -32,7 +34,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testSimpleMatch() {
+	public void testSimpleMatch()
+	{
 		Utterance utterance = new Utterance("What's the time");
 
 		String input = Utils.cleanInput("What's the time");
@@ -47,7 +50,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testSimpleNotMatch() {
+	public void testSimpleNotMatch()
+	{
 		Utterance utterance = new Utterance("This is that and that is this");
 
 		String input = Utils.cleanInput("This is really not all that");
@@ -62,7 +66,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testSimpleSlotMatch() {
+	public void testSimpleSlotMatch()
+	{
 		Utterance utterance = new Utterance("I like {Color}");
 
 		String input = Utils.cleanInput("I Like red");
@@ -85,7 +90,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testSimpleNotSlotMatch() {
+	public void testSimpleNotSlotMatch()
+	{
 		Utterance utterance = new Utterance("I like {Color}");
 
 		String input = Utils.cleanInput("I Like pink");
@@ -103,7 +109,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testMultiSlotMatch() {
+	public void testMultiSlotMatch()
+	{
 		Utterance utterance = new Utterance("I like {Color} and {Food}");
 
 		String input = Utils.cleanInput("I like red and grapes");
@@ -134,7 +141,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testMultiSlotNotMatch() {
+	public void testMultiSlotNotMatch()
+	{
 		Utterance utterance = new Utterance("I like {Color} and {Food}");
 
 		String input = Utils.cleanInput("I like red and burgers");
@@ -155,7 +163,8 @@ public class TestUtterance {
 	}
 
 	@Test
-	public void testMultiWordSlotMatch() {
+	public void testMultiWordSlotMatch()
+	{
 		Utterance utterance = new Utterance("What is the time in {City}");
 
 		String input = Utils.cleanInput("What is the time in San francisco");

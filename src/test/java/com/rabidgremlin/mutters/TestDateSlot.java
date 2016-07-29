@@ -20,8 +20,9 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.UtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
-public class TestDateSlot {
-	
+public class TestDateSlot
+{
+
 	@Test
 	public void testBasicMatch()
 	{
@@ -30,8 +31,7 @@ public class TestDateSlot {
 		String input = Utils.cleanInput("for the 30th May 1974");
 		Slots slots = new Slots();
 		Context context = new Context();
-		
-		
+
 		DateSlot slot = new DateSlot("date");
 		slots.add(slot);
 
@@ -44,10 +44,9 @@ public class TestDateSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
-		assertThat(slotMatch.getValue(), is(new LocalDate(1974,5,30)));		
+		assertThat(slotMatch.getValue(), is(new LocalDate(1974, 5, 30)));
 	}
-	
-	
+
 	@Test
 	public void testMatchWithTimeZone()
 	{
@@ -55,9 +54,9 @@ public class TestDateSlot {
 
 		String input = Utils.cleanInput("for the 30th May 1974");
 		Slots slots = new Slots();
-		Context context = new Context();	
+		Context context = new Context();
 		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
-		
+
 		DateSlot slot = new DateSlot("date");
 		slots.add(slot);
 
@@ -70,8 +69,7 @@ public class TestDateSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
-		assertThat(slotMatch.getValue(), is(new LocalDate(1974,5,30)));		
+		assertThat(slotMatch.getValue(), is(new LocalDate(1974, 5, 30)));
 	}
-	
-	
+
 }

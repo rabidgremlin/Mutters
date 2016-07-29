@@ -12,8 +12,9 @@ import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.core.UtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
-public class TestLiteralSlot {
-	
+public class TestLiteralSlot
+{
+
 	@Test
 	public void testBasicMatch()
 	{
@@ -21,8 +22,8 @@ public class TestLiteralSlot {
 
 		String input = Utils.cleanInput("My Name is Kilroy Jones");
 		Slots slots = new Slots();
-		Context context = new Context();		
-		
+		Context context = new Context();
+
 		LiteralSlot slot = new LiteralSlot("name");
 		slots.add(slot);
 
@@ -35,9 +36,9 @@ public class TestLiteralSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("Kilroy Jones"));
-		assertThat(slotMatch.getValue(), is("kilroy jones"));		
+		assertThat(slotMatch.getValue(), is("kilroy jones"));
 	}
-	
+
 	@Test
 	public void testMidUtteranceMatch()
 	{
@@ -45,8 +46,8 @@ public class TestLiteralSlot {
 
 		String input = Utils.cleanInput("The pinot noir is good");
 		Slots slots = new Slots();
-		Context context = new Context();		
-		
+		Context context = new Context();
+
 		LiteralSlot slot = new LiteralSlot("something");
 		slots.add(slot);
 
@@ -59,7 +60,7 @@ public class TestLiteralSlot {
 		SlotMatch slotMatch = match.getSlotMatches().get(slot);
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("pinot noir"));
-		assertThat(slotMatch.getValue(), is("pinot noir"));		
+		assertThat(slotMatch.getValue(), is("pinot noir"));
 	}
 
 }
