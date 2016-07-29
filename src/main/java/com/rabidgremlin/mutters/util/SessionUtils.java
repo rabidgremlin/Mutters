@@ -14,7 +14,7 @@ public class SessionUtils
 		// utility class
 	}
 
-	public static void setIntegerSlotIntoSession(Session session, String slotName, Integer value)
+	public static void setNumberSlotIntoSession(Session session, String slotName, Number value)
 	{
 		session.setAttribute(SLOT_PREFIX + slotName, value);
 	}
@@ -32,12 +32,12 @@ public class SessionUtils
 		}
 	}
 
-	public static Integer getIntegerSlot(IntentMatch match, String slotName, Integer defaultValue)
+	public static Number getNumberSlot(IntentMatch match, String slotName, Number defaultValue)
 	{
 		if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
 		{
 			// TODO better cast handling
-			return (Integer) match.getSlotMatch(slotName).getValue();
+			return (Number) match.getSlotMatch(slotName).getValue();
 		}
 		else
 		{
@@ -64,15 +64,15 @@ public class SessionUtils
 		return getStringSlot(match, slotName, defaultValue);
 	}
 
-	public static Integer getIntegerFromSlotOrSession(IntentMatch match, Session session, String slotName, Integer defaultValue)
+	public static Number getNumberFromSlotOrSession(IntentMatch match, Session session, String slotName, Number defaultValue)
 	{
-		Integer sessionValue = (Integer) session.getAttribute(SLOT_PREFIX + slotName);
+		Number sessionValue = (Number) session.getAttribute(SLOT_PREFIX + slotName);
 		if (sessionValue != null)
 		{
 			return sessionValue;
 		}
 
-		return getIntegerSlot(match, slotName, defaultValue);
+		return getNumberSlot(match, slotName, defaultValue);
 	}
 
 }

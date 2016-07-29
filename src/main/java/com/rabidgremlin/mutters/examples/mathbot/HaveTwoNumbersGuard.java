@@ -16,8 +16,8 @@ public class HaveTwoNumbersGuard implements Guard
 		SessionUtils.saveSlotsToSession(match, session);
 
 		// get the numbers
-		Integer number1 = SessionUtils.getIntegerFromSlotOrSession(match, session, "number1", null);
-		Integer number2 = SessionUtils.getIntegerFromSlotOrSession(match, session, "number2", null);
+		Number number1 = SessionUtils.getNumberFromSlotOrSession(match, session, "number1", null);
+		Number number2 = SessionUtils.getNumberFromSlotOrSession(match, session, "number2", null);
 
 		// do we have both numbers
 		return number1 != null && number2 != null;

@@ -22,10 +22,10 @@ public class AddNumbersState extends State
 		SessionUtils.saveSlotsToSession(intentMatch, session);
 
 		// get the numbers
-		Integer number1 = SessionUtils.getIntegerFromSlotOrSession(intentMatch, session, "number1", null);
-		Integer number2 = SessionUtils.getIntegerFromSlotOrSession(intentMatch, session, "number2", null);
+		Number number1 = SessionUtils.getNumberFromSlotOrSession(intentMatch, session, "number1", null);
+		Number number2 = SessionUtils.getNumberFromSlotOrSession(intentMatch, session, "number2", null);
 
-		return IntentResponse.newTellResponse(String.format("%d + %d is %d", number1, number2, number1 + number2));
+		return IntentResponse.newTellResponse(String.format("%s + %s is %s", number1.toString(), number2.toString(), (number1.doubleValue() + number2.doubleValue())).toString()); 
 	}
 
 }

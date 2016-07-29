@@ -12,11 +12,11 @@ public class SetNumberAsSecondNumber implements PreEventAction
 	public void execute(IntentMatch intentMatch, Session session)
 	{
 
-		Integer number = SessionUtils.getIntegerSlot(intentMatch, "number", null);
+		Number number = SessionUtils.getNumberSlot(intentMatch, "number", null);
 
 		if (number != null)
 		{
-			SessionUtils.setIntegerSlotIntoSession(session, "number2", number);
+			SessionUtils.setNumberSlotIntoSession(session, "number2", number);
 		}
 	}
 

@@ -46,6 +46,7 @@ public class MathBot
 		additionIntent.addUtterance(new Utterance("What is {number1} + {number2}"));
 		additionIntent.addUtterance(new Utterance("Whats {number1} + {number2}"));
 		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
+		additionIntent.addUtterance(new Utterance("Add {number1} to {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));
 		// TODO tweak Utterance so it can handle tokens not separated by spaces

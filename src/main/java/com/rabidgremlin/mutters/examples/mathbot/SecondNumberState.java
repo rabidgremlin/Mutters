@@ -22,9 +22,9 @@ public class SecondNumberState extends State
 		SessionUtils.saveSlotsToSession(intentMatch, session);
 
 		// get the numbers
-		Integer number1 = SessionUtils.getIntegerFromSlotOrSession(intentMatch, session, "number1", null);
+		Number number1 = SessionUtils.getNumberFromSlotOrSession(intentMatch, session, "number1", null);
 
-		return IntentResponse.newAskResponse(String.format("Add %d to which number?", number1));
+		return IntentResponse.newAskResponse(String.format("Add %s to which number?", number1.toString()));
 
 	}
 
