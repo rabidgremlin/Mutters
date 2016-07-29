@@ -8,8 +8,11 @@ repositories {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'joda-time:joda-time:2.9.4' 
+    compile 'com.joestelmach:natty:0.12'    
     testCompile 'junit:junit:4.11'
+    testCompile 'org.slf4j:slf4j-simple:1.7.21'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
 }
 
 
