@@ -16,4 +16,9 @@ public class Session
 	{
 		attributes.put(attributeName.toLowerCase(), value);
 	}
+
+	public void reset()
+	{
+		attributes = new HashMap<String, Object>();
+	}
 }

@@ -1,57 +1,49 @@
 package com.rabidgremlin.mutters.examples.mathbot;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.bot.AbstractBot;
 import com.rabidgremlin.mutters.core.Intent;
-import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.session.Session;
-import com.rabidgremlin.mutters.state.IntentResponse;
+import com.rabidgremlin.mutters.state.Guard;
+import com.rabidgremlin.mutters.state.PreEventAction;
+import com.rabidgremlin.mutters.state.State;
+import com.rabidgremlin.mutters.state.StateMachine;
 
-public class MathBot
+public class MathBot extends AbstractBot
 {
 
-	IntentMatcher matcher;
-	Session session;
-	MathBotStateMachine stateMachine;
-	Context context;
-
-	public MathBot()
+	@Override
+	public IntentMatcher setUpIntents()
 	{
-		setUpIntents();
-	}
+		IntentMatcher matcher = new IntentMatcher();
 
-	private void setUpIntents()
-	{
-		session = new Session();
-		context = new Context();
-
-		matcher = new IntentMatcher();
 		matcher.addIntent(createAdditionIntent());
 		matcher.addIntent(createNumberIntent());
 		matcher.addIntent(createGenerateGraphIntent());
 
-		stateMachine = new MathBotStateMachine();
+		return matcher;
 	}
-
+	
+	
 	private Intent createAdditionIntent()
 	{
 		Intent additionIntent = new Intent("Addition");
 
 		additionIntent.addUtterance(new Utterance("What's {number1} + {number2}"));
+		additionIntent.addUtterance(new Utterance("What's {number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("What is {number1} + {number2}"));
+		additionIntent.addUtterance(new Utterance("What is {number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("Whats {number1} + {number2}"));
+		additionIntent.addUtterance(new Utterance("Whats {number1} plus {number2}"));
 		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
 		additionIntent.addUtterance(new Utterance("Add {number1} to {number2}"));
 		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
-		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));
+		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));		
 		// TODO tweak Utterance so it can handle tokens not separated by spaces
 		// additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
 		additionIntent.addUtterance(new Utterance("Add {number1}"));
+		
 
 		NumberSlot number1 = new NumberSlot("number1");
 		NumberSlot number2 = new NumberSlot("number2");
@@ -85,54 +77,35 @@ public class MathBot
 		return graphIntent;
 	}
 
-	public void run() throws Exception
+	@Override
+	public StateMachine setUpStateMachine()
 	{
-		BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+		StateMachine stateMachine = new StateMachine();
 
-		System.out.println("Hi, I'm MathBot\nYou can ask me to add two numbers together.");
+		State startState = new StartState();
+		stateMachine.setStartState(startState);
 
-		System.out.print("> ");
-		String input = null;
-		while ((input = inReader.readLine()) != null)
-		{
-			IntentMatch intentMatch = matcher.match(input, context);
+		State addNumbersState = new AddNumbersState();
+		State secondNumberState = new SecondNumberState();
+		State generateGraphState = new GenerateGraphState(stateMachine);
 
-			if (intentMatch != null)
-			{
-				IntentResponse response = stateMachine.trigger(intentMatch, session);
-				System.out.println(response.getResponse());
+		Guard haveTwoNumbersGuard = new HaveTwoNumbersGuard();
 
-				if (response.isSessionEnded())
-				{
-					session = new Session();
-				}
+		PreEventAction setNumberAsFirstNumber = new SetNumberAsFirstNumber();
+		PreEventAction setNumberAsSecondNumber = new SetNumberAsSecondNumber();
 
-			}
-			else
-			{
-				System.out.println("Pardon?");
-			}
+		stateMachine.addTransition("Addition", startState, addNumbersState, haveTwoNumbersGuard);
+		stateMachine.addTransition("Addition", startState, secondNumberState);
 
-			// System.out.println("You said '" + input + "'");
-			System.out.print("> ");
-		}
+		stateMachine.addPreEventAction("Number", secondNumberState, setNumberAsSecondNumber);
+		stateMachine.addTransition("Number", secondNumberState, addNumbersState, haveTwoNumbersGuard);
 
-	}
+		stateMachine.addPreEventAction("Number", startState, setNumberAsFirstNumber);
+		stateMachine.addTransition("Number", startState, secondNumberState);
 
-	public static void main(String[] args)
-	{
-		try
-		{
-			MathBot mathBot = new MathBot();
+		stateMachine.addTransition("GenerateGraph", startState, generateGraphState);
 
-			mathBot.run();
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		return stateMachine;
 	}
 
 }
