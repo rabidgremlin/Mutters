@@ -5,13 +5,7 @@ import java.io.InputStreamReader;
 
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Intent;
-import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.core.NumberSlot;
-import com.rabidgremlin.mutters.core.Utterance;
 import com.rabidgremlin.mutters.session.Session;
-import com.rabidgremlin.mutters.state.IntentResponse;
 
 public class MathBotExample
 {
