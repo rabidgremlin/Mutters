@@ -28,11 +28,14 @@ public class DateSlot implements Slot
 		List<DateGroup> groups = parser.parse(token);
 		for (DateGroup group : groups)
 		{
-			List<Date> dates = group.getDates();
-			if (!dates.isEmpty())
+			if (!group.isDateInferred())
 			{
-				DateTime theDateTime = new DateTime(dates.get(0), DateTimeZone.forTimeZone(context.getTimeZone()));
-				return new SlotMatch(this, token, theDateTime.toLocalDate());
+				List<Date> dates = group.getDates();
+				if (!dates.isEmpty())
+				{
+					DateTime theDateTime = new DateTime(dates.get(0), DateTimeZone.forTimeZone(context.getTimeZone()));
+					return new SlotMatch(this, token, theDateTime.toLocalDate());
+				}
 			}
 		}
 

@@ -71,5 +71,23 @@ public class TestDateSlot
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
 		assertThat(slotMatch.getValue(), is(new LocalDate(1974, 5, 30)));
 	}
+	
+	@Test
+	public void testDontMatchOnJustTime()
+	{
+		Utterance utterance = new Utterance("{date}");
+
+		String input = Utils.cleanInput("10pm");
+		Slots slots = new Slots();
+		Context context = new Context();
+		
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		UtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(false));		
+	}
 
 }
