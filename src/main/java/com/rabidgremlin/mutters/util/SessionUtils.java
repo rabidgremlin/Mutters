@@ -17,6 +17,16 @@ public class SessionUtils
 		// utility class
 	}
 
+	public static void setReprompt(Session session, String reprompt)
+	{
+		session.setAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890", reprompt);
+	}
+
+	public static String getReprompt(Session session)
+	{
+		return (String)session.getAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890");
+	}
+
 	public static void setNumberSlotIntoSession(Session session, String slotName, Number value)
 	{
 		session.setAttribute(SLOT_PREFIX + slotName, value);

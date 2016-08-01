@@ -6,6 +6,7 @@ import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.StateMachine;
+import com.rabidgremlin.mutters.util.SessionUtils;
 
 public abstract class AbstractBot
 {
@@ -21,22 +22,39 @@ public abstract class AbstractBot
 
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
-		String responseText = defaultResponse;
-
-		IntentMatch intentMatch = matcher.match(messageText, context);
-
-		if (intentMatch != null)
+		try
 		{
-			IntentResponse response = stateMachine.trigger(intentMatch, session);
-			responseText = response.getResponse();
+			String responseText = defaultResponse;
 
-			if (response.isSessionEnded())
+			IntentMatch intentMatch = matcher.match(messageText, context);
+
+			if (intentMatch != null)
 			{
-				session.reset();
-			}
-		}
+				IntentResponse response = stateMachine.trigger(intentMatch, session);
+				responseText = response.getResponse();
 
-		return new BotResponse(responseText);
+				if (response.isSessionEnded())
+				{
+					session.reset();
+				}
+				else
+				{
+					// TODO eventually use reprompt text from Intent Response (when we have it)
+					SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
+				}
+			}
+
+			return new BotResponse(responseText);
+		}
+		catch (IllegalStateException e)
+		{
+			String repromptText = SessionUtils.getReprompt(session);
+			if (repromptText == null)
+			{
+				repromptText = defaultResponse;
+			}
+			return new BotResponse(repromptText);
+		}
 	}
 
 	public String getDefaultResponse()
