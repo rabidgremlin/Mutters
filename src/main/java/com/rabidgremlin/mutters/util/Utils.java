@@ -22,7 +22,8 @@ public class Utils
 
 	public static String cleanInput(String inputString)
 	{
-		List<String> inputTokens = tokenize(inputString);
+		// TODO better stripping of punctuation
+		List<String> inputTokens = tokenize(inputString.replaceAll("\\?", ""));
 
 		// yuck fix this !
 		String input = "";
