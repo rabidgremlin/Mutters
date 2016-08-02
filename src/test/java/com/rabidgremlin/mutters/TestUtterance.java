@@ -21,19 +21,6 @@ public class TestUtterance
 {
 
 	@Test
-	public void testTokens()
-	{
-		Utterance utterance = new Utterance("What's the time");
-		List<String> tokens = utterance.getTokens();
-		assertNotNull(tokens);
-		assertThat(tokens.size(), is(3));
-
-		assertThat(tokens.get(0), is("What's"));
-		assertThat(tokens.get(1), is("the"));
-		assertThat(tokens.get(2), is("time"));
-	}
-
-	@Test
 	public void testSimpleMatch()
 	{
 		Utterance utterance = new Utterance("What's the time");

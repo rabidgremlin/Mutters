@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rabidgremlin.mutters.util.Utils;
 
 public class Utterance
 {
+
 
 	private String template;
 	private List<String> tokens;
@@ -46,19 +50,22 @@ public class Utterance
 		matchPattern = Pattern.compile(regexStr.trim(), Pattern.CASE_INSENSITIVE);
 	}
 
-	public List<String> getTokens()
+	
+
+	public String getTemplate()
 	{
-		return tokens;
+		return template;
 	}
+
+
 
 	// NOTE input should be cleaned
 	public UtteranceMatch matches(String input, Slots slots, Context context)
-	{
-
+	{	
 		Matcher match = matchPattern.matcher(input);
 
 		if (!match.find())
-		{
+		{	
 			return new UtteranceMatch(false);
 		}
 
@@ -80,11 +87,11 @@ public class Utterance
 				theMatch.getSlotMatches().put(slot, slotMatch);
 			}
 			else
-			{
+			{		
 				return new UtteranceMatch(false);
 			}
 		}
-
+		
 		return theMatch;
 	}
 
