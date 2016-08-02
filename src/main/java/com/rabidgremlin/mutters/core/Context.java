@@ -30,4 +30,10 @@ public class Context
 		this.timeZone = timeZone;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Context [locale=" + locale + ", timeZone=" + timeZone + "]";
+	}
+
 }

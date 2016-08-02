@@ -51,5 +51,23 @@ public class TestIntentMatcher
 		assertThat(number2Match.getValue(), is(5l));
 
 	}
+	
+	@Test
+	public void testBrokenMatch()
+	{
+		Intent intent = new Intent("Hello");
+
+		intent.addUtterance(new Utterance("hello"));
+		intent.addUtterance(new Utterance("hi"));
+		intent.addUtterance(new Utterance("hiya"));
+		
+		IntentMatcher matcher = new IntentMatcher();
+		matcher.addIntent(intent);
+		
+		IntentMatch intentMatch = matcher.match("book this flight", new Context());
+
+		assertThat(intentMatch, is(nullValue()));		
+		
+	}
 
 }

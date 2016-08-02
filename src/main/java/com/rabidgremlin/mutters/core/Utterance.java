@@ -27,7 +27,7 @@ public class Utterance
 		this.template = template;
 		tokens = Utils.tokenize(template);
 
-		String regexStr = "";
+		String regexStr = "^";
 
 		for (int loop = 0; loop < tokens.size(); loop++)
 		{

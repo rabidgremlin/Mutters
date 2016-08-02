@@ -1,16 +1,19 @@
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.IsCloseTo.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 
 import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.DateSlot;
 import com.rabidgremlin.mutters.core.DateTimeSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
@@ -73,13 +76,13 @@ public class TestDateTimeSlot
 	@Test
 	public void testLastWeek()
 	{
-		Utterance utterance = new Utterance("Give me the report for {datetime}");
+		Utterance utterance = new Utterance("Give me the report for {date}");
 
 		String input = Utils.cleanInput("Give me the report for last week");
 		Slots slots = new Slots();
 		Context context = new Context();
 
-		DateTimeSlot slot = new DateTimeSlot("datetime");
+		DateSlot slot = new DateSlot("date");
 		slots.add(slot);
 
 		UtteranceMatch match = utterance.matches(input, slots, context);
@@ -92,10 +95,9 @@ public class TestDateTimeSlot
 		assertThat(slotMatch, is(notNullValue()));
 		assertThat(slotMatch.getOrginalValue(), is("last week"));
 
-		long lastWeekInMillis = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000;
-		long parsedLastWeekInMills = ((DateTime) slotMatch.getValue()).getMillis();
+		LocalDate sevenDaysAgo = new LocalDate().minusDays(7);
 
-		assertThat((double) parsedLastWeekInMills, is(closeTo(lastWeekInMillis, 1000)));
+		assertThat(slotMatch.getValue(), is(sevenDaysAgo));
 	}
 
 }

@@ -21,4 +21,11 @@ public class Session
 	{
 		attributes = new HashMap<String, Object>();
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Session [attributes=" + attributes + "]";
+	}
+
 }
