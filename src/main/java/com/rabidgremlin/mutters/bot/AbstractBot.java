@@ -1,5 +1,8 @@
 package com.rabidgremlin.mutters.bot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -10,6 +13,7 @@ import com.rabidgremlin.mutters.util.SessionUtils;
 
 public abstract class AbstractBot
 {
+	private Logger log = LoggerFactory.getLogger(AbstractBot.class);
 	protected IntentMatcher matcher;
 	protected StateMachine stateMachine;
 	protected String defaultResponse = "Pardon?";
@@ -22,6 +26,7 @@ public abstract class AbstractBot
 
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
+		log.debug("session: {} context: {} messageText: {}", new Object[]{session,context,messageText});
 		try
 		{
 			String responseText = defaultResponse;
