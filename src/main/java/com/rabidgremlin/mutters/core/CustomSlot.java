@@ -14,19 +14,30 @@ public class CustomSlot implements Slot
 	public CustomSlot(String name, String[] options)
 	{
 		this.name = name;
-		Metaphone metaphoner = new Metaphone();
 		for (String option : options)
 		{
-			this.options.put(metaphoner.metaphone(option), option);
+			this.options.put(makeId(option), option);
 		}
+	}
+
+	// metaphone ignore multi word strings like so need to treat each word as seperate token to make key
+	private String makeId(String token)
+	{
+		String id = "";
+		Metaphone metaphoner = new Metaphone();
+		for (String part : token.split(" "))
+		{
+			id += metaphoner.metaphone(part);
+		}
+
+		return id;
 	}
 
 	@Override
 	public SlotMatch match(String token, Context context)
 	{
-		Metaphone metaphoner = new Metaphone();
-		String id = metaphoner.metaphone(token);
-		
+		String id = makeId(token);
+
 		if (options.containsKey(id))
 		{
 			return new SlotMatch(this, token, options.get(id));

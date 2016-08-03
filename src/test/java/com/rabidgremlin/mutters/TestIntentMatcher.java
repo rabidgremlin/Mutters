@@ -12,7 +12,10 @@ import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Utterance;
+
+
 import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.CustomSlot;
 
 public class TestIntentMatcher
 {
@@ -66,8 +69,25 @@ public class TestIntentMatcher
 		
 		IntentMatch intentMatch = matcher.match("book this flight", new Context());
 
-		assertThat(intentMatch, is(nullValue()));		
+		assertThat(intentMatch, is(nullValue()));				
+	}
+	
+	@Test
+	public void testBrokenAirportMatch()
+	{
+		Intent intent = new Intent("GetAirport");
+		intent.addUtterance(new Utterance("{Airport}"));
+
+		CustomSlot airportSlot = new CustomSlot("Airport", new String[]{"NEWCASTLE"});
+		intent.addSlot(airportSlot);
 		
+
+		IntentMatcher matcher = new IntentMatcher();
+		matcher.addIntent(intent);
+		
+		IntentMatch intentMatch = matcher.match("next friday", new Context());
+
+		assertThat(intentMatch, is(nullValue()));	
 	}
 
 }

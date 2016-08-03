@@ -43,7 +43,7 @@ public class Intent
 			UtteranceMatch match = utterance.matches(input, slots, context);
 			if (match.isMatched())
 			{
-				log.debug("------------ Matched to {} -------------", name);
+				log.debug("------------ Matched to {} -> {} -------------", name,utterance.getTemplate());
 				return match;
 			}
 		}
