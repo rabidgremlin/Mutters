@@ -9,8 +9,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.CustomSlot;
+import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.core.Utterance;
@@ -25,7 +27,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("What's the time");
 
-		String input = Utils.cleanInput("What's the time");
+		CleanedInput input = InputCleaner.cleanInput("What's the time");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -41,7 +43,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("This is that and that is this");
 
-		String input = Utils.cleanInput("This is really not all that");
+		CleanedInput input = InputCleaner.cleanInput("This is really not all that");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -57,7 +59,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("I like {Color}");
 
-		String input = Utils.cleanInput("I Like red");
+		CleanedInput input = InputCleaner.cleanInput("I Like red");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -81,7 +83,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("I like {Color}");
 
-		String input = Utils.cleanInput("I Like pink");
+		CleanedInput input = InputCleaner.cleanInput("I Like pink");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -100,7 +102,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("I like {Color} and {Food}");
 
-		String input = Utils.cleanInput("I like red and grapes");
+		CleanedInput input = InputCleaner.cleanInput("I like red and grapes");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -132,7 +134,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("I like {Color} and {Food}");
 
-		String input = Utils.cleanInput("I like red and burgers");
+		CleanedInput input = InputCleaner.cleanInput("I like red and burgers");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -154,7 +156,7 @@ public class TestUtterance
 	{
 		Utterance utterance = new Utterance("What is the time in {City}");
 
-		String input = Utils.cleanInput("What is the time in San francisco");
+		CleanedInput input = InputCleaner.cleanInput("What is the time in San francisco");
 		Slots slots = new Slots();
 		Context context = new Context();
 

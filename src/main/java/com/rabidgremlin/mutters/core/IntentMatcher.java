@@ -18,7 +18,7 @@ public class IntentMatcher
 	public IntentMatch match(String utterance, Context context)
 	{
 
-		String cleanedUtterance = Utils.cleanInput(utterance);
+		CleanedInput cleanedUtterance = InputCleaner.cleanInput(utterance);
 
 		for (Intent intent : intents)
 		{

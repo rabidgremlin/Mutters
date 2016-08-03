@@ -34,7 +34,7 @@ public class Intent
 		utterances.add(utterance);
 	}
 
-	public UtteranceMatch matches(String input, Context context)
+	public UtteranceMatch matches(CleanedInput input, Context context)
 	{
 		log.debug("------------- Intent: {} Input: {}", name,input);
 		for (Utterance utterance : utterances)

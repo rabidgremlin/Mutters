@@ -12,9 +12,11 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.DateSlot;
 import com.rabidgremlin.mutters.core.DateTimeSlot;
+import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.core.TimeSlot;
@@ -30,7 +32,7 @@ public class TestTimeSlot
 	{
 		Utterance utterance = new Utterance("at {time}");
 
-		String input = Utils.cleanInput("at 6:45am");
+		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -54,7 +56,7 @@ public class TestTimeSlot
 	{
 		Utterance utterance = new Utterance("at {time}");
 
-		String input = Utils.cleanInput("at 6:45am");
+		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
 		Slots slots = new Slots();
 		Context context = new Context();
 		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));

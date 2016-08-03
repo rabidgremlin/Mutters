@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.LiteralSlot;
 import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -21,7 +23,7 @@ public class TestNumberSlot
 	{
 		Utterance utterance = new Utterance("The balance is {number}");
 
-		String input = Utils.cleanInput("The balance is One hundred two thousand and thirty four");
+		CleanedInput input = InputCleaner.cleanInput("The balance is One hundred two thousand and thirty four");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -58,7 +60,7 @@ public class TestNumberSlot
 	{
 		Utterance utterance = new Utterance("The balance is {number}");
 
-		String input = Utils.cleanInput("The balance is 123");
+		CleanedInput input = InputCleaner.cleanInput("The balance is 123");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -82,7 +84,7 @@ public class TestNumberSlot
 	{
 		Utterance utterance = new Utterance("The balance is {number}");
 
-		String input = Utils.cleanInput("The balance is 546.12");
+		CleanedInput input = InputCleaner.cleanInput("The balance is 546.12");
 		Slots slots = new Slots();
 		Context context = new Context();
 

@@ -12,9 +12,11 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.DateSlot;
 import com.rabidgremlin.mutters.core.DateTimeSlot;
+import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.core.Utterance;
@@ -29,7 +31,7 @@ public class TestDateTimeSlot
 	{
 		Utterance utterance = new Utterance("for the {datetime}");
 
-		String input = Utils.cleanInput("for the 30th May 1974 at 10pm");
+		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -53,7 +55,7 @@ public class TestDateTimeSlot
 	{
 		Utterance utterance = new Utterance("for the {datetime}");
 
-		String input = Utils.cleanInput("for the 30th May 1974 at 10pm");
+		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
 		Context context = new Context();
 		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
@@ -78,7 +80,7 @@ public class TestDateTimeSlot
 	{
 		Utterance utterance = new Utterance("Give me the report for {date}");
 
-		String input = Utils.cleanInput("Give me the report for last week");
+		CleanedInput input = InputCleaner.cleanInput("Give me the report for last week");
 		Slots slots = new Slots();
 		Context context = new Context();
 

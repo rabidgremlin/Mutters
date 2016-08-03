@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.LiteralSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
@@ -20,7 +22,7 @@ public class TestLiteralSlot
 	{
 		Utterance utterance = new Utterance("My name is {name}");
 
-		String input = Utils.cleanInput("My Name is Kilroy Jones");
+		CleanedInput input = InputCleaner.cleanInput("My Name is Kilroy Jones");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -44,7 +46,7 @@ public class TestLiteralSlot
 	{
 		Utterance utterance = new Utterance("The {something} is good");
 
-		String input = Utils.cleanInput("The pinot noir is good");
+		CleanedInput input = InputCleaner.cleanInput("The pinot noir is good");
 		Slots slots = new Slots();
 		Context context = new Context();
 
