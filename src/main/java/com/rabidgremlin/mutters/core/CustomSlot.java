@@ -2,6 +2,8 @@ package com.rabidgremlin.mutters.core;
 
 import java.util.HashMap;
 
+import org.apache.commons.codec.language.Metaphone;
+
 public class CustomSlot implements Slot
 {
 
@@ -12,18 +14,22 @@ public class CustomSlot implements Slot
 	public CustomSlot(String name, String[] options)
 	{
 		this.name = name;
+		Metaphone metaphoner = new Metaphone();
 		for (String option : options)
 		{
-			this.options.put(option.toLowerCase(), option);
+			this.options.put(metaphoner.metaphone(option), option);
 		}
 	}
 
 	@Override
 	public SlotMatch match(String token, Context context)
 	{
-		if (options.containsKey(token.toLowerCase()))
+		Metaphone metaphoner = new Metaphone();
+		String id = metaphoner.metaphone(token);
+		
+		if (options.containsKey(id))
 		{
-			return new SlotMatch(this, token, options.get(token.toLowerCase()));
+			return new SlotMatch(this, token, options.get(id));
 		}
 		return null;
 	}

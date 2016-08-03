@@ -65,6 +65,8 @@ public class TestUtterance
 
 		CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
 		slots.add(color);
+		
+		//System.out.println(color);
 
 		UtteranceMatch match = utterance.matches(input, slots, context);
 
