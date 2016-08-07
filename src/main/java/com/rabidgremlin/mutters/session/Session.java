@@ -1,8 +1,9 @@
 package com.rabidgremlin.mutters.session;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Session
+public class Session implements Serializable
 {
 
 	private HashMap<String, Object> attributes = new HashMap<String, Object>();
