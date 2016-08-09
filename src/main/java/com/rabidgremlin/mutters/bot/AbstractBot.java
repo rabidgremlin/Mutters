@@ -30,6 +30,7 @@ public abstract class AbstractBot
 		try
 		{
 			String responseText = defaultResponse;
+			boolean askResponse = true;
 
 			IntentMatch intentMatch = matcher.match(messageText, context);
 
@@ -41,6 +42,7 @@ public abstract class AbstractBot
 				if (response.isSessionEnded())
 				{
 					session.reset();
+					askResponse = false;
 				}
 				else
 				{
@@ -49,7 +51,7 @@ public abstract class AbstractBot
 				}
 			}
 
-			return new BotResponse(responseText);
+			return new BotResponse(responseText,askResponse);
 		}
 		catch (IllegalStateException e)
 		{
@@ -58,7 +60,7 @@ public abstract class AbstractBot
 			{
 				repromptText = defaultResponse;
 			}
-			return new BotResponse(repromptText);
+			return new BotResponse(repromptText,true);
 		}
 	}
 
