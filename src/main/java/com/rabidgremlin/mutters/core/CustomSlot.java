@@ -2,8 +2,6 @@ package com.rabidgremlin.mutters.core;
 
 import java.util.HashMap;
 
-import org.apache.commons.codec.language.Soundex;
-
 public class CustomSlot implements Slot
 {
 
@@ -16,27 +14,14 @@ public class CustomSlot implements Slot
 		this.name = name;
 		for (String option : options)
 		{
-			this.options.put(makeId(option), option);
+			this.options.put(option.toLowerCase(), option);
 		}
-	}
-
-	// metaphone ignore multi word strings like so need to treat each word as seperate token to make key
-	private String makeId(String token)
-	{
-		String id = "";
-		Soundex soundexr = new Soundex();
-		for (String part : token.split(" "))
-		{
-			id += soundexr.soundex(part);
-		}
-
-		return id;
 	}
 
 	@Override
 	public SlotMatch match(String token, Context context)
 	{
-		String id = makeId(token);
+		String id = token.toLowerCase();
 
 		if (options.containsKey(id))
 		{
