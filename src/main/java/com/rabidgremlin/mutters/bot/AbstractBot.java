@@ -55,6 +55,8 @@ public abstract class AbstractBot
 		}
 		catch (IllegalStateException e)
 		{
+			log.warn("Hit illegal state",e);
+			
 			String repromptText = SessionUtils.getReprompt(session);
 			if (repromptText == null)
 			{

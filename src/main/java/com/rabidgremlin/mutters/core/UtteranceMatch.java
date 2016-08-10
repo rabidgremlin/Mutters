@@ -30,4 +30,12 @@ public class UtteranceMatch
 		return slotMatches;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "UtteranceMatch [matched=" + matched + ", slotMatches=" + slotMatches + "]";
+	}
+	
+	
+
 }

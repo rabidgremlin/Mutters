@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.codec.language.Metaphone;
+import org.apache.commons.codec.language.Soundex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class InputCleaner
 {
 	private static Logger log = LoggerFactory.getLogger(InputCleaner.class);
-	
+
 	private InputCleaner()
 	{
 		// do nothing
@@ -19,13 +19,12 @@ public class InputCleaner
 
 	public static CleanedInput cleanInput(String inputString)
 	{
-		Metaphone metaphoner = new Metaphone();
-		
+		Soundex soundexr = new Soundex();
+
 		// TODO more punctuation and white space removal..
 		List<String> originalTokens = Arrays.asList((inputString.replaceAll("\\?", "").split("\\s+")));
-	    List<String> cleanedTokens = new ArrayList<String>();
+		List<String> cleanedTokens = new ArrayList<String>();
 
-			
 		for (String token : originalTokens)
 		{
 			if (token.startsWith("{") && token.endsWith("}"))
@@ -34,21 +33,21 @@ public class InputCleaner
 			}
 			else
 			{
-				String metaphone = metaphoner.metaphone(token);
-				if (metaphone.equals(""))
+				String soundex = soundexr.soundex(token);
+				if (soundex.equals(""))
 				{
 					cleanedTokens.add(token);
 				}
 				else
 				{
-					cleanedTokens.add(metaphone);
+					cleanedTokens.add(soundex);
 				}
 			}
 		}
-		
+
 		CleanedInput cleanedInput = new CleanedInput(originalTokens, cleanedTokens);
 
-		log.debug("Cleaned Input: {} -> {}",inputString,cleanedInput);
+		log.debug("Cleaned Input: {} -> {}", inputString, cleanedInput);
 
 		return cleanedInput;
 	}

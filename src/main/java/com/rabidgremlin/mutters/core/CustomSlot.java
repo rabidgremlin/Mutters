@@ -2,7 +2,7 @@ package com.rabidgremlin.mutters.core;
 
 import java.util.HashMap;
 
-import org.apache.commons.codec.language.Metaphone;
+import org.apache.commons.codec.language.Soundex;
 
 public class CustomSlot implements Slot
 {
@@ -24,10 +24,10 @@ public class CustomSlot implements Slot
 	private String makeId(String token)
 	{
 		String id = "";
-		Metaphone metaphoner = new Metaphone();
+		Soundex soundexr = new Soundex();
 		for (String part : token.split(" "))
 		{
-			id += metaphoner.metaphone(part);
+			id += soundexr.soundex(part);
 		}
 
 		return id;
