@@ -1,5 +1,7 @@
 package com.rabidgremlin.mutters.bot;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +28,12 @@ public abstract class AbstractBot
 
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
-		log.debug("session: {} context: {} messageText: {}", new Object[]{session,context,messageText});
+		log.debug("session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
 		try
 		{
 			String responseText = defaultResponse;
+			String reponseAction = null;
+			Map<String, Object> responseActionParams = null;
 			boolean askResponse = true;
 
 			IntentMatch intentMatch = matcher.match(messageText, context);
@@ -38,6 +42,8 @@ public abstract class AbstractBot
 			{
 				IntentResponse response = stateMachine.trigger(intentMatch, session);
 				responseText = response.getResponse();
+				reponseAction = response.getAction();
+				responseActionParams = response.getActionParams();
 
 				if (response.isSessionEnded())
 				{
@@ -51,18 +57,18 @@ public abstract class AbstractBot
 				}
 			}
 
-			return new BotResponse(responseText,askResponse);
+			return new BotResponse(responseText, askResponse, reponseAction, responseActionParams);
 		}
 		catch (IllegalStateException e)
 		{
-			log.warn("Hit illegal state",e);
-			
+			log.warn("Hit illegal state", e);
+
 			String repromptText = SessionUtils.getReprompt(session);
 			if (repromptText == null)
 			{
 				repromptText = defaultResponse;
 			}
-			return new BotResponse(repromptText,true);
+			return new BotResponse(repromptText, true, null, null);
 		}
 	}
 
