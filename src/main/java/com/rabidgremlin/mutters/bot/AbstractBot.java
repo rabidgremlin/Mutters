@@ -29,10 +29,19 @@ public abstract class AbstractBot
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
 		log.debug("session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
-		try
+		
+		// set up default response in case bot has issue processing input
+		String responseText = SessionUtils.getReprompt(session);
+		if (responseText == null)
 		{
-			String responseText = defaultResponse;
-			String hint = null;
+			responseText = defaultResponse;
+		}
+		
+		// default to reprompt hint if we have one
+		String hint = SessionUtils.getRepromptHint(session);;
+		
+		try
+		{			
 			String reprompt = null;
 			String reponseAction = null;
 			Map<String, Object> responseActionParams = null;
@@ -59,10 +68,12 @@ public abstract class AbstractBot
 					if (reprompt != null)
 					{
 						SessionUtils.setReprompt(session, reprompt);
+						SessionUtils.setRepromptHint(session, hint);
 					}
 					else
 					{
 						SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
+						SessionUtils.setRepromptHint(session, null);
 					}
 				}
 			}
@@ -72,13 +83,7 @@ public abstract class AbstractBot
 		catch (IllegalStateException e)
 		{
 			log.warn("Hit illegal state", e);
-
-			String repromptText = SessionUtils.getReprompt(session);
-			if (repromptText == null)
-			{
-				repromptText = defaultResponse;
-			}
-			return new BotResponse(repromptText, null, true, null, null);
+			return new BotResponse(responseText, hint, true, null, null);
 		}
 	}
 
