@@ -32,6 +32,8 @@ public abstract class AbstractBot
 		try
 		{
 			String responseText = defaultResponse;
+			String hint = null;
+			String reprompt = null;
 			String reponseAction = null;
 			Map<String, Object> responseActionParams = null;
 			boolean askResponse = true;
@@ -42,6 +44,8 @@ public abstract class AbstractBot
 			{
 				IntentResponse response = stateMachine.trigger(intentMatch, session);
 				responseText = response.getResponse();
+				hint = response.getHint();
+				reprompt = response.getReprompt();
 				reponseAction = response.getAction();
 				responseActionParams = response.getActionParams();
 
@@ -52,12 +56,18 @@ public abstract class AbstractBot
 				}
 				else
 				{
-					// TODO eventually use reprompt text from Intent Response (when we have it)
-					SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
+					if (reprompt != null)
+					{
+						SessionUtils.setReprompt(session, reprompt);
+					}
+					else
+					{
+						SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
+					}
 				}
 			}
 
-			return new BotResponse(responseText, askResponse, reponseAction, responseActionParams);
+			return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams);
 		}
 		catch (IllegalStateException e)
 		{
@@ -68,7 +78,7 @@ public abstract class AbstractBot
 			{
 				repromptText = defaultResponse;
 			}
-			return new BotResponse(repromptText, true, null, null);
+			return new BotResponse(repromptText, null, true, null, null);
 		}
 	}
 

@@ -8,34 +8,53 @@ public class IntentResponse
 
 	private boolean sessionEnded;
 	private String response;
+	private String reprompt;
+	private String hint;
 	private String action;
 	private Map<String, Object> actionParams;
 
 	public static IntentResponse newAskResponse(String response)
 	{
-		return new IntentResponse(false, response, null, null);
+		return new IntentResponse(false, response, null, null, null, null);
+	}
+	
+	public static IntentResponse newAskResponse(String response,String reprompt)
+	{
+		return new IntentResponse(false, response, reprompt, null, null, null);
+	}
+	
+	public static IntentResponse newAskResponse(String response,String reprompt, String hint)
+	{
+		return new IntentResponse(false, response, reprompt, hint, null, null);
 	}
 
 	public static IntentResponse newAskResponse(String response, String action, Map<String, Object> actionParams)
 	{
-		return new IntentResponse(false, response, action, actionParams);
+		return new IntentResponse(false, response, null, null, action, actionParams);
+	}
+	
+	public static IntentResponse newAskResponse(String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
+	{
+		return new IntentResponse(false, response, null, null, action, actionParams);
 	}
 
 	public static IntentResponse newTellResponse(String response)
 	{
-		return new IntentResponse(true, response, null, null);
+		return new IntentResponse(true, response, null, null, null, null);
 	}
 
 	public static IntentResponse newTellResponse(String response, String action, Map<String, Object> actionParams)
 	{
-		return new IntentResponse(true, response, action, actionParams);
+		return new IntentResponse(true, response, null, null,action, actionParams);
 	}
 
-	public IntentResponse(boolean sessionEnded, String response, String action, Map<String, Object> actionParams)
+	public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
 	{
 
 		this.sessionEnded = sessionEnded;
 		this.response = response;
+		this.reprompt = reprompt;
+		this.hint = hint;
 		this.action = action;
 		this.actionParams = actionParams;
 	}
@@ -63,6 +82,16 @@ public class IntentResponse
 		}
 
 		return Collections.unmodifiableMap(actionParams);
+	}
+
+	public String getReprompt()
+	{
+		return reprompt;
+	}
+
+	public String getHint()
+	{
+		return hint;
 	}
 
 }
