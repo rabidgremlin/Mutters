@@ -1,7 +1,7 @@
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -13,6 +13,8 @@ import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.CustomSlot;
 import com.rabidgremlin.mutters.core.InputCleaner;
+import com.rabidgremlin.mutters.core.Intent;
+import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.core.Utterance;
@@ -65,8 +67,8 @@ public class TestUtterance
 
 		CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
 		slots.add(color);
-		
-		//System.out.println(color);
+
+		// System.out.println(color);
 
 		UtteranceMatch match = utterance.matches(input, slots, context);
 
@@ -175,5 +177,28 @@ public class TestUtterance
 		assertThat(colorMatch, is(notNullValue()));
 		assertThat(colorMatch.getOrginalValue(), is("San francisco"));
 		assertThat(colorMatch.getValue(), is("San Francisco"));
+	}
+
+	//TODO refactor out to a separate Intent test class
+	@Test
+	public void testSingleWordMatch()
+	{
+		Intent intent = new Intent("YesIntent");
+
+//		intent.addUtterance(new Utterance("yes"));
+//		intent.addUtterance(new Utterance("yes please"));
+//		intent.addUtterance(new Utterance("yes thanks"));
+//		intent.addUtterance(new Utterance("yes thank you"));
+//		intent.addUtterance(new Utterance("yep"));
+//		intent.addUtterance(new Utterance("Y"));
+//		intent.addUtterance(new Utterance("Ok"));
+		intent.addUtterance(new Utterance("K"));
+		
+		CleanedInput input = InputCleaner.cleanInput("Kia Ora");		
+		Context context = new Context();
+		
+		UtteranceMatch match = intent.matches(input, context);
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(false));
 	}
 }

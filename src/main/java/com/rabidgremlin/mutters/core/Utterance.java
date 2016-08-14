@@ -51,7 +51,7 @@ public class Utterance
 		}
 
 		//System.out.println(regexStr);
-		matchPattern = Pattern.compile(regexStr.trim(), Pattern.CASE_INSENSITIVE);
+		matchPattern = Pattern.compile(regexStr.trim() +"$", Pattern.CASE_INSENSITIVE);
 	}
 
 	public String getTemplate()
