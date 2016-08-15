@@ -17,6 +17,16 @@ public class CustomSlot implements Slot
 			this.options.put(option.toLowerCase(), option);
 		}
 	}
+	
+	public CustomSlot(String name, HashMap<String, String> optionValueMap)
+	{
+		this.name = name;
+		for (String key : optionValueMap.keySet())
+		{
+			this.options.put(key.toLowerCase(), optionValueMap.get(key));
+		}
+	}
+	
 
 	@Override
 	public SlotMatch match(String token, Context context)

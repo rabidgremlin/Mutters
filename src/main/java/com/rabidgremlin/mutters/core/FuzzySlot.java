@@ -19,6 +19,16 @@ public class FuzzySlot implements Slot
 			this.options.put(makeId(option), option);
 		}
 	}
+	
+	public FuzzySlot(String name, HashMap<String, String> optionValueMap)
+	{
+		this.name = name;
+		for (String key : optionValueMap.keySet())
+		{
+			this.options.put(makeId(key), optionValueMap.get(key));
+		}
+	}
+	
 
 	// metaphone ignore multi word strings like so need to treat each word as seperate token to make key
 	private String makeId(String token)
