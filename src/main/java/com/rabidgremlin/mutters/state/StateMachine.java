@@ -52,6 +52,11 @@ public class StateMachine
 		return intentName + '-' + state.getName();
 	}
 
+	private String makeGlobalTransitionKey(String intentName)
+	{
+		return intentName + "-*";
+	}
+
 	public void addTransition(String intentName, State fromState, State toState)
 	{
 		addTransition(intentName, fromState, toState, null);
@@ -75,6 +80,32 @@ public class StateMachine
 		}
 
 		String key = makeTransitionKey(intentName, fromState);
+		List<Transition> transitionList = transitionMap.get(key);
+		if (transitionList == null)
+		{
+			transitionList = new ArrayList<Transition>();
+			transitionMap.put(key, transitionList);
+		}
+
+		transitionList.add(new Transition(toState, guard));
+
+		handledIntents.add(intentName);
+	}
+
+	public void addGlobalTransition(String intentName, State toState)
+	{
+		addGlobalTransition(intentName, toState, null);
+	}
+
+	public void addGlobalTransition(String intentName, State toState, Guard guard)
+	{
+
+		if (!states.containsKey(toState.getName()))
+		{
+			addState(toState);
+		}
+
+		String key = makeGlobalTransitionKey(intentName);
 		List<Transition> transitionList = transitionMap.get(key);
 		if (transitionList == null)
 		{
@@ -123,7 +154,13 @@ public class StateMachine
 
 		if (transitionToStateList == null)
 		{
-			throw new IllegalStateException("Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
+			key = makeGlobalTransitionKey(intentName);
+			transitionToStateList = transitionMap.get(key);
+
+			if (transitionToStateList == null)
+			{
+				throw new IllegalStateException("Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
+			}
 		}
 
 		State transitionToState = null;
@@ -166,6 +203,17 @@ public class StateMachine
 
 	public void dump(Writer writer) throws IOException
 	{
+		// dummy state for global transitions
+		final State anyState = new State("<<ANY>>")
+		{
+
+			@Override
+			public IntentResponse execute(IntentMatch intentMatch, Session session)
+			{
+				return null;
+			}
+		};
+
 		PrintWriter out = new PrintWriter(writer);
 
 		out.println("digraph g {");
@@ -184,7 +232,18 @@ public class StateMachine
 		{
 			String[] splitKey = key.split("-");
 			String intent = splitKey[0];
-			State fromState = states.get(splitKey[1]);
+			State fromState;
+
+			// handle global transitions
+			if (splitKey[1].equals("*"))
+			{
+				fromState = anyState;
+			}
+			else
+			{
+				fromState = states.get(splitKey[1]);
+			}
+
 			List<Transition> transitionToStateList = transitionMap.get(key);
 
 			for (Transition transition : transitionToStateList)
