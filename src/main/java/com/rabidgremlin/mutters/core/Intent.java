@@ -36,7 +36,7 @@ public class Intent
 	
 	public void addUtterances(List<Utterance> utterances)
 	{
-		utterances.addAll(utterances);
+		this.utterances.addAll(utterances);
 	}
 
 	public UtteranceMatch matches(CleanedInput input, Context context)
