@@ -52,7 +52,7 @@ public class UtteranceGenerator
 		List<Utterance> utterances = new ArrayList<Utterance>();
 		for (List<String> templateParts : templates)
 		{
-			utterances.add(new Utterance(StringUtils.join(templateParts, " ")));
+			utterances.add(new Utterance(StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
 		}
 
 		return utterances;
