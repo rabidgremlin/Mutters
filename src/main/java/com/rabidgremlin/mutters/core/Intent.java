@@ -33,6 +33,11 @@ public class Intent
 	{
 		utterances.add(utterance);
 	}
+	
+	public void addUtterances(List<Utterance> utterances)
+	{
+		utterances.addAll(utterances);
+	}
 
 	public UtteranceMatch matches(CleanedInput input, Context context)
 	{
