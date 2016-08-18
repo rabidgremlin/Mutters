@@ -37,6 +37,17 @@ public class DateSlot implements Slot
 		{
 			// do nothing
 		}
+		
+		try
+		{
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM");
+			LocalDate nzDate = fmt.parseLocalDate(token);
+			return new SlotMatch(this, token, nzDate);
+		}
+		catch (IllegalArgumentException e)
+		{
+			// do nothing
+		}
 
 		// try parse with natty
 		Parser parser = new Parser(context.getTimeZone());

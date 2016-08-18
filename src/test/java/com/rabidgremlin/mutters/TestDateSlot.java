@@ -30,7 +30,7 @@ public class TestDateSlot
 	{
 		Utterance utterance = new Utterance("for the {date}");
 
-		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974");		
+		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974");
 		Slots slots = new Slots();
 		Context context = new Context();
 
@@ -73,7 +73,7 @@ public class TestDateSlot
 		assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
 		assertThat(slotMatch.getValue(), is(new LocalDate(1974, 5, 30)));
 	}
-	
+
 	@Test
 	public void testDontMatchOnJustTime()
 	{
@@ -82,14 +82,111 @@ public class TestDateSlot
 		CleanedInput input = InputCleaner.cleanInput("10pm");
 		Slots slots = new Slots();
 		Context context = new Context();
-		
+
 		DateSlot slot = new DateSlot("date");
 		slots.add(slot);
 
 		UtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(false));		
+		assertThat(match.isMatched(), is(false));
+	}
+
+	@Test
+	public void testNZDate()
+	{
+		Utterance utterance = new Utterance("{date}");
+
+		CleanedInput input = InputCleaner.cleanInput("2 Aug");
+		Slots slots = new Slots();
+		Context context = new Context();
+
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		UtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(true));
+
+		SlotMatch slotMatch = match.getSlotMatches().get(slot);
+		LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+		assertThat(dateMatch.getDayOfMonth(), is(2));
+		assertThat(dateMatch.getMonthOfYear(), is(8));
+	}
+
+	@Test
+	public void testNZDate2()
+	{
+		Utterance utterance = new Utterance("{date}");
+
+		CleanedInput input = InputCleaner.cleanInput("20/5/2016");
+		Slots slots = new Slots();
+		Context context = new Context();
+
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		UtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(true));
+
+		SlotMatch slotMatch = match.getSlotMatches().get(slot);
+		LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+		assertThat(dateMatch.getDayOfMonth(), is(20));
+		assertThat(dateMatch.getMonthOfYear(), is(5));
+		assertThat(dateMatch.getYear(), is(2016));
+	}
+
+	// TODO handle different TZ in context
+	@Test
+	public void testToday()
+	{
+		Utterance utterance = new Utterance("{date}");
+
+		CleanedInput input = InputCleaner.cleanInput("today");
+		Slots slots = new Slots();
+		Context context = new Context();
+
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		UtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(true));
+
+		SlotMatch slotMatch = match.getSlotMatches().get(slot);
+		LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+
+		LocalDate today = new LocalDate();
+		assertThat(dateMatch, is(today));
+	}
+
+	// TODO handle different TZ in context
+	@Test
+	public void testTomorrow()
+	{
+		Utterance utterance = new Utterance("{date}");
+
+		CleanedInput input = InputCleaner.cleanInput("tomorrow");
+		Slots slots = new Slots();
+		Context context = new Context();
+
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		UtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(true));
+
+		SlotMatch slotMatch = match.getSlotMatches().get(slot);
+		LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+
+		LocalDate tommorrow = new LocalDate().plusDays(1);
+		assertThat(dateMatch, is(tommorrow));
 	}
 
 }

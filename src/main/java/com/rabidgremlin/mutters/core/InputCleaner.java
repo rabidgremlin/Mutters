@@ -19,7 +19,7 @@ public class InputCleaner
 
 	public static CleanedInput cleanInput(String inputString)
 	{
-		Soundex soundexr = new Soundex();
+//		Soundex soundexr = new Soundex();
 
 		// TODO more punctuation and white space removal..
 		List<String> originalTokens = Arrays.asList((inputString.replaceAll("\\?", "").split("\\s+")));
@@ -33,15 +33,15 @@ public class InputCleaner
 			}
 			else
 			{
-				String soundex = soundexr.soundex(token);
-				if (soundex.equals(""))
-				{
+//				String soundex = soundexr.soundex(token);
+//				if (soundex.equals(""))
+//				{
 					cleanedTokens.add(token);
-				}
-				else
-				{
-					cleanedTokens.add(soundex);
-				}
+//				}
+//				else
+//				{
+//					cleanedTokens.add(soundex);
+//				}
 			}
 		}
 
