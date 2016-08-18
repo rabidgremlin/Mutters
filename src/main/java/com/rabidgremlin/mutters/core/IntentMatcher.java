@@ -1,6 +1,7 @@
 package com.rabidgremlin.mutters.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.rabidgremlin.mutters.util.Utils;
@@ -30,6 +31,11 @@ public class IntentMatcher
 		}
 
 		return null;
+	}
+	
+	public List<Intent> getIntents()
+	{
+		return Collections.unmodifiableList(intents);
 	}
 
 }

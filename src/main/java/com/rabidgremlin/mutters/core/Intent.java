@@ -1,6 +1,7 @@
 package com.rabidgremlin.mutters.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -55,5 +56,10 @@ public class Intent
 
 		log.debug("------------ No Match to {} -------------", name);
 		return new UtteranceMatch(false);
+	}
+	
+	public List<Utterance> getUtterances()
+	{
+		return Collections.unmodifiableList(utterances);
 	}
 }
