@@ -10,8 +10,8 @@ import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.LiteralSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestInputCleaning

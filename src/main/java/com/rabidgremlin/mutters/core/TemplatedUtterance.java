@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.util.Utils;
 
-public class Utterance
+public class TemplatedUtterance
 {
 
 	private String template;
@@ -25,7 +25,7 @@ public class Utterance
 
 	private Pattern matchPattern;
 
-	public Utterance(String template)
+	public TemplatedUtterance(String template)
 	{
 		this.template = template;
 		tokens = InputCleaner.cleanInput(template);
@@ -60,7 +60,7 @@ public class Utterance
 	}
 
 	// NOTE input should be cleaned
-	public UtteranceMatch matches(CleanedInput input, Slots slots, Context context)
+	public TemplatedUtteranceMatch matches(CleanedInput input, Slots slots, Context context)
 	{
 		String inputString = StringUtils.join(input.getCleanedTokens(), ' ');
 
@@ -68,10 +68,10 @@ public class Utterance
 
 		if (!match.find())
 		{
-			return new UtteranceMatch(false);
+			return new TemplatedUtteranceMatch(false);
 		}
 
-		UtteranceMatch theMatch = new UtteranceMatch(true);
+		TemplatedUtteranceMatch theMatch = new TemplatedUtteranceMatch(true);
 
 		for (String slotName : slotNames)
 		{
@@ -106,7 +106,7 @@ public class Utterance
 			}
 			else
 			{
-				return new UtteranceMatch(false);
+				return new TemplatedUtteranceMatch(false);
 			}
 		}
 

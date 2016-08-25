@@ -10,8 +10,8 @@ import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.LiteralSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestLiteralSlot
@@ -20,7 +20,7 @@ public class TestLiteralSlot
 	@Test
 	public void testBasicMatch()
 	{
-		Utterance utterance = new Utterance("My name is {name}");
+		TemplatedUtterance utterance = new TemplatedUtterance("My name is {name}");
 
 		CleanedInput input = InputCleaner.cleanInput("My Name is Kilroy Jones");
 		Slots slots = new Slots();
@@ -29,7 +29,7 @@ public class TestLiteralSlot
 		LiteralSlot slot = new LiteralSlot("name");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -44,7 +44,7 @@ public class TestLiteralSlot
 	@Test
 	public void testMidUtteranceMatch()
 	{
-		Utterance utterance = new Utterance("The {something} is good");
+		TemplatedUtterance utterance = new TemplatedUtterance("The {something} is good");
 
 		CleanedInput input = InputCleaner.cleanInput("The pinot noir is good");
 		Slots slots = new Slots();
@@ -53,7 +53,7 @@ public class TestLiteralSlot
 		LiteralSlot slot = new LiteralSlot("something");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));

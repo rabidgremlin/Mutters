@@ -2,19 +2,19 @@ package com.rabidgremlin.mutters.core;
 
 import java.util.HashMap;
 
-public class UtteranceMatch
+public class TemplatedUtteranceMatch
 {
 
 	private boolean matched;
 	private HashMap<Slot, SlotMatch> slotMatches;
 
-	public UtteranceMatch(boolean matched)
+	public TemplatedUtteranceMatch(boolean matched)
 	{
 		this.matched = matched;
 		this.slotMatches = new HashMap<Slot, SlotMatch>();
 	}
 
-	public UtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
+	public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
 	{
 		this.matched = matched;
 		this.slotMatches = slotMatches;

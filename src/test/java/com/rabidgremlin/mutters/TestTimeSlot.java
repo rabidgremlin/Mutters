@@ -20,8 +20,8 @@ import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.core.TimeSlot;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestTimeSlot
@@ -30,7 +30,7 @@ public class TestTimeSlot
 	@Test
 	public void testBasicMatch()
 	{
-		Utterance utterance = new Utterance("at {time}");
+		TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
 
 		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
 		Slots slots = new Slots();
@@ -39,7 +39,7 @@ public class TestTimeSlot
 		TimeSlot slot = new TimeSlot("time");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -54,7 +54,7 @@ public class TestTimeSlot
 	@Test
 	public void testMatchWithTimeZone()
 	{
-		Utterance utterance = new Utterance("at {time}");
+		TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
 
 		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
 		Slots slots = new Slots();
@@ -64,7 +64,7 @@ public class TestTimeSlot
 		TimeSlot slot = new TimeSlot("time");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));

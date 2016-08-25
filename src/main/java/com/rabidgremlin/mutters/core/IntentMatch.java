@@ -7,17 +7,17 @@ import java.util.Map;
 public class IntentMatch
 {
 
-	private Intent intent;
+	private TemplatedIntent intent;
 	private HashMap<Slot, SlotMatch> slotMatches;
 
-	public IntentMatch(Intent intent, HashMap<Slot, SlotMatch> slotMatches)
+	public IntentMatch(TemplatedIntent intent, HashMap<Slot, SlotMatch> slotMatches)
 	{
 
 		this.intent = intent;
 		this.slotMatches = slotMatches;
 	}
 
-	public Intent getIntent()
+	public TemplatedIntent getIntent()
 	{
 		return intent;
 	}

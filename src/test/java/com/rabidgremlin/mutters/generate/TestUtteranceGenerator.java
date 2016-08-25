@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.core.Utterance;
+import com.rabidgremlin.mutters.core.TemplatedUtterance;
 
 import java.util.List;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public class TestUtteranceGenerator
 	{
 		UtteranceGenerator generator = new UtteranceGenerator();
 		
-		List<Utterance> utterances = generator.generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
+		List<TemplatedUtterance> utterances = generator.generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
 		
 		System.out.println(utterances);
 
