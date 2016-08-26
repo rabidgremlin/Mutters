@@ -91,4 +91,23 @@ public class TestNER
 		assertThat(locations.length,is(1));
 		assertThat(locations[0],is("today"));				
 	}
+	
+	@Test
+	public void testAddressNER() throws Exception
+	{
+		URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-locations.bin");		
+		assertThat(modelUrl,is(notNullValue()));
+		
+		TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
+		assertThat(model,is(notNullValue()));
+		
+		NameFinderME nameFinder = new NameFinderME(model);		
+		String[] tokens = SimpleTokenizer.INSTANCE.tokenize("Send a taxi to 12 Pleasent Street");	
+		Span[] spans = nameFinder.find(tokens);
+		assertThat(spans.length,is(1));
+		
+		String[] locations = Span.spansToStrings(spans, tokens);
+		assertThat(locations.length,is(1));
+		assertThat(locations[0],is("12 Pleasent Street"));				
+	}
 }
