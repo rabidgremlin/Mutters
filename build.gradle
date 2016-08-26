@@ -1,5 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:3.1.1'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'maven-publish' 
+apply plugin: 'de.undercouch.download'
 
 version="1.0.0-snapshot"
 
@@ -8,9 +18,11 @@ repositories {
 }
 
 dependencies {
+    compile 'org.apache.opennlp:opennlp-tools:1.6.0'
     compile 'joda-time:joda-time:2.9.4' 
     compile 'com.joestelmach:natty:0.12'    
     compile 'commons-codec:commons-codec:1.10'
+    
 
     
     testCompile 'junit:junit:4.11'
@@ -27,4 +39,51 @@ publishing {
             from components.java
         }
     }
+}
+
+
+// build model
+task generateIntentModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = sourceSets.main.runtimeClasspath
+   args = ['DoccatTrainer',
+           '-model',
+           'src/test/resources/models/en-cat-taxi-intents.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/test/resources/models/TaxiBotIntents.txt',
+           '-encoding', 
+           'UTF-8',
+           '-featureGenerators',
+           'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator']
+}
+
+
+// these snippets from https://github.com/spinscale/elasticsearch-ingest-opennlp
+
+// download the models before the tests are run, also needed for packaging
+project.afterEvaluate {
+  processTestResources.dependsOn downloadModels
+  processTestResources.dependsOn generateIntentModel
+}
+
+// download the models but dont overwrite existing ones
+task downloadModels << {  
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin',   'en-ner-persons.bin')
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-location.bin', 'en-ner-locations.bin')
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-date.bin',     'en-ner-dates.bin')
+}
+
+def downloadIfNotExists(String url, String file) {
+  String dir = 'src' + File.separator + 'test' + File.separator + 'resources' + File.separator + 'models'
+     
+  //print(new File(dir).getAbsolutePath())
+  new File(dir).mkdirs()
+  if (new File(dir + File.separator + file).exists() == false) {
+    download {
+      src url
+      dest new File(dir, file)
+    }
+  }
 }

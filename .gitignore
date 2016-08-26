@@ -1,3 +1,5 @@
 /bin/
 /.gradle/
 /build/
+gradle.properties
+src/test/resources/models/*.bin
