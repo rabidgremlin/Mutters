@@ -59,6 +59,20 @@ task generateIntentModel(type:JavaExec) {
            'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator']
 }
 
+task generateAddressModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = sourceSets.main.runtimeClasspath
+   args = ['TokenNameFinderTrainer',
+           '-model',
+           'src/test/resources/models/en-ner-address.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/test/resources/models/NERAddresses.txt',
+           '-encoding', 
+           'UTF-8']
+}
+
 
 // these snippets from https://github.com/spinscale/elasticsearch-ingest-opennlp
 
@@ -66,6 +80,7 @@ task generateIntentModel(type:JavaExec) {
 project.afterEvaluate {
   processTestResources.dependsOn downloadModels
   processTestResources.dependsOn generateIntentModel
+  processTestResources.dependsOn generateAddressModel
 }
 
 // download the models but dont overwrite existing ones

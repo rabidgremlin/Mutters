@@ -95,7 +95,7 @@ public class TestNER
 	@Test
 	public void testAddressNER() throws Exception
 	{
-		URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-locations.bin");		
+		URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-address.bin");		
 		assertThat(modelUrl,is(notNullValue()));
 		
 		TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
