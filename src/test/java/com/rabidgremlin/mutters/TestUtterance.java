@@ -11,14 +11,14 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.CustomSlot;
 import com.rabidgremlin.mutters.core.InputCleaner;
-import com.rabidgremlin.mutters.core.TemplatedIntent;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
-import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
+import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestUtterance

@@ -7,12 +7,12 @@ import org.junit.Test;
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.InputCleaner;
-import com.rabidgremlin.mutters.core.LiteralSlot;
-import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
-import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
+import com.rabidgremlin.mutters.slots.LiteralSlot;
+import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestNumberSlot

@@ -14,13 +14,13 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.DateSlot;
-import com.rabidgremlin.mutters.core.DateTimeSlot;
 import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
-import com.rabidgremlin.mutters.core.TemplatedUtteranceMatch;
+import com.rabidgremlin.mutters.slots.DateSlot;
+import com.rabidgremlin.mutters.slots.DateTimeSlot;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestDateTimeSlot

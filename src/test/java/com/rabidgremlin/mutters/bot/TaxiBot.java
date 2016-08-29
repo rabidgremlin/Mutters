@@ -4,6 +4,7 @@ import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.examples.mathbot.StartState;
 import com.rabidgremlin.mutters.ml.MLIntent;
 import com.rabidgremlin.mutters.ml.MLIntentMatcher;
+import com.rabidgremlin.mutters.slots.LiteralSlot;
 import com.rabidgremlin.mutters.state.Guard;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.state.StateMachine;
@@ -18,7 +19,7 @@ public class TaxiBot extends AbstractBot
 		matcher.addSlotModel("Address", "models/en-ner-address.bin");
 		
 		MLIntent intent = new MLIntent("OrderTaxi");
-		intent.addSlot("Address");
+		intent.addSlot(new LiteralSlot("Address"));
 		matcher.addIntent(intent);		
 		
 		intent = new MLIntent("CancelTaxi");
@@ -28,7 +29,7 @@ public class TaxiBot extends AbstractBot
 		matcher.addIntent(intent);
 		
 		intent = new MLIntent("GaveAddress");
-		intent.addSlot("Address");
+		intent.addSlot(new LiteralSlot("Address"));
 		matcher.addIntent(intent);
 		
 		return matcher;

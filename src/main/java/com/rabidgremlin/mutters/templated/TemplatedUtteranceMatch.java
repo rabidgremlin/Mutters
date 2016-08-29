@@ -1,6 +1,9 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.templated;
 
 import java.util.HashMap;
+
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
 
 public class TemplatedUtteranceMatch
 {

@@ -1,9 +1,14 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.InputCleaner;
+import com.rabidgremlin.mutters.core.IntentMatch;
+import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TemplatedIntentMatcher implements IntentMatcher

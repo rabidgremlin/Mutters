@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 import java.util.List;
 import java.util.Arrays;

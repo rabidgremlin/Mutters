@@ -6,16 +6,14 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.core.TemplatedIntent;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.core.TemplatedIntentMatcher;
-import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
-
-
+import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.CustomSlot;
 
 public class TestIntentMatcher
 {

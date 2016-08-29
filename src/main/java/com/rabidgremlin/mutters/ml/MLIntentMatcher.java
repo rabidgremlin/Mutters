@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.core.LiteralSlot;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
+import com.rabidgremlin.mutters.slots.LiteralSlot;
 
 import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
@@ -75,7 +75,7 @@ public class MLIntentMatcher implements IntentMatcher
 
 		// TODO extract match probablity and filter out low ones...
 		SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
-		log.info("Sorted scores were: {}",scoredCats);
+		log.info("Sorted scores were: {}", scoredCats);
 
 		String category = intentCategorizer.getBestCategory(intentCategorizer.categorize(utterance));
 		log.info("Best Match was:" + category);
@@ -90,12 +90,12 @@ public class MLIntentMatcher implements IntentMatcher
 
 		HashMap<Slot, SlotMatch> matchedSlots = new HashMap<Slot, SlotMatch>();
 
-		for (String slotName : bestIntent.getSlotsNames())
+		for (Slot slot : bestIntent.getSlots())
 		{
-			TokenNameFinderModel tnfModel = slotModels.get(slotName.toLowerCase());
+			TokenNameFinderModel tnfModel = slotModels.get(slot.getName().toLowerCase());
 			if (tnfModel == null)
 			{
-				log.warn("Could not find NER model for slot {}", slotName);
+				log.warn("Could not find NER model for slot {}", slot.getName());
 				continue;
 			}
 
@@ -106,11 +106,8 @@ public class MLIntentMatcher implements IntentMatcher
 			{
 				String[] matches = Span.spansToStrings(spans, tokens);
 
-				log.info("Match for {} found {}", slotName, matches);
-
-				// TODO clean this up
-				LiteralSlot slot = new LiteralSlot(slotName);
-
+				log.info("Match for {} found {}", slot, matches);
+				
 				// TODO what to do with multi matches?
 				matchedSlots.put(slot, new SlotMatch(slot, matches[0], matches[0]));
 			}

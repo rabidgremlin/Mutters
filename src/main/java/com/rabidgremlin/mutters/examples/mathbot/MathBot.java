@@ -1,15 +1,15 @@
 package com.rabidgremlin.mutters.examples.mathbot;
 
 import com.rabidgremlin.mutters.bot.AbstractBot;
-import com.rabidgremlin.mutters.core.TemplatedIntent;
 import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.core.TemplatedIntentMatcher;
-import com.rabidgremlin.mutters.core.NumberSlot;
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.state.Guard;
 import com.rabidgremlin.mutters.state.PreEventAction;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.state.StateMachine;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 public class MathBot extends AbstractBot
 {

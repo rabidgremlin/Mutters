@@ -1,8 +1,12 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.slots;
 
 import java.util.HashMap;
 
 import org.apache.commons.codec.language.Soundex;
+
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
 
 public class FuzzySlot implements Slot
 {

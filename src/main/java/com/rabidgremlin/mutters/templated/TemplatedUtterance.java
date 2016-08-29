@@ -1,4 +1,4 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +12,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rabidgremlin.mutters.core.CleanedInput;
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.InputCleaner;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
+import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TemplatedUtterance

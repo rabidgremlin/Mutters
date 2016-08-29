@@ -1,5 +1,7 @@
 package com.rabidgremlin.mutters.core;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Slots
@@ -15,6 +17,11 @@ public class Slots
 	public Slot getSlot(String name)
 	{
 		return slots.get(name.toLowerCase());
+	}
+	
+	public Collection<Slot> getSlots()
+	{
+		return Collections.unmodifiableCollection(slots.values());
 	}
 
 }

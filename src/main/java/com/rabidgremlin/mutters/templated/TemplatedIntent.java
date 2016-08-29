@@ -1,4 +1,4 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,32 +7,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TemplatedIntent implements Intent
+import com.rabidgremlin.mutters.core.CleanedInput;
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.Intent;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.Slots;
+
+public class TemplatedIntent extends Intent
 {
-	private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);
-	private String name;
-	private Slots slots = new Slots();
+	private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);	
 	private List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
 
 	public TemplatedIntent(String name)
 	{
-		super();
-		this.name = name;
+		super(name);		
 	}
-
-	/* (non-Javadoc)
-	 * @see com.rabidgremlin.mutters.core.Intent#getName()
-	 */
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	public void addSlot(Slot slot)
-	{
-		slots.add(slot);
-	}
+	
 
 	public void addUtterance(TemplatedUtterance utterance)
 	{

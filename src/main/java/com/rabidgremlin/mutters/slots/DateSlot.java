@@ -1,4 +1,4 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.slots;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +11,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
 
 public class DateSlot implements Slot
 {

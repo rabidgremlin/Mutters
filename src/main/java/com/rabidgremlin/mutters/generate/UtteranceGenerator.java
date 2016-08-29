@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rabidgremlin.mutters.core.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 public class UtteranceGenerator
 {
