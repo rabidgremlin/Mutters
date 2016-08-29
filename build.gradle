@@ -56,7 +56,9 @@ task generateIntentModel(type:JavaExec) {
            '-encoding', 
            'UTF-8',
            '-featureGenerators',
-           'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator']
+           'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator',
+           '-params',
+           'src/test/resources/models/TaxiBotIntentsParams.txt']
 }
 
 task generateAddressModel(type:JavaExec) {
@@ -70,7 +72,9 @@ task generateAddressModel(type:JavaExec) {
            '-data',
            'src/test/resources/models/NERAddresses.txt',
            '-encoding', 
-           'UTF-8']
+           'UTF-8',
+           '-params',
+           'src/test/resources/models/NERAddressesParams.txt']
 }
 
 

@@ -17,3 +17,11 @@ WhereTaxi How far away is my taxi ?
 WhereTaxi How far away is my cab ?
 WhereTaxi How long until my cab is here ?
 WhereTaxi How long until my taxi is here ?
+GaveAddress My address is 173 Essex Drive
+GaveAddress The address is 1407 Graymalkin Lane , Salem Center
+GaveAddress 52 Festive Road
+GaveAddress it's 6151 Richmond Street
+GaveAddress The pick up is at 740 Evergreen Terrace 
+GaveAddress 890 Fifth Avenue
+GaveAddress The address is 13 China Ave
+GaveAddress 136 River Road

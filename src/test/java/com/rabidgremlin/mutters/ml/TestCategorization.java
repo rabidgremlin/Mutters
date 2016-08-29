@@ -58,9 +58,13 @@ public class TestCategorization
 		assertThat(category,is(notNullValue()));
 		assertThat(category,is("CancelTaxi"));
 		
-		category = myCategorizer.getBestCategory(myCategorizer.categorize("When is the taxi arriving?"));		
+		category = myCategorizer.getBestCategory(myCategorizer.categorize("Where is my taxi ?"));		
 		assertThat(category,is(notNullValue()));
 		assertThat(category,is("WhereTaxi"));
+		
+		category = myCategorizer.getBestCategory(myCategorizer.categorize("The address is 136 River Road"));		
+		assertThat(category,is(notNullValue()));
+		assertThat(category,is("GaveAddress"));
 	}
 	
 	
