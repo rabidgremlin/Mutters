@@ -61,7 +61,12 @@ public class DateSlot implements Slot
 			if (!group.isDateInferred())
 			{
 				List<Date> dates = group.getDates();
-				if (!dates.isEmpty())
+				
+				// natty is very aggressive so will match date on text that is largely not a date, which is not what we want				
+				String matchText = group.getText();
+				float percMatch = (float)matchText.length()/ (float)token.length();				
+				
+				if (!dates.isEmpty()  && percMatch > 0.75)
 				{
 					DateTime theDateTime = new DateTime(dates.get(0), DateTimeZone.forTimeZone(context.getTimeZone()));
 					return new SlotMatch(this, token, theDateTime.toLocalDate());

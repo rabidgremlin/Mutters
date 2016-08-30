@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.util.SessionUtils;
 
 import java.util.List;
 import java.util.Arrays;
@@ -29,9 +30,9 @@ public class TestTaxiBot
 		Context context = new Context();
 		
 		BotResponse response = taxiBot.respond(session, context, "Send a taxi to 56 Kilm Steet");
-		
+			
 		assertThat(response, is(notNullValue()));
-		assertThat(response.getResponse(),is("Taxi 932e is on its way"));
+		assertThat(response.getResponse(),is("Taxi 1e1f is on its way"));
 		assertThat(response.isAskResponse(), is(false));
 	}
 	
@@ -48,10 +49,10 @@ public class TestTaxiBot
 		assertThat(response.isAskResponse(), is(true));
 		
 		
-        response = taxiBot.respond(session, context, "136 River Road");
+        response = taxiBot.respond(session, context, "136 River Road");        
 		
 		assertThat(response, is(notNullValue()));
-		assertThat(response.getResponse(),is("Taxi 9047 is on its way"));
+		assertThat(response.getResponse(),is("Taxi 1983 is on its way"));
 		assertThat(response.isAskResponse(), is(false));
 	}
 	

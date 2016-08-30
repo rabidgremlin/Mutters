@@ -188,5 +188,26 @@ public class TestDateSlot
 		LocalDate tommorrow = new LocalDate().plusDays(1);
 		assertThat(dateMatch, is(tommorrow));
 	}
+	
+	@Test
+	public void testMismatch()
+	{
+		TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+
+		CleanedInput input = InputCleaner.cleanInput("book auckland to wellington for friday");
+		Slots slots = new Slots();
+		Context context = new Context();
+
+		DateSlot slot = new DateSlot("date");
+		slots.add(slot);
+
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+
+		assertThat(match, is(notNullValue()));
+		assertThat(match.isMatched(), is(false));
+	}
+	
+	
+	
 
 }
