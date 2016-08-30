@@ -92,6 +92,8 @@ public class MLIntentMatcher implements IntentMatcher
 
 		for (Slot slot : bestIntent.getSlots())
 		{
+			log.info("Looking for Slot {}", slot.getName());
+			
 			TokenNameFinderModel tnfModel = slotModels.get(slot.getName().toLowerCase());
 			if (tnfModel == null)
 			{
@@ -106,10 +108,23 @@ public class MLIntentMatcher implements IntentMatcher
 			{
 				String[] matches = Span.spansToStrings(spans, tokens);
 
-				log.info("Match for {} found {}", slot, matches);
+				log.info("Matching for {} against {}", slot.getName(), matches);
 				
 				// TODO what to do with multi matches?
-				matchedSlots.put(slot, new SlotMatch(slot, matches[0], matches[0]));
+				SlotMatch match = slot.match(matches[0], context);
+				if (match != null)
+				{
+				  matchedSlots.put(slot, match);
+				  log.info("Match found {}", match);
+				}
+				else
+				{
+					log.info("No Match found slot: {} text: {} ", slot.getName(), matches);
+				}
+			}
+			else
+			{
+				log.info("Did not find slot {} utterance {} ", slot.getName(),utterance);
 			}
 		}
 
