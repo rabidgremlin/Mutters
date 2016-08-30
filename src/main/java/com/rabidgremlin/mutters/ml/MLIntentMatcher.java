@@ -128,7 +128,7 @@ public class MLIntentMatcher implements IntentMatcher
 			}
 		}
 
-		return new IntentMatch(bestIntent, matchedSlots);
+		return new IntentMatch(bestIntent, matchedSlots,utterance);
 
 	}
 

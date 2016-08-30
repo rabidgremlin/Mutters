@@ -9,12 +9,14 @@ public class IntentMatch
 
 	private Intent intent;
 	private HashMap<Slot, SlotMatch> slotMatches;
+	private String utterance;
 
-	public IntentMatch(Intent intent, HashMap<Slot, SlotMatch> slotMatches)
+	public IntentMatch(Intent intent, HashMap<Slot, SlotMatch> slotMatches, String utterance)
 	{
 
 		this.intent = intent;
 		this.slotMatches = slotMatches;
+		this.utterance = utterance;
 	}
 
 	public Intent getIntent()
@@ -37,6 +39,11 @@ public class IntentMatch
 			}
 		}
 		return null;
+	}
+
+	public String getUtterance()
+	{
+		return utterance;
 	}
 
 }

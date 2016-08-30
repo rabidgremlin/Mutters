@@ -35,7 +35,7 @@ public class TemplatedIntentMatcher implements IntentMatcher
 			TemplatedUtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
 			if (utteranceMatch.isMatched())
 			{
-				return new IntentMatch(intent, utteranceMatch.getSlotMatches());
+				return new IntentMatch(intent, utteranceMatch.getSlotMatches(),utterance);
 			}
 		}
 
