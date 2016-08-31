@@ -16,6 +16,11 @@ public class SessionUtils
 	{
 		// utility class
 	}
+	
+	public static void removeSlotfromSession(Session session, String slotName)
+	{
+		session.removeAttribute(SLOT_PREFIX + slotName);
+	}
 
 	public static void setReprompt(Session session, String reprompt)
 	{
