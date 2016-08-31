@@ -40,6 +40,15 @@ public class IntentMatch
 		}
 		return null;
 	}
+	
+	public void removeSlotMatch(String slotName)
+	{
+		SlotMatch match = getSlotMatch(slotName);
+		if (match != null)
+		{
+			slotMatches.remove(match.getSlot());
+		}
+	}
 
 	public String getUtterance()
 	{
