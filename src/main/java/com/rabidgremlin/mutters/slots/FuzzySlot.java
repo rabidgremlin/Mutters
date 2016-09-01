@@ -1,8 +1,11 @@
 package com.rabidgremlin.mutters.slots;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-import org.apache.commons.codec.language.Soundex;
+import org.apache.commons.lang3.StringUtils;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
@@ -13,50 +16,41 @@ public class FuzzySlot implements Slot
 
 	private String name;
 
-	private HashMap<String, String> options = new HashMap<String, String>();
+	private List<String> options = new ArrayList<String>();
 
 	public FuzzySlot(String name, String[] options)
 	{
 		this.name = name;
-		for (String option : options)
-		{
-			this.options.put(makeId(option), option);
-		}
+		this.options = Arrays.asList(options);
 	}
 	
-	public FuzzySlot(String name, HashMap<String, String> optionValueMap)
-	{
-		this.name = name;
-		for (String key : optionValueMap.keySet())
-		{
-			this.options.put(makeId(key), optionValueMap.get(key));
-		}
-	}
 	
-
-	// metaphone ignore multi word strings like so need to treat each word as seperate token to make key
-	private String makeId(String token)
-	{
-		String id = "";
-		Soundex soundexr = new Soundex();
-		for (String part : token.split(" "))
-		{
-			id += soundexr.soundex(part);
-		}
-
-		return id;
-	}
+	
 
 	@Override
 	public SlotMatch match(String token, Context context)
 	{
-		String id = makeId(token);
-
-		if (options.containsKey(id))
+		double bestMatchScore = 0;
+		String bestMatch = null;
+		
+		for(String option:options)
 		{
-			return new SlotMatch(this, token, options.get(id));
+			double score = StringUtils.getJaroWinklerDistance(token,option);
+			if (score > bestMatchScore)
+			{
+				bestMatchScore = score;
+				bestMatch = option;
+			}			
 		}
-		return null;
+		
+		if (bestMatchScore > 0.8 && bestMatch != null)
+		{
+			return new SlotMatch(this, token, bestMatch);
+		}
+		else
+		{
+			return null;	
+		}
 	}
 
 	public String getName()

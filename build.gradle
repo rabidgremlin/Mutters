@@ -21,9 +21,8 @@ dependencies {
     compile 'org.apache.opennlp:opennlp-tools:1.6.0'
     compile 'joda-time:joda-time:2.9.4' 
     compile 'com.joestelmach:natty:0.12'    
-    compile 'commons-codec:commons-codec:1.10'
-    
-
+    compile 'commons-codec:commons-codec:1.10'   
+    compile 'org.apache.commons:commons-lang3:3.4'
     
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.21'
