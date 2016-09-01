@@ -11,6 +11,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
+// TODO needs to be optimised
 public class FuzzySlot implements Slot
 {
     
@@ -27,19 +28,20 @@ public class FuzzySlot implements Slot
 	
 	public FuzzySlot(String name, String[] options)
 	{
-		this(name,options,0.99);
+		this(name,options,0.98);
 	}
 	
 
 	@Override
 	public SlotMatch match(String token, Context context)
 	{
+		String lowerToken = token.toLowerCase();
 		double bestMatchScore = 0;
 		String bestMatch = null;
 		
 		for(String option:options)
 		{
-			double score = StringUtils.getJaroWinklerDistance(token,option);
+			double score = StringUtils.getJaroWinklerDistance(lowerToken,option.toLowerCase());
 			if (score > bestMatchScore)
 			{
 				bestMatchScore = score;
