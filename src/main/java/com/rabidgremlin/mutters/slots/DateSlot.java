@@ -15,7 +15,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
-public class DateSlot implements Slot
+public class DateSlot extends Slot
 {
 
 	private String name;

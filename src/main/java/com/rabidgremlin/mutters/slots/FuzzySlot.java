@@ -12,7 +12,7 @@ import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 // TODO needs to be optimised
-public class FuzzySlot implements Slot
+public class FuzzySlot extends Slot
 {
     
 	private String name;

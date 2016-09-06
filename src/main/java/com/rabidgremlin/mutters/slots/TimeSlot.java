@@ -12,7 +12,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
-public class TimeSlot implements Slot
+public class TimeSlot extends Slot
 {
 
 	private String name;

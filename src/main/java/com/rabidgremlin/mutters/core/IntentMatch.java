@@ -45,7 +45,7 @@ public class IntentMatch
 	{
 		SlotMatch match = getSlotMatch(slotName);
 		if (match != null)
-		{
+		{			
 			slotMatches.remove(match.getSlot());
 		}
 	}

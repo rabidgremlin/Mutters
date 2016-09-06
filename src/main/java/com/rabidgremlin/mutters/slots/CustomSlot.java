@@ -6,7 +6,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
-public class CustomSlot implements Slot
+public class CustomSlot extends Slot
 {
 
 	private String name;
@@ -54,5 +54,9 @@ public class CustomSlot implements Slot
 	{
 		return "CustomSlot [name=" + name + ", options=" + options + "]";
 	}
+
+	
+	
+	
 
 }

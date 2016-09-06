@@ -1,6 +1,6 @@
 package com.rabidgremlin.mutters.core;
 
-public class CompoundSlot implements Slot
+public class CompoundSlot extends Slot
 {
 	private String name;
 	private Slot firstSlot;
