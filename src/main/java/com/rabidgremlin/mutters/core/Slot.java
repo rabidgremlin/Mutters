@@ -27,9 +27,10 @@ public abstract class Slot
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Slot) )
 			return false;
-		CustomSlot other = (CustomSlot) obj;
+		
+		Slot other = (Slot) obj;
 		if (getName() == null)
 		{
 			if (other.getName() != null)
