@@ -1,22 +1,38 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:3.1.1'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'maven-publish' 
+apply plugin: 'de.undercouch.download'
 
-version="1.0.0-snapshot"
+version="1.0.1-snapshot"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    compile 'org.apache.opennlp:opennlp-tools:1.6.0'
     compile 'joda-time:joda-time:2.9.4' 
     compile 'com.joestelmach:natty:0.12'    
-    compile 'commons-codec:commons-codec:1.10'
-
+    compile 'commons-codec:commons-codec:1.10'   
+    compile 'org.apache.commons:commons-lang3:3.4'
     
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.21'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
 }
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
 
 
 publishing {
@@ -25,6 +41,76 @@ publishing {
             groupId 'com.rabidgremlin.mutters'
             artifactId 'mutters'
             from components.java
+            
+            artifact sourceJar {
+                classifier "sources"
+            }
         }
     }
+}
+
+
+// build model
+task generateIntentModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = sourceSets.main.runtimeClasspath
+   args = ['DoccatTrainer',
+           '-model',
+           'src/test/resources/models/en-cat-taxi-intents.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/test/resources/models/TaxiBotIntents.txt',
+           '-encoding', 
+           'UTF-8',
+           '-featureGenerators',
+           'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator',
+           '-params',
+           'src/test/resources/models/TaxiBotIntentsParams.txt']
+}
+
+task generateAddressModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = sourceSets.main.runtimeClasspath
+   args = ['TokenNameFinderTrainer',
+           '-model',
+           'src/test/resources/models/en-ner-address.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/test/resources/models/NERAddresses.txt',
+           '-encoding', 
+           'UTF-8',
+           '-params',
+           'src/test/resources/models/NERAddressesParams.txt']
+}
+
+
+// these snippets from https://github.com/spinscale/elasticsearch-ingest-opennlp
+
+// download the models before the tests are run, also needed for packaging
+project.afterEvaluate {
+  processTestResources.dependsOn downloadModels
+  processTestResources.dependsOn generateIntentModel
+  processTestResources.dependsOn generateAddressModel
+}
+
+// download the models but dont overwrite existing ones
+task downloadModels << {  
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin',   'en-ner-persons.bin')
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-location.bin', 'en-ner-locations.bin')
+  downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-date.bin',     'en-ner-dates.bin')
+}
+
+def downloadIfNotExists(String url, String file) {
+  String dir = 'src' + File.separator + 'test' + File.separator + 'resources' + File.separator + 'models'
+     
+  //print(new File(dir).getAbsolutePath())
+  new File(dir).mkdirs()
+  if (new File(dir + File.separator + file).exists() == false) {
+    download {
+      src url
+      dest new File(dir, file)
+    }
+  }
 }

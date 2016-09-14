@@ -9,13 +9,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rabidgremlin.mutters.core.Utterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 public class UtteranceGenerator
 {
 	private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");
 
-	public List<Utterance> generate(String template)
+	public List<TemplatedUtterance> generate(String template)
 	{
 		Matcher match = matchPattern.matcher(template);
 
@@ -49,10 +49,10 @@ public class UtteranceGenerator
 
 		// System.out.println(templates);
 
-		List<Utterance> utterances = new ArrayList<Utterance>();
+		List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
 		for (List<String> templateParts : templates)
 		{
-			utterances.add(new Utterance(StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
+			utterances.add(new TemplatedUtterance(StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
 		}
 
 		return utterances;

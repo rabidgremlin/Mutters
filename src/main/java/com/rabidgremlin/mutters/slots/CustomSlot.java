@@ -1,8 +1,12 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.slots;
 
 import java.util.HashMap;
 
-public class CustomSlot implements Slot
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
+
+public class CustomSlot extends Slot
 {
 
 	private String name;
@@ -50,5 +54,9 @@ public class CustomSlot implements Slot
 	{
 		return "CustomSlot [name=" + name + ", options=" + options + "]";
 	}
+
+	
+	
+	
 
 }

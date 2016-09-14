@@ -11,14 +11,14 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.CustomSlot;
 import com.rabidgremlin.mutters.core.InputCleaner;
-import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestUtterance
@@ -27,13 +27,13 @@ public class TestUtterance
 	@Test
 	public void testSimpleMatch()
 	{
-		Utterance utterance = new Utterance("What's the time");
+		TemplatedUtterance utterance = new TemplatedUtterance("What's the time");
 
 		CleanedInput input = InputCleaner.cleanInput("What's the time");
 		Slots slots = new Slots();
 		Context context = new Context();
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -43,13 +43,13 @@ public class TestUtterance
 	@Test
 	public void testSimpleNotMatch()
 	{
-		Utterance utterance = new Utterance("This is that and that is this");
+		TemplatedUtterance utterance = new TemplatedUtterance("This is that and that is this");
 
 		CleanedInput input = InputCleaner.cleanInput("This is really not all that");
 		Slots slots = new Slots();
 		Context context = new Context();
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(false));
@@ -59,7 +59,7 @@ public class TestUtterance
 	@Test
 	public void testSimpleSlotMatch()
 	{
-		Utterance utterance = new Utterance("I like {Color}");
+		TemplatedUtterance utterance = new TemplatedUtterance("I like {Color}");
 
 		CleanedInput input = InputCleaner.cleanInput("I Like red");
 		Slots slots = new Slots();
@@ -70,7 +70,7 @@ public class TestUtterance
 
 		// System.out.println(color);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -85,7 +85,7 @@ public class TestUtterance
 	@Test
 	public void testSimpleNotSlotMatch()
 	{
-		Utterance utterance = new Utterance("I like {Color}");
+		TemplatedUtterance utterance = new TemplatedUtterance("I like {Color}");
 
 		CleanedInput input = InputCleaner.cleanInput("I Like pink");
 		Slots slots = new Slots();
@@ -94,7 +94,7 @@ public class TestUtterance
 		CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
 		slots.add(color);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(false));
@@ -104,7 +104,7 @@ public class TestUtterance
 	@Test
 	public void testMultiSlotMatch()
 	{
-		Utterance utterance = new Utterance("I like {Color} and {Food}");
+		TemplatedUtterance utterance = new TemplatedUtterance("I like {Color} and {Food}");
 
 		CleanedInput input = InputCleaner.cleanInput("I like red and grapes");
 		Slots slots = new Slots();
@@ -116,7 +116,7 @@ public class TestUtterance
 		CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
 		slots.add(food);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -136,7 +136,7 @@ public class TestUtterance
 	@Test
 	public void testMultiSlotNotMatch()
 	{
-		Utterance utterance = new Utterance("I like {Color} and {Food}");
+		TemplatedUtterance utterance = new TemplatedUtterance("I like {Color} and {Food}");
 
 		CleanedInput input = InputCleaner.cleanInput("I like red and burgers");
 		Slots slots = new Slots();
@@ -148,7 +148,7 @@ public class TestUtterance
 		CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
 		slots.add(food);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(false));
@@ -158,7 +158,7 @@ public class TestUtterance
 	@Test
 	public void testMultiWordSlotMatch()
 	{
-		Utterance utterance = new Utterance("What is the time in {City}");
+		TemplatedUtterance utterance = new TemplatedUtterance("What is the time in {City}");
 
 		CleanedInput input = InputCleaner.cleanInput("What is the time in San francisco");
 		Slots slots = new Slots();
@@ -167,7 +167,7 @@ public class TestUtterance
 		CustomSlot color = new CustomSlot("City", new String[] { "Wellington", "San Francisco", "Auckland" });
 		slots.add(color);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -183,7 +183,7 @@ public class TestUtterance
 	@Test
 	public void testSingleWordMatch()
 	{
-		Intent intent = new Intent("YesIntent");
+		TemplatedIntent intent = new TemplatedIntent("YesIntent");
 
 //		intent.addUtterance(new Utterance("yes"));
 //		intent.addUtterance(new Utterance("yes please"));
@@ -192,12 +192,12 @@ public class TestUtterance
 //		intent.addUtterance(new Utterance("yep"));
 //		intent.addUtterance(new Utterance("Y"));
 //		intent.addUtterance(new Utterance("Ok"));
-		intent.addUtterance(new Utterance("K"));
+		intent.addUtterance(new TemplatedUtterance("K"));
 		
 		CleanedInput input = InputCleaner.cleanInput("Kia Ora");		
 		Context context = new Context();
 		
-		UtteranceMatch match = intent.matches(input, context);
+		TemplatedUtteranceMatch match = intent.matches(input, context);
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(false));
 	}

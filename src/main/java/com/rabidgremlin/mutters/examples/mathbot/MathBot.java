@@ -1,14 +1,15 @@
 package com.rabidgremlin.mutters.examples.mathbot;
 
 import com.rabidgremlin.mutters.bot.AbstractBot;
-import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.core.NumberSlot;
-import com.rabidgremlin.mutters.core.Utterance;
+import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.state.Guard;
 import com.rabidgremlin.mutters.state.PreEventAction;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.state.StateMachine;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 public class MathBot extends AbstractBot
 {
@@ -16,7 +17,7 @@ public class MathBot extends AbstractBot
 	@Override
 	public IntentMatcher setUpIntents()
 	{
-		IntentMatcher matcher = new IntentMatcher();
+		TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
 
 		matcher.addIntent(createAdditionIntent());
 		matcher.addIntent(createNumberIntent());
@@ -26,23 +27,23 @@ public class MathBot extends AbstractBot
 	}
 	
 	
-	private Intent createAdditionIntent()
+	private TemplatedIntent createAdditionIntent()
 	{
-		Intent additionIntent = new Intent("Addition");
+		TemplatedIntent additionIntent = new TemplatedIntent("Addition");
 
-		additionIntent.addUtterance(new Utterance("What's {number1} + {number2}"));
-		additionIntent.addUtterance(new Utterance("What's {number1} plus {number2}"));
-		additionIntent.addUtterance(new Utterance("What is {number1} + {number2}"));
-		additionIntent.addUtterance(new Utterance("What is {number1} plus {number2}"));
-		additionIntent.addUtterance(new Utterance("Whats {number1} + {number2}"));
-		additionIntent.addUtterance(new Utterance("Whats {number1} plus {number2}"));
-		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
-		additionIntent.addUtterance(new Utterance("Add {number1} to {number2}"));
-		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
-		additionIntent.addUtterance(new Utterance("{number1} + {number2}"));		
+		additionIntent.addUtterance(new TemplatedUtterance("What's {number1} + {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("What's {number1} plus {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("What is {number1} + {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("What is {number1} plus {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} + {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} plus {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Add {number1} and {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Add {number1} to {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("{number1} plus {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("{number1} + {number2}"));		
 		// TODO tweak Utterance so it can handle tokens not separated by spaces
 		// additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
-		additionIntent.addUtterance(new Utterance("Add {number1}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Add {number1}"));
 		
 
 		NumberSlot number1 = new NumberSlot("number1");
@@ -54,11 +55,11 @@ public class MathBot extends AbstractBot
 		return additionIntent;
 	}
 
-	private Intent createNumberIntent()
+	private TemplatedIntent createNumberIntent()
 	{
-		Intent numberIntent = new Intent("Number");
+		TemplatedIntent numberIntent = new TemplatedIntent("Number");
 
-		numberIntent.addUtterance(new Utterance("{number}"));
+		numberIntent.addUtterance(new TemplatedUtterance("{number}"));
 
 		NumberSlot number = new NumberSlot("number");
 		numberIntent.addSlot(number);
@@ -66,13 +67,13 @@ public class MathBot extends AbstractBot
 		return numberIntent;
 	}
 
-	private Intent createGenerateGraphIntent()
+	private TemplatedIntent createGenerateGraphIntent()
 	{
-		Intent graphIntent = new Intent("GenerateGraph");
+		TemplatedIntent graphIntent = new TemplatedIntent("GenerateGraph");
 
-		graphIntent.addUtterance(new Utterance("dump graph"));
-		graphIntent.addUtterance(new Utterance("show graph"));
-		graphIntent.addUtterance(new Utterance("graph"));
+		graphIntent.addUtterance(new TemplatedUtterance("dump graph"));
+		graphIntent.addUtterance(new TemplatedUtterance("show graph"));
+		graphIntent.addUtterance(new TemplatedUtterance("graph"));
 
 		return graphIntent;
 	}

@@ -1,20 +1,23 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.templated;
 
 import java.util.HashMap;
 
-public class UtteranceMatch
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
+
+public class TemplatedUtteranceMatch
 {
 
 	private boolean matched;
 	private HashMap<Slot, SlotMatch> slotMatches;
 
-	public UtteranceMatch(boolean matched)
+	public TemplatedUtteranceMatch(boolean matched)
 	{
 		this.matched = matched;
 		this.slotMatches = new HashMap<Slot, SlotMatch>();
 	}
 
-	public UtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
+	public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
 	{
 		this.matched = matched;
 		this.slotMatches = slotMatches;

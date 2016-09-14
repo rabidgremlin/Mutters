@@ -14,13 +14,13 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.DateSlot;
-import com.rabidgremlin.mutters.core.DateTimeSlot;
 import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.slots.DateSlot;
+import com.rabidgremlin.mutters.slots.DateTimeSlot;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestDateTimeSlot
@@ -29,7 +29,7 @@ public class TestDateTimeSlot
 	@Test
 	public void testBasicMatch()
 	{
-		Utterance utterance = new Utterance("for the {datetime}");
+		TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
 
 		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
@@ -38,7 +38,7 @@ public class TestDateTimeSlot
 		DateTimeSlot slot = new DateTimeSlot("datetime");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -53,7 +53,7 @@ public class TestDateTimeSlot
 	@Test
 	public void testMatchWithTimeZone()
 	{
-		Utterance utterance = new Utterance("for the {datetime}");
+		TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
 
 		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
 		Slots slots = new Slots();
@@ -63,7 +63,7 @@ public class TestDateTimeSlot
 		DateTimeSlot slot = new DateTimeSlot("datetime");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -78,7 +78,7 @@ public class TestDateTimeSlot
 	@Test
 	public void testLastWeek()
 	{
-		Utterance utterance = new Utterance("Give me the report for {date}");
+		TemplatedUtterance utterance = new TemplatedUtterance("Give me the report for {date}");
 
 		CleanedInput input = InputCleaner.cleanInput("Give me the report for last week");
 		Slots slots = new Slots();
@@ -87,7 +87,7 @@ public class TestDateTimeSlot
 		DateSlot slot = new DateSlot("date");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));

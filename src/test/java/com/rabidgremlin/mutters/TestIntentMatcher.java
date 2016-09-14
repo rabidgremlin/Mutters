@@ -6,16 +6,14 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
-import com.rabidgremlin.mutters.core.Utterance;
-
-
+import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.TemplatedIntent;
+import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.CustomSlot;
 
 public class TestIntentMatcher
 {
@@ -23,12 +21,12 @@ public class TestIntentMatcher
 	@Test
 	public void testBasicMatching()
 	{
-		Intent additionIntent = new Intent("Addition");
+		TemplatedIntent additionIntent = new TemplatedIntent("Addition");
 
-		additionIntent.addUtterance(new Utterance("What's {number1} + {number2}"));
-		additionIntent.addUtterance(new Utterance("What is {number1} + {number2}"));
-		additionIntent.addUtterance(new Utterance("Add {number1} and {number2}"));
-		additionIntent.addUtterance(new Utterance("{number1} plus {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("What's {number1} + {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("What is {number1} + {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("Add {number1} and {number2}"));
+		additionIntent.addUtterance(new TemplatedUtterance("{number1} plus {number2}"));
 
 		NumberSlot number1 = new NumberSlot("number1");
 		NumberSlot number2 = new NumberSlot("number2");
@@ -36,7 +34,7 @@ public class TestIntentMatcher
 		additionIntent.addSlot(number1);
 		additionIntent.addSlot(number2);
 
-		IntentMatcher matcher = new IntentMatcher();
+		TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
 		matcher.addIntent(additionIntent);
 
 		IntentMatch intentMatch = matcher.match("What is 1 + 5", new Context());
@@ -58,13 +56,13 @@ public class TestIntentMatcher
 	@Test
 	public void testBrokenMatch()
 	{
-		Intent intent = new Intent("Hello");
+		TemplatedIntent intent = new TemplatedIntent("Hello");
 
-		intent.addUtterance(new Utterance("hello"));
-		intent.addUtterance(new Utterance("hi"));
-		intent.addUtterance(new Utterance("hiya"));
+		intent.addUtterance(new TemplatedUtterance("hello"));
+		intent.addUtterance(new TemplatedUtterance("hi"));
+		intent.addUtterance(new TemplatedUtterance("hiya"));
 		
-		IntentMatcher matcher = new IntentMatcher();
+		TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
 		matcher.addIntent(intent);
 		
 		IntentMatch intentMatch = matcher.match("book this flight", new Context());
@@ -75,14 +73,14 @@ public class TestIntentMatcher
 	@Test
 	public void testBrokenAirportMatch()
 	{
-		Intent intent = new Intent("GetAirport");
-		intent.addUtterance(new Utterance("{Airport}"));
+		TemplatedIntent intent = new TemplatedIntent("GetAirport");
+		intent.addUtterance(new TemplatedUtterance("{Airport}"));
 
 		CustomSlot airportSlot = new CustomSlot("Airport", new String[]{"NEWCASTLE"});
 		intent.addSlot(airportSlot);
 		
 
-		IntentMatcher matcher = new IntentMatcher();
+		TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
 		matcher.addIntent(intent);
 		
 		IntentMatch intentMatch = matcher.match("next friday", new Context());

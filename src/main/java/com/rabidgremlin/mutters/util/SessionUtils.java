@@ -10,11 +10,16 @@ import com.rabidgremlin.mutters.session.Session;
 public class SessionUtils
 {
 
-	private static final String SLOT_PREFIX = "SLOT_JLA1974_";
+	public static final String SLOT_PREFIX = "SLOT_JLA1974_";
 
 	protected SessionUtils()
 	{
 		// utility class
+	}
+	
+	public static void removeSlotfromSession(Session session, String slotName)
+	{
+		session.removeAttribute(SLOT_PREFIX + slotName);
 	}
 
 	public static void setReprompt(Session session, String reprompt)

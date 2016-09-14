@@ -1,8 +1,12 @@
-package com.rabidgremlin.mutters.core;
+package com.rabidgremlin.mutters.slots;
+
+import com.rabidgremlin.mutters.core.Context;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
 
 // very rough code
 //TODO clean up
-public class NumberSlot implements Slot
+public class NumberSlot extends Slot
 {
 
 	private String name;

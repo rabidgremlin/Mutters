@@ -17,6 +17,11 @@ public class Session implements Serializable
 	{
 		attributes.put(attributeName.toLowerCase(), value);
 	}
+	
+	public void removeAttribute(String attributeName)
+	{
+		attributes.remove(attributeName.toLowerCase());
+	}
 
 	public void reset()
 	{

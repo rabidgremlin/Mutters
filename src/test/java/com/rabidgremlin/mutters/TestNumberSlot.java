@@ -7,12 +7,12 @@ import org.junit.Test;
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.InputCleaner;
-import com.rabidgremlin.mutters.core.LiteralSlot;
-import com.rabidgremlin.mutters.core.NumberSlot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.core.Utterance;
-import com.rabidgremlin.mutters.core.UtteranceMatch;
+import com.rabidgremlin.mutters.slots.LiteralSlot;
+import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.TemplatedUtterance;
+import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 import com.rabidgremlin.mutters.util.Utils;
 
 public class TestNumberSlot
@@ -21,7 +21,7 @@ public class TestNumberSlot
 	@Test
 	public void testBasicWordMatch()
 	{
-		Utterance utterance = new Utterance("The balance is {number}");
+		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
 		CleanedInput input = InputCleaner.cleanInput("The balance is One hundred two thousand and thirty four");
 		Slots slots = new Slots();
@@ -30,7 +30,7 @@ public class TestNumberSlot
 		NumberSlot slot = new NumberSlot("number");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -58,7 +58,7 @@ public class TestNumberSlot
 	@Test
 	public void testBasicNumberMatch()
 	{
-		Utterance utterance = new Utterance("The balance is {number}");
+		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
 		CleanedInput input = InputCleaner.cleanInput("The balance is 123");
 		Slots slots = new Slots();
@@ -67,7 +67,7 @@ public class TestNumberSlot
 		NumberSlot slot = new NumberSlot("number");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
@@ -82,7 +82,7 @@ public class TestNumberSlot
 	@Test
 	public void testBasicDecimalMatch()
 	{
-		Utterance utterance = new Utterance("The balance is {number}");
+		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
 		CleanedInput input = InputCleaner.cleanInput("The balance is 546.12");
 		Slots slots = new Slots();
@@ -91,7 +91,7 @@ public class TestNumberSlot
 		NumberSlot slot = new NumberSlot("number");
 		slots.add(slot);
 
-		UtteranceMatch match = utterance.matches(input, slots, context);
+		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
 		assertThat(match, is(notNullValue()));
 		assertThat(match.isMatched(), is(true));
