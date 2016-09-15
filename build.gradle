@@ -23,7 +23,9 @@ dependencies {
     compile 'com.joestelmach:natty:0.12'    
     compile 'commons-codec:commons-codec:1.10'   
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.bladecoder.ink:blade-ink:0.1.1'
+    compile 'com.bladecoder.ink:blade-ink:0.1.1'    
+    compile 'commons-io:commons-io:2.5'
+    
     
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.21'

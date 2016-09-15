@@ -3,6 +3,7 @@ package com.rabidgremlin.mutters.util;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import com.bladecoder.ink.runtime.StoryState;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.session.Session;
@@ -16,7 +17,7 @@ public class SessionUtils
 	{
 		// utility class
 	}
-	
+
 	public static void removeSlotfromSession(Session session, String slotName)
 	{
 		session.removeAttribute(SLOT_PREFIX + slotName);
@@ -29,9 +30,37 @@ public class SessionUtils
 
 	public static String getReprompt(Session session)
 	{
-		return (String)session.getAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890");
+		return (String) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890");
 	}
-	
+
+	public static void saveInkStoryState(Session session, StoryState storyState)
+	{
+		try
+		{
+			session.setAttribute(SLOT_PREFIX + "0987654321STORYSTATE1234567890", storyState.toJson());
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Unexpected error. Failed to save story state", e);
+		}
+	}
+
+	public static void loadInkStoryState(Session session, StoryState storyState)
+	{
+		try
+		{
+			String stateJson = (String) session.getAttribute(SLOT_PREFIX + "0987654321STORYSTATE1234567890");
+			if (stateJson != null)
+			{
+				storyState.loadJson(stateJson);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Unexpected error. Failed to load story state", e);
+		}
+	}
+
 	public static void setRepromptHint(Session session, String repromptHint)
 	{
 		session.setAttribute(SLOT_PREFIX + "0987654321REPROMPTHINT1234567890", repromptHint);
@@ -39,7 +68,7 @@ public class SessionUtils
 
 	public static String getRepromptHint(Session session)
 	{
-		return (String)session.getAttribute(SLOT_PREFIX + "0987654321REPROMPTHINT1234567890");
+		return (String) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPTHINT1234567890");
 	}
 
 	public static void setNumberSlotIntoSession(Session session, String slotName, Number value)
