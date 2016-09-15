@@ -1,3 +1,3 @@
 == cancel_taxi ==
-Cancel taxi here
+Your taxi has been cancelled
 -> END
