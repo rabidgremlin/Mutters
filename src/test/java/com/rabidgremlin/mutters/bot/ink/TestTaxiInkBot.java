@@ -1,4 +1,4 @@
-package com.rabidgremlin.mutters.bot;
+package com.rabidgremlin.mutters.bot.ink;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.util.SessionUtils;
@@ -13,14 +14,14 @@ import com.rabidgremlin.mutters.util.SessionUtils;
 import java.util.List;
 import java.util.Arrays;
 
-public class TestTaxiBot
+public class TestTaxiInkBot
 {
-	private static TaxiBot taxiBot; 
+	private static TaxiInkBot taxiBot; 
 	
 	@BeforeClass
 	public static void setUpBot()
 	{
-		taxiBot = new TaxiBot();
+		taxiBot = new TaxiInkBot();
 	}
 	
 	@Test

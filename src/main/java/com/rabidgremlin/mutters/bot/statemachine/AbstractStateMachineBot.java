@@ -1,10 +1,12 @@
-package com.rabidgremlin.mutters.bot;
+package com.rabidgremlin.mutters.bot.statemachine;
 
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rabidgremlin.mutters.bot.Bot;
+import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -13,19 +15,23 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.StateMachine;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public abstract class AbstractBot
+public abstract class AbstractStateMachineBot implements Bot
 {
-	private Logger log = LoggerFactory.getLogger(AbstractBot.class);
+	private Logger log = LoggerFactory.getLogger(AbstractStateMachineBot.class);
 	protected IntentMatcher matcher;
 	protected StateMachine stateMachine;
 	protected String defaultResponse = "Pardon?";
 
-	public AbstractBot()
+	public AbstractStateMachineBot()
 	{
 		matcher = setUpIntents();
 		stateMachine = setUpStateMachine();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session, com.rabidgremlin.mutters.core.Context, java.lang.String)
+	 */
+	@Override
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
 		log.debug("session: {} context: {} messageText: {}", new Object[] { session, context, messageText });

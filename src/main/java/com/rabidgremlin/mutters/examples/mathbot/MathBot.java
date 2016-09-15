@@ -1,6 +1,6 @@
 package com.rabidgremlin.mutters.examples.mathbot;
 
-import com.rabidgremlin.mutters.bot.AbstractBot;
+import com.rabidgremlin.mutters.bot.statemachine.AbstractStateMachineBot;
 import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.state.Guard;
@@ -11,7 +11,7 @@ import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
-public class MathBot extends AbstractBot
+public class MathBot extends AbstractStateMachineBot
 {
 
 	@Override

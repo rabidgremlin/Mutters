@@ -1,4 +1,4 @@
-package com.rabidgremlin.mutters.bot;
+package com.rabidgremlin.mutters.bot.statemachine;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.session.Session;
