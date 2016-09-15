@@ -1,4 +1,5 @@
 VAR address=""
+VAR taxiNo = ""
 
 == order_taxi ==
 
@@ -7,7 +8,7 @@ VAR address=""
 {
   - address == "":
     -> request_address
-  else:
+  - else:
     -> order_the_taxi
 }
 -> END
@@ -19,5 +20,5 @@ What is the pick up address ?
   
 = order_the_taxi  
 :ORDER_TAXI
-Taxi {address} is on its way
+Taxi {taxiNo} is on its way
 -> END  
