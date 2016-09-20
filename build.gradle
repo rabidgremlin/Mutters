@@ -14,6 +14,9 @@ apply plugin: 'de.undercouch.download'
 version="1.0.1-snapshot"
 
 repositories {
+    flatDir {
+       dirs 'libs'
+    }
     mavenCentral()
 }
 
@@ -23,7 +26,8 @@ dependencies {
     compile 'com.joestelmach:natty:0.12'    
     compile 'commons-codec:commons-codec:1.10'   
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.bladecoder.ink:blade-ink:0.1.1'    
+    //compile 'com.bladecoder.ink:blade-ink:0.1.1'
+    compile name:'blade-ink-0.1.2-SNAPSHOT'     
     compile 'commons-io:commons-io:2.5'
     
     

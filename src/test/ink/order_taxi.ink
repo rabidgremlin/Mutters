@@ -15,7 +15,7 @@ VAR taxiNo = ""
 
 = request_address
 What is the pick up address ?
-+ GetAddress
++ GaveAddress
 - -> order_taxi_loop
   
 = order_the_taxi  

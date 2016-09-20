@@ -22,7 +22,7 @@ import com.rabidgremlin.mutters.util.SessionUtils;
 
 public abstract class AbstractInkBot implements Bot
 {
-	private Logger log = LoggerFactory.getLogger(AbstractStateMachineBot.class);
+	private Logger log = LoggerFactory.getLogger(AbstractInkBot.class);
 	protected IntentMatcher matcher;
 	protected String inkStoryJson;
 	protected String defaultResponse = "Pardon?";
@@ -41,7 +41,7 @@ public abstract class AbstractInkBot implements Bot
 	@Override
 	public BotResponse respond(Session session, Context context, String messageText)
 	{
-		log.info("session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
+		log.info("============================================================== \n session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
 
 		// set up default response in case bot has issue processing input
 		String responseText = SessionUtils.getReprompt(session);
@@ -77,18 +77,27 @@ public abstract class AbstractInkBot implements Bot
 			if (intentMatch != null)
 			{
 				// get to write place in story
-				while (story.canContinue())
-				{
-					log.info("Skipping {}", story.Continue());
-				}
+				
+				story.continueMaximally();
+				
+				//while (story.canContinue())
+				//{
+				//	log.info("Skipping {}", story.Continue());
+				//}
+				
+				//log.info("B Path:" + story.buildStringOfHierarchy());
+				//story.Continue();
+				//log.info("A Path:" + story.buildStringOfHierarchy());
 
 				if (story.getCurrentChoices().size() > 0)
 				{
 					int choiceIndex = 0;
 					for (Choice c : story.getCurrentChoices())
 					{
+						log.info("Checking choice:" + c.getText());
 						if (StringUtils.equalsIgnoreCase(intentMatch.getIntent().getName(), c.getText()))
 						{
+							log.info("Choosing:" + c.getText());
 							story.chooseChoiceIndex(choiceIndex);
 							break;
 						}
