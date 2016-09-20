@@ -1,18 +1,13 @@
 package com.rabidgremlin.mutters.bot.ink;
 
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-
-import com.rabidgremlin.mutters.bot.statemachine.AbstractStateMachineBot;
+import com.bladecoder.ink.runtime.Story;
+import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.examples.mathbot.StartState;
 import com.rabidgremlin.mutters.ml.MLIntent;
 import com.rabidgremlin.mutters.ml.MLIntentMatcher;
+import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.slots.LiteralSlot;
-import com.rabidgremlin.mutters.state.Guard;
-import com.rabidgremlin.mutters.state.State;
-import com.rabidgremlin.mutters.state.StateMachine;
+import com.rabidgremlin.mutters.util.SessionUtils;
 
 public class TaxiInkBot extends AbstractInkBot
 {
@@ -43,16 +38,27 @@ public class TaxiInkBot extends AbstractInkBot
 	@Override
 	public String getStoryJson()
 	{
-		try
+		return loadStoryJsonFromClassPath("taxibot.ink.json");
+	}
+
+	@Override
+	public void setUpFunctions()
+	{		
+		addFunction("ORDER_TAXI", new InkBotFunction()
 		{
-			InputStream inkJsonStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("taxibot.ink.json");
-			
-			return IOUtils.toString(inkJsonStream,"UTF-8").replace('\uFEFF', ' ');
-		}
-		catch (Exception e)
-		{
-			throw new IllegalStateException("Failed to load ink json.", e);
-		}
+			@Override
+			public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+			{	
+				try
+				{
+					story.getVariablesState().set("taxiNo", Integer.toHexString(SessionUtils.getStringFromSlotOrSession(intentMatch, session, "address", "").hashCode()).substring(0, 4));
+				}
+				catch (Exception e)
+				{					
+					throw new RuntimeException("Unable to set taxi no",e);
+				}
+			}
+		}); 	
 	}
 
 }
