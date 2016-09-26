@@ -8,10 +8,10 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'maven-publish' 
+apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'de.undercouch.download'
 
-version="1.0.1-snapshot"
 
 repositories {   
     mavenCentral()
@@ -30,26 +30,6 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.21'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
-}
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-}
-
-
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId 'com.rabidgremlin.mutters'
-            artifactId 'mutters'
-            from components.java
-            
-            artifact sourceJar {
-                classifier "sources"
-            }
-        }
-    }
 }
 
 
@@ -114,6 +94,76 @@ def downloadIfNotExists(String url, String file) {
     download {
       src url
       dest new File(dir, file)
+    }
+  }
+}
+
+// Maven publication
+group = 'com.rabidgremlin'
+archivesBaseName = 'mutters'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+// only sign if we doing a release AND we are uploading
+// allows devs to gradle build or gradle install without PGP keys etc 
+def isReleaseVersion = !version.endsWith("SNAPSHOT")
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask(uploadArchives) }
+    sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Mutters'
+        packaging 'jar'
+        description 'A framework for building bots.'
+        url 'https://github.com/rabidgremlin/Mutters'
+
+        scm {
+          connection 'scm:git:https://github.com/rabidgremlin/Mutters'
+          developerConnection 'scm:git:https://github.com/rabidgremlin/Mutters'
+          url 'https://github.com/rabidgremlin/Mutters'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'rabidgremlin'
+            name 'Jonathan Ackerman'
+            email 'jack@rabidgremlin.com'
+          }
+        }
+      }
     }
   }
 }
