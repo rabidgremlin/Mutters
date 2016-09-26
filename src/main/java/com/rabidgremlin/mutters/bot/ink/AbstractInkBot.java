@@ -103,6 +103,8 @@ public abstract class AbstractInkBot implements Bot
 		{
 			// TODO is this efficent or do we need ThreadLocals ?
 			Story story = new Story(inkStoryJson);
+			afterStoryCreated(story);
+			
 			SessionUtils.loadInkStoryState(session, story.getState());
 
 			IntentMatch intentMatch = matcher.match(messageText, context);
@@ -251,5 +253,10 @@ public abstract class AbstractInkBot implements Bot
 	public abstract String getStoryJson();
 
 	public abstract void setUpFunctions();
+	
+	protected void afterStoryCreated(Story story)
+	{
+		// do nothing
+	}
 
 }
