@@ -103,20 +103,25 @@ public abstract class AbstractInkBot implements Bot
 		{
 			// TODO is this efficent or do we need ThreadLocals ?
 			Story story = new Story(inkStoryJson);
+			
+			// call hook so externs and other things can be applied
 			afterStoryCreated(story);
 			
 			SessionUtils.loadInkStoryState(session, story.getState());
 
 			IntentMatch intentMatch = matcher.match(messageText, context);
-
-			for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
-			{
-				// TODO do handle dates etc
-				story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
-			}
-
+					
 			if (intentMatch != null)
 			{
+				// call after match hook, allows fixups to be applied
+				afterIntentMatch(intentMatch, session, story);
+
+				// copy any slot values into ink vars 
+				for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
+				{					
+					story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
+				}				
+				
 				// get to right place in story
 				story.continueMaximally();
 
@@ -255,6 +260,11 @@ public abstract class AbstractInkBot implements Bot
 	public abstract void setUpFunctions();
 	
 	protected void afterStoryCreated(Story story)
+	{
+		// do nothing
+	}
+	
+	protected void afterIntentMatch(IntentMatch intentMatch, Session session, Story story)
 	{
 		// do nothing
 	}
