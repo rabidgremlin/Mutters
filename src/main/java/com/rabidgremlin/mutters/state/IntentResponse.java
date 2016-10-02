@@ -6,92 +6,97 @@ import java.util.Map;
 public class IntentResponse
 {
 
-	private boolean sessionEnded;
-	private String response;
-	private String reprompt;
-	private String hint;
-	private String action;
-	private Map<String, Object> actionParams;
+  private boolean sessionEnded;
 
-	public static IntentResponse newAskResponse(String response)
-	{
-		return new IntentResponse(false, response, null, null, null, null);
-	}
-	
-	public static IntentResponse newAskResponse(String response,String reprompt)
-	{
-		return new IntentResponse(false, response, reprompt, null, null, null);
-	}
-	
-	public static IntentResponse newAskResponse(String response,String reprompt, String hint)
-	{
-		return new IntentResponse(false, response, reprompt, hint, null, null);
-	}
+  private String response;
 
-	public static IntentResponse newAskResponse(String response, String action, Map<String, Object> actionParams)
-	{
-		return new IntentResponse(false, response, null, null, action, actionParams);
-	}
-	
-	public static IntentResponse newAskResponse(String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
-	{
-		return new IntentResponse(false, response, null, null, action, actionParams);
-	}
+  private String reprompt;
 
-	public static IntentResponse newTellResponse(String response)
-	{
-		return new IntentResponse(true, response, null, null, null, null);
-	}
+  private String hint;
 
-	public static IntentResponse newTellResponse(String response, String action, Map<String, Object> actionParams)
-	{
-		return new IntentResponse(true, response, null, null,action, actionParams);
-	}
+  private String action;
 
-	public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
-	{
+  private Map<String, Object> actionParams;
 
-		this.sessionEnded = sessionEnded;
-		this.response = response;
-		this.reprompt = reprompt;
-		this.hint = hint;
-		this.action = action;
-		this.actionParams = actionParams;
-	}
+  public static IntentResponse newAskResponse(String response)
+  {
+    return new IntentResponse(false, response, null, null, null, null);
+  }
 
-	public boolean isSessionEnded()
-	{
-		return sessionEnded;
-	}
+  public static IntentResponse newAskResponse(String response, String reprompt)
+  {
+    return new IntentResponse(false, response, reprompt, null, null, null);
+  }
 
-	public String getResponse()
-	{
-		return response;
-	}
+  public static IntentResponse newAskResponse(String response, String reprompt, String hint)
+  {
+    return new IntentResponse(false, response, reprompt, hint, null, null);
+  }
 
-	public String getAction()
-	{
-		return action;
-	}
+  public static IntentResponse newAskResponse(String response, String action, Map<String, Object> actionParams)
+  {
+    return new IntentResponse(false, response, null, null, action, actionParams);
+  }
 
-	public Map<String, Object> getActionParams()
-	{
-		if (actionParams == null)
-		{
-			return null;
-		}
+  public static IntentResponse newAskResponse(String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
+  {
+    return new IntentResponse(false, response, null, null, action, actionParams);
+  }
 
-		return Collections.unmodifiableMap(actionParams);
-	}
+  public static IntentResponse newTellResponse(String response)
+  {
+    return new IntentResponse(true, response, null, null, null, null);
+  }
 
-	public String getReprompt()
-	{
-		return reprompt;
-	}
+  public static IntentResponse newTellResponse(String response, String action, Map<String, Object> actionParams)
+  {
+    return new IntentResponse(true, response, null, null, action, actionParams);
+  }
 
-	public String getHint()
-	{
-		return hint;
-	}
+  public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
+  {
+
+    this.sessionEnded = sessionEnded;
+    this.response = response;
+    this.reprompt = reprompt;
+    this.hint = hint;
+    this.action = action;
+    this.actionParams = actionParams;
+  }
+
+  public boolean isSessionEnded()
+  {
+    return sessionEnded;
+  }
+
+  public String getResponse()
+  {
+    return response;
+  }
+
+  public String getAction()
+  {
+    return action;
+  }
+
+  public Map<String, Object> getActionParams()
+  {
+    if (actionParams == null)
+    {
+      return null;
+    }
+
+    return Collections.unmodifiableMap(actionParams);
+  }
+
+  public String getReprompt()
+  {
+    return reprompt;
+  }
+
+  public String getHint()
+  {
+    return hint;
+  }
 
 }

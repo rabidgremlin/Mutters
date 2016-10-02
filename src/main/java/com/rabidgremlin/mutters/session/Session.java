@@ -3,35 +3,36 @@ package com.rabidgremlin.mutters.session;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class Session implements Serializable
+public class Session
+    implements Serializable
 {
 
-	private HashMap<String, Object> attributes = new HashMap<String, Object>();
+  private HashMap<String, Object> attributes = new HashMap<String, Object>();
 
-	public Object getAttribute(String attributeName)
-	{
-		return attributes.get(attributeName.toLowerCase());
-	}
+  public Object getAttribute(String attributeName)
+  {
+    return attributes.get(attributeName.toLowerCase());
+  }
 
-	public void setAttribute(String attributeName, Object value)
-	{
-		attributes.put(attributeName.toLowerCase(), value);
-	}
-	
-	public void removeAttribute(String attributeName)
-	{
-		attributes.remove(attributeName.toLowerCase());
-	}
+  public void setAttribute(String attributeName, Object value)
+  {
+    attributes.put(attributeName.toLowerCase(), value);
+  }
 
-	public void reset()
-	{
-		attributes = new HashMap<String, Object>();
-	}
+  public void removeAttribute(String attributeName)
+  {
+    attributes.remove(attributeName.toLowerCase());
+  }
 
-	@Override
-	public String toString()
-	{
-		return "Session [attributes=" + attributes + "]";
-	}
+  public void reset()
+  {
+    attributes = new HashMap<String, Object>();
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Session [attributes=" + attributes + "]";
+  }
 
 }

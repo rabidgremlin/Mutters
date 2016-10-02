@@ -6,26 +6,27 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class SecondNumberState extends State
+public class SecondNumberState
+    extends State
 {
 
-	public SecondNumberState()
-	{
-		super("SecondNumberState");
-	}
+  public SecondNumberState()
+  {
+    super("SecondNumberState");
+  }
 
-	@Override
-	public IntentResponse execute(IntentMatch intentMatch, Session session)
-	{
+  @Override
+  public IntentResponse execute(IntentMatch intentMatch, Session session)
+  {
 
-		// save or slots into session
-		SessionUtils.saveSlotsToSession(intentMatch, session);
+    // save or slots into session
+    SessionUtils.saveSlotsToSession(intentMatch, session);
 
-		// get the numbers
-		Number number1 = SessionUtils.getNumberFromSlotOrSession(intentMatch, session, "number1", null);
+    // get the numbers
+    Number number1 = SessionUtils.getNumberFromSlotOrSession(intentMatch, session, "number1", null);
 
-		return IntentResponse.newAskResponse(String.format("Add %s to which number?", number1.toString()));
+    return IntentResponse.newAskResponse(String.format("Add %s to which number?", number1.toString()));
 
-	}
+  }
 
 }

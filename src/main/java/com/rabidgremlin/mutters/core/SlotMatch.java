@@ -3,36 +3,38 @@ package com.rabidgremlin.mutters.core;
 public class SlotMatch
 {
 
-	private Slot slot;
-	private String orginalValue;
-	private Object value;
+  private Slot slot;
 
-	public SlotMatch(Slot slot, String orginalValue, Object value)
-	{
-		this.slot = slot;
-		this.orginalValue = orginalValue;
-		this.value = value;
-	}
+  private String orginalValue;
 
-	public Slot getSlot()
-	{
-		return slot;
-	}
+  private Object value;
 
-	public String getOrginalValue()
-	{
-		return orginalValue;
-	}
+  public SlotMatch(Slot slot, String orginalValue, Object value)
+  {
+    this.slot = slot;
+    this.orginalValue = orginalValue;
+    this.value = value;
+  }
 
-	public Object getValue()
-	{
-		return value;
-	}
+  public Slot getSlot()
+  {
+    return slot;
+  }
 
-	@Override
-	public String toString()
-	{
-		return "SlotMatch [slot=" + slot + ", orginalValue=" + orginalValue + ", value=" + value + "]";
-	}
+  public String getOrginalValue()
+  {
+    return orginalValue;
+  }
+
+  public Object getValue()
+  {
+    return value;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "SlotMatch [slot=" + slot + ", orginalValue=" + orginalValue + ", value=" + value + "]";
+  }
 
 }

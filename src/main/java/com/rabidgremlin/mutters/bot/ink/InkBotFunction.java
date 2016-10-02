@@ -6,5 +6,5 @@ import com.rabidgremlin.mutters.session.Session;
 
 public interface InkBotFunction
 {
-	void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param);
+  void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param);
 }

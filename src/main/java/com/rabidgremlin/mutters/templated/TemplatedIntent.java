@@ -13,47 +13,48 @@ import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.Slots;
 
-public class TemplatedIntent extends Intent
+public class TemplatedIntent
+    extends Intent
 {
-	private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);	
-	private List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
+  private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);
 
-	public TemplatedIntent(String name)
-	{
-		super(name);		
-	}
-	
+  private List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
 
-	public void addUtterance(TemplatedUtterance utterance)
-	{
-		utterances.add(utterance);
-	}
-	
-	public void addUtterances(List<TemplatedUtterance> utterances)
-	{
-		this.utterances.addAll(utterances);
-	}
+  public TemplatedIntent(String name)
+  {
+    super(name);
+  }
 
-	public TemplatedUtteranceMatch matches(CleanedInput input, Context context)
-	{
-		log.debug("------------- Intent: {} Input: {}", name,input);
-		for (TemplatedUtterance utterance : utterances)
-		{
-			log.debug("       Matching to {} ", utterance.getTemplate());
-			TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
-			if (match.isMatched())
-			{
-				log.debug("------------ Matched to {} match: {} -------------", utterance.getTemplate(), match);
-				return match;
-			}
-		}
+  public void addUtterance(TemplatedUtterance utterance)
+  {
+    utterances.add(utterance);
+  }
 
-		log.debug("------------ No Match to {} -------------", name);
-		return new TemplatedUtteranceMatch(false);
-	}
-	
-	public List<TemplatedUtterance> getUtterances()
-	{
-		return Collections.unmodifiableList(utterances);
-	}
+  public void addUtterances(List<TemplatedUtterance> utterances)
+  {
+    this.utterances.addAll(utterances);
+  }
+
+  public TemplatedUtteranceMatch matches(CleanedInput input, Context context)
+  {
+    log.debug("------------- Intent: {} Input: {}", name, input);
+    for (TemplatedUtterance utterance : utterances)
+    {
+      log.debug("       Matching to {} ", utterance.getTemplate());
+      TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+      if (match.isMatched())
+      {
+        log.debug("------------ Matched to {} match: {} -------------", utterance.getTemplate(), match);
+        return match;
+      }
+    }
+
+    log.debug("------------ No Match to {} -------------", name);
+    return new TemplatedUtteranceMatch(false);
+  }
+
+  public List<TemplatedUtterance> getUtterances()
+  {
+    return Collections.unmodifiableList(utterances);
+  }
 }

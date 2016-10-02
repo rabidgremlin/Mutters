@@ -10,18 +10,24 @@ import java.util.Map;
  */
 public class CurrentResponse
 {
-	String responseText;
-	String hint;
-	String reprompt = null;
-	String reponseAction = null;
-	Map<String, Object> responseActionParams = null;
-	boolean askResponse = true;
+  String responseText;
 
-	@Override
-	public String toString()
-	{
-		return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt=" + reprompt + ", reponseAction=" + reponseAction + ", responseActionParams=" + responseActionParams
-		        + ", askResponse=" + askResponse + "]";
-	}
+  String hint;
+
+  String reprompt = null;
+
+  String reponseAction = null;
+
+  Map<String, Object> responseActionParams = null;
+
+  boolean askResponse = true;
+
+  @Override
+  public String toString()
+  {
+    return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt=" + reprompt + ", reponseAction=" + reponseAction
+        + ", responseActionParams=" + responseActionParams
+        + ", askResponse=" + askResponse + "]";
+  }
 
 }

@@ -8,37 +8,36 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 public class TemplatedUtteranceMatch
 {
 
-	private boolean matched;
-	private HashMap<Slot, SlotMatch> slotMatches;
+  private boolean matched;
 
-	public TemplatedUtteranceMatch(boolean matched)
-	{
-		this.matched = matched;
-		this.slotMatches = new HashMap<Slot, SlotMatch>();
-	}
+  private HashMap<Slot, SlotMatch> slotMatches;
 
-	public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
-	{
-		this.matched = matched;
-		this.slotMatches = slotMatches;
-	}
+  public TemplatedUtteranceMatch(boolean matched)
+  {
+    this.matched = matched;
+    this.slotMatches = new HashMap<Slot, SlotMatch>();
+  }
 
-	public boolean isMatched()
-	{
-		return matched;
-	}
+  public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
+  {
+    this.matched = matched;
+    this.slotMatches = slotMatches;
+  }
 
-	public HashMap<Slot, SlotMatch> getSlotMatches()
-	{
-		return slotMatches;
-	}
+  public boolean isMatched()
+  {
+    return matched;
+  }
 
-	@Override
-	public String toString()
-	{
-		return "UtteranceMatch [matched=" + matched + ", slotMatches=" + slotMatches + "]";
-	}
-	
-	
+  public HashMap<Slot, SlotMatch> getSlotMatches()
+  {
+    return slotMatches;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "UtteranceMatch [matched=" + matched + ", slotMatches=" + slotMatches + "]";
+  }
 
 }

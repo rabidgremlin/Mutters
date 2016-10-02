@@ -7,21 +7,21 @@ import java.util.HashMap;
 public class Slots
 {
 
-	private HashMap<String, Slot> slots = new HashMap<String, Slot>();
+  private HashMap<String, Slot> slots = new HashMap<String, Slot>();
 
-	public void add(Slot slot)
-	{
-		slots.put(slot.getName().toLowerCase(), slot);
-	}
+  public void add(Slot slot)
+  {
+    slots.put(slot.getName().toLowerCase(), slot);
+  }
 
-	public Slot getSlot(String name)
-	{
-		return slots.get(name.toLowerCase());
-	}
-	
-	public Collection<Slot> getSlots()
-	{
-		return Collections.unmodifiableCollection(slots.values());
-	}
+  public Slot getSlot(String name)
+  {
+    return slots.get(name.toLowerCase());
+  }
+
+  public Collection<Slot> getSlots()
+  {
+    return Collections.unmodifiableCollection(slots.values());
+  }
 
 }

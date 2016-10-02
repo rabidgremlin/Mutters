@@ -22,114 +22,119 @@ import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.util.Span;
 
-public class MLIntentMatcher implements IntentMatcher
+public class MLIntentMatcher
+    implements IntentMatcher
 {
-	private Logger log = LoggerFactory.getLogger(MLIntentMatcher.class);
-	private DoccatModel model;
-	private HashMap<String, MLIntent> intents = new HashMap<String, MLIntent>();
-	private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<String, TokenNameFinderModel>();
-	private HashMap<String, TokenNameFinderModel> slotModels = new HashMap<String, TokenNameFinderModel>();
+  private Logger log = LoggerFactory.getLogger(MLIntentMatcher.class);
 
-	public MLIntentMatcher(String intentModel)
-	{
-		try
-		{
-			URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(intentModel);
-			model = new DoccatModel(modelUrl);
-		}
-		catch (Exception e)
-		{
-			throw new IllegalArgumentException("Unable to load intent model", e);
-		}
-	}
+  private DoccatModel model;
 
-	public void addSlotModel(String slotName, String nerModel)
-	{
-		TokenNameFinderModel tnfModel = nerModels.get(nerModel);
-		if (tnfModel == null)
-		{
-			try
-			{
-				URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(nerModel);
-				tnfModel = new TokenNameFinderModel(modelUrl);
-			}
-			catch (Exception e)
-			{
-				throw new IllegalArgumentException("Unable to load NER model", e);
-			}
-		}
+  private HashMap<String, MLIntent> intents = new HashMap<String, MLIntent>();
 
-		slotModels.put(slotName.toLowerCase(), tnfModel);
-	}
+  private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<String, TokenNameFinderModel>();
 
-	public void addIntent(MLIntent intent)
-	{
-		intents.put(intent.getName().toUpperCase(), intent);
-	}
+  private HashMap<String, TokenNameFinderModel> slotModels = new HashMap<String, TokenNameFinderModel>();
 
-	@Override
-	public IntentMatch match(String utterance, Context context)
-	{
-		// TODO look into thread safety of DocumentCategorizerME
-		DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
+  public MLIntentMatcher(String intentModel)
+  {
+    try
+    {
+      URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(intentModel);
+      model = new DoccatModel(modelUrl);
+    }
+    catch (Exception e)
+    {
+      throw new IllegalArgumentException("Unable to load intent model", e);
+    }
+  }
 
-		// TODO extract match probablity and filter out low ones...
-		SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
-		log.info("Sorted scores were: {}", scoredCats);
+  public void addSlotModel(String slotName, String nerModel)
+  {
+    TokenNameFinderModel tnfModel = nerModels.get(nerModel);
+    if (tnfModel == null)
+    {
+      try
+      {
+        URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(nerModel);
+        tnfModel = new TokenNameFinderModel(modelUrl);
+      }
+      catch (Exception e)
+      {
+        throw new IllegalArgumentException("Unable to load NER model", e);
+      }
+    }
 
-		String category = intentCategorizer.getBestCategory(intentCategorizer.categorize(utterance));
-		log.info("Best Match was:" + category);
+    slotModels.put(slotName.toLowerCase(), tnfModel);
+  }
 
-		MLIntent bestIntent = intents.get(category.toUpperCase());
-		if (bestIntent == null)
-		{
-			return null;
-		}
+  public void addIntent(MLIntent intent)
+  {
+    intents.put(intent.getName().toUpperCase(), intent);
+  }
 
-		String[] tokens = SimpleTokenizer.INSTANCE.tokenize(utterance);
+  @Override
+  public IntentMatch match(String utterance, Context context)
+  {
+    // TODO look into thread safety of DocumentCategorizerME
+    DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
-		HashMap<Slot, SlotMatch> matchedSlots = new HashMap<Slot, SlotMatch>();
+    // TODO extract match probablity and filter out low ones...
+    SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
+    log.info("Sorted scores were: {}", scoredCats);
 
-		for (Slot slot : bestIntent.getSlots())
-		{
-			log.info("Looking for Slot {}", slot.getName());
-			
-			TokenNameFinderModel tnfModel = slotModels.get(slot.getName().toLowerCase());
-			if (tnfModel == null)
-			{
-				log.warn("Could not find NER model for slot {}", slot.getName());
-				continue;
-			}
+    String category = intentCategorizer.getBestCategory(intentCategorizer.categorize(utterance));
+    log.info("Best Match was:" + category);
 
-			NameFinderME nameFinder = new NameFinderME(tnfModel);
-			Span[] spans = nameFinder.find(tokens);
+    MLIntent bestIntent = intents.get(category.toUpperCase());
+    if (bestIntent == null)
+    {
+      return null;
+    }
 
-			if (spans.length > 0)
-			{
-				String[] matches = Span.spansToStrings(spans, tokens);
+    String[] tokens = SimpleTokenizer.INSTANCE.tokenize(utterance);
 
-				log.info("Matching for {} against {}", slot.getName(), matches);
-				
-				// TODO what to do with multi matches?
-				SlotMatch match = slot.match(matches[0], context);
-				if (match != null)
-				{
-				  matchedSlots.put(slot, match);
-				  log.info("Match found {}", match);
-				}
-				else
-				{
-					log.info("No Match found slot: {} text: {} ", slot.getName(), matches);
-				}
-			}
-			else
-			{
-				log.info("Did not find slot {} utterance {} ", slot.getName(),utterance);
-			}
-		}
+    HashMap<Slot, SlotMatch> matchedSlots = new HashMap<Slot, SlotMatch>();
 
-		return new IntentMatch(bestIntent, matchedSlots,utterance);
+    for (Slot slot : bestIntent.getSlots())
+    {
+      log.info("Looking for Slot {}", slot.getName());
 
-	}
+      TokenNameFinderModel tnfModel = slotModels.get(slot.getName().toLowerCase());
+      if (tnfModel == null)
+      {
+        log.warn("Could not find NER model for slot {}", slot.getName());
+        continue;
+      }
+
+      NameFinderME nameFinder = new NameFinderME(tnfModel);
+      Span[] spans = nameFinder.find(tokens);
+
+      if (spans.length > 0)
+      {
+        String[] matches = Span.spansToStrings(spans, tokens);
+
+        log.info("Matching for {} against {}", slot.getName(), matches);
+
+        // TODO what to do with multi matches?
+        SlotMatch match = slot.match(matches[0], context);
+        if (match != null)
+        {
+          matchedSlots.put(slot, match);
+          log.info("Match found {}", match);
+        }
+        else
+        {
+          log.info("No Match found slot: {} text: {} ", slot.getName(), matches);
+        }
+      }
+      else
+      {
+        log.info("Did not find slot {} utterance {} ", slot.getName(), utterance);
+      }
+    }
+
+    return new IntentMatch(bestIntent, matchedSlots, utterance);
+
+  }
 
 }

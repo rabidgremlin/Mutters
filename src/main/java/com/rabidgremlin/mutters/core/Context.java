@@ -7,33 +7,34 @@ import java.util.TimeZone;
 public class Context
 {
 
-	private Locale locale = Locale.getDefault();
-	private TimeZone timeZone = TimeZone.getDefault();
+  private Locale locale = Locale.getDefault();
 
-	public Locale getLocale()
-	{
-		return locale;
-	}
+  private TimeZone timeZone = TimeZone.getDefault();
 
-	public void setLocale(Locale locale)
-	{
-		this.locale = locale;
-	}
+  public Locale getLocale()
+  {
+    return locale;
+  }
 
-	public TimeZone getTimeZone()
-	{
-		return timeZone;
-	}
+  public void setLocale(Locale locale)
+  {
+    this.locale = locale;
+  }
 
-	public void setTimeZone(TimeZone timeZone)
-	{
-		this.timeZone = timeZone;
-	}
+  public TimeZone getTimeZone()
+  {
+    return timeZone;
+  }
 
-	@Override
-	public String toString()
-	{
-		return "Context [locale=" + locale + ", timeZone=" + timeZone + "]";
-	}
+  public void setTimeZone(TimeZone timeZone)
+  {
+    this.timeZone = timeZone;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Context [locale=" + locale + ", timeZone=" + timeZone + "]";
+  }
 
 }

@@ -26,80 +26,80 @@ import com.rabidgremlin.mutters.util.Utils;
 public class TestDateTimeSlot
 {
 
-	@Test
-	public void testBasicMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
+  @Test
+  public void testBasicMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
 
-		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		DateTimeSlot slot = new DateTimeSlot("datetime");
-		slots.add(slot);
+    DateTimeSlot slot = new DateTimeSlot("datetime");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-		assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0)));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
+    assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0)));
+  }
 
-	@Test
-	public void testMatchWithTimeZone()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
+  @Test
+  public void testMatchWithTimeZone()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
 
-		CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
-		Slots slots = new Slots();
-		Context context = new Context();
-		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
+    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
+    Slots slots = new Slots();
+    Context context = new Context();
+    context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
 
-		DateTimeSlot slot = new DateTimeSlot("datetime");
-		slots.add(slot);
+    DateTimeSlot slot = new DateTimeSlot("datetime");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-		assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
+    assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
+  }
 
-	@Test
-	public void testLastWeek()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("Give me the report for {date}");
+  @Test
+  public void testLastWeek()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("Give me the report for {date}");
 
-		CleanedInput input = InputCleaner.cleanInput("Give me the report for last week");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("Give me the report for last week");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		DateSlot slot = new DateSlot("date");
-		slots.add(slot);
+    DateSlot slot = new DateSlot("date");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("last week"));
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("last week"));
 
-		LocalDate sevenDaysAgo = new LocalDate().minusDays(7);
+    LocalDate sevenDaysAgo = new LocalDate().minusDays(7);
 
-		assertThat(slotMatch.getValue(), is(sevenDaysAgo));
-	}
+    assertThat(slotMatch.getValue(), is(sevenDaysAgo));
+  }
 
 }

@@ -10,48 +10,51 @@ import com.rabidgremlin.mutters.session.Session;
 public class MathBotExample
 {
 
-	Session session;
-	MathBot mathBot;
-	Context context;
+  Session session;
 
-	public MathBotExample()
-	{
-		mathBot = new MathBot();
-		session = new Session();
-	}
+  MathBot mathBot;
 
-	public void run() throws Exception
-	{
-		BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+  Context context;
 
-		System.out.println("Hi, I'm MathBot\nYou can ask me to add two numbers together.");
+  public MathBotExample()
+  {
+    mathBot = new MathBot();
+    session = new Session();
+  }
 
-		System.out.print("> ");
-		String input = null;
-		while ((input = inReader.readLine()) != null)
-		{
-			BotResponse botResponse = mathBot.respond(session, context, input);
-			System.out.println(botResponse.getResponse());
+  public void run()
+    throws Exception
+  {
+    BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
 
-			System.out.print("> ");
-		}
+    System.out.println("Hi, I'm MathBot\nYou can ask me to add two numbers together.");
 
-	}
+    System.out.print("> ");
+    String input = null;
+    while ((input = inReader.readLine()) != null)
+    {
+      BotResponse botResponse = mathBot.respond(session, context, input);
+      System.out.println(botResponse.getResponse());
 
-	public static void main(String[] args)
-	{
-		try
-		{
-			MathBotExample mathBot = new MathBotExample();
+      System.out.print("> ");
+    }
 
-			mathBot.run();
+  }
 
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+  public static void main(String[] args)
+  {
+    try
+    {
+      MathBotExample mathBot = new MathBotExample();
 
-	}
+      mathBot.run();
+
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+  }
 
 }

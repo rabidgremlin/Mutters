@@ -27,53 +27,53 @@ import com.rabidgremlin.mutters.util.Utils;
 public class TestTimeSlot
 {
 
-	@Test
-	public void testBasicMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
+  @Test
+  public void testBasicMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
 
-		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("at 6:45am");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		TimeSlot slot = new TimeSlot("time");
-		slots.add(slot);
+    TimeSlot slot = new TimeSlot("time");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("6:45am"));
-		assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("6:45am"));
+    assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
+  }
 
-	@Test
-	public void testMatchWithTimeZone()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
+  @Test
+  public void testMatchWithTimeZone()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
 
-		CleanedInput input = InputCleaner.cleanInput("at 6:45am");
-		Slots slots = new Slots();
-		Context context = new Context();
-		context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
+    CleanedInput input = InputCleaner.cleanInput("at 6:45am");
+    Slots slots = new Slots();
+    Context context = new Context();
+    context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
 
-		TimeSlot slot = new TimeSlot("time");
-		slots.add(slot);
+    TimeSlot slot = new TimeSlot("time");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("6:45am"));
-		assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("6:45am"));
+    assertThat(slotMatch.getValue(), is(new LocalTime(6, 45)));
+  }
 
 }

@@ -18,89 +18,89 @@ import com.rabidgremlin.mutters.util.Utils;
 public class TestNumberSlot
 {
 
-	@Test
-	public void testBasicWordMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+  @Test
+  public void testBasicWordMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
-		CleanedInput input = InputCleaner.cleanInput("The balance is One hundred two thousand and thirty four");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("The balance is One hundred two thousand and thirty four");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		NumberSlot slot = new NumberSlot("number");
-		slots.add(slot);
+    NumberSlot slot = new NumberSlot("number");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("One hundred two thousand and thirty four"));
-		assertThat(slotMatch.getValue(), is(102034l));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("One hundred two thousand and thirty four"));
+    assertThat(slotMatch.getValue(), is(102034l));
+  }
 
-	@Test
-	public void testWordStringToNumber()
-	{
-		NumberSlot slot = new NumberSlot("test");
-		Number result = slot.wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
+  @Test
+  public void testWordStringToNumber()
+  {
+    NumberSlot slot = new NumberSlot("test");
+    Number result = slot.wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
 
-		assertThat(result, is(notNullValue()));
-		assertThat(result, is(352261l));
+    assertThat(result, is(notNullValue()));
+    assertThat(result, is(352261l));
 
-		result = slot.wordStringToNumber("Three hundred and bad");
-		assertThat(result, is(nullValue()));
-	}
+    result = slot.wordStringToNumber("Three hundred and bad");
+    assertThat(result, is(nullValue()));
+  }
 
-	@Test
-	public void testBasicNumberMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+  @Test
+  public void testBasicNumberMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
-		CleanedInput input = InputCleaner.cleanInput("The balance is 123");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("The balance is 123");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		NumberSlot slot = new NumberSlot("number");
-		slots.add(slot);
+    NumberSlot slot = new NumberSlot("number");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("123"));
-		assertThat(slotMatch.getValue(), is(123l));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("123"));
+    assertThat(slotMatch.getValue(), is(123l));
+  }
 
-	@Test
-	public void testBasicDecimalMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+  @Test
+  public void testBasicDecimalMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
-		CleanedInput input = InputCleaner.cleanInput("The balance is 546.12");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("The balance is 546.12");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		NumberSlot slot = new NumberSlot("number");
-		slots.add(slot);
+    NumberSlot slot = new NumberSlot("number");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("546.12"));
-		assertThat(slotMatch.getValue(), is(546.12));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("546.12"));
+    assertThat(slotMatch.getValue(), is(546.12));
+  }
 
 }

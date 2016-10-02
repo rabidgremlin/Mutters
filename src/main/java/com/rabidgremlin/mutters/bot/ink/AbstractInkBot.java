@@ -19,254 +19,262 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public abstract class AbstractInkBot implements Bot
+public abstract class AbstractInkBot
+    implements Bot
 {
-	private Logger log = LoggerFactory.getLogger(AbstractInkBot.class);
-	protected IntentMatcher matcher;
-	protected String inkStoryJson;
-	protected String defaultResponse = "Pardon?";
-	protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
+  private Logger log = LoggerFactory.getLogger(AbstractInkBot.class);
 
-	public AbstractInkBot()
-	{
-		matcher = setUpIntents();
-		inkStoryJson = getStoryJson();
+  protected IntentMatcher matcher;
 
-		addFunction("SET_HINT", new InkBotFunction()
-		{
-			@Override
-			public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-			{
-				currentResponse.hint = param;
-			}
-		});
+  protected String inkStoryJson;
 
-		addFunction("SET_REPROMPT", new InkBotFunction()
-		{
-			@Override
-			public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-			{
-				currentResponse.reprompt = param;
-			}
-		});
+  protected String defaultResponse = "Pardon?";
 
-		addFunction("SET_ACTION", new InkBotFunction()
-		{
-			@Override
-			public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-			{
-				// HACK HACK doesn't handle spaces in name value pairs
-		        // OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo}
-				String trimmedLine = param.trim();
-				String actionName = trimmedLine.split(" ")[0].substring(0).trim();
-				String[] nameValues = trimmedLine.substring(actionName.length() + 1).trim().split(" ");
+  protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
 
-				currentResponse.reponseAction = actionName;
-				currentResponse.responseActionParams = new HashMap<String, Object>();
+  public AbstractInkBot()
+  {
+    matcher = setUpIntents();
+    inkStoryJson = getStoryJson();
 
-				for (String nameValue : nameValues)
-				{
-					String name = nameValue.split(":")[0].substring(0).trim();
-					String value = nameValue.substring(name.length() + 1).trim();
+    addFunction("SET_HINT", new InkBotFunction()
+    {
+      @Override
+      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+      {
+        currentResponse.hint = param;
+      }
+    });
 
-					currentResponse.responseActionParams.put(name, value);
-				}
-			}
-		});
+    addFunction("SET_REPROMPT", new InkBotFunction()
+    {
+      @Override
+      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+      {
+        currentResponse.reprompt = param;
+      }
+    });
 
-		setUpFunctions();
-	}
+    addFunction("SET_ACTION", new InkBotFunction()
+    {
+      @Override
+      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+      {
+        // HACK HACK doesn't handle spaces in name value pairs
+        // OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo}
+        String trimmedLine = param.trim();
+        String actionName = trimmedLine.split(" ")[0].substring(0).trim();
+        String[] nameValues = trimmedLine.substring(actionName.length() + 1).trim().split(" ");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session, com.rabidgremlin.mutters.core.Context, java.lang.String)
-	 */
-	@Override
-	public BotResponse respond(Session session, Context context, String messageText)
-	{
-		log.info("============================================================== \n session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
+        currentResponse.reponseAction = actionName;
+        currentResponse.responseActionParams = new HashMap<String, Object>();
 
-		CurrentResponse currentResponse = new CurrentResponse();
+        for (String nameValue : nameValues)
+        {
+          String name = nameValue.split(":")[0].substring(0).trim();
+          String value = nameValue.substring(name.length() + 1).trim();
 
-		// set up default response in case bot has issue processing input
-		currentResponse.responseText = SessionUtils.getReprompt(session);
-		if (currentResponse.responseText == null)
-		{
-			currentResponse.responseText = defaultResponse;
-		}
+          currentResponse.responseActionParams.put(name, value);
+        }
+      }
+    });
 
-		// preserve hint if we had reprompt hint
-		currentResponse.hint = SessionUtils.getRepromptHint(session);
+    setUpFunctions();
+  }
 
-		try
-		{
-			// TODO is this efficent or do we need ThreadLocals ?
-			Story story = new Story(inkStoryJson);
-			
-			// call hook so externs and other things can be applied
-			afterStoryCreated(story);
-			
-			SessionUtils.loadInkStoryState(session, story.getState());
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session,
+   * com.rabidgremlin.mutters.core.Context, java.lang.String)
+   */
+  @Override
+  public BotResponse respond(Session session, Context context, String messageText)
+  {
+    log.info("============================================================== \n session: {} context: {} messageText: {}",
+        new Object[]{ session, context, messageText });
 
-			IntentMatch intentMatch = matcher.match(messageText, context);
-					
-			if (intentMatch != null)
-			{
-				// call after match hook, allows fixups to be applied
-				afterIntentMatch(intentMatch, session, story);
+    CurrentResponse currentResponse = new CurrentResponse();
 
-				// copy any slot values into ink vars 
-				for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
-				{					
-					story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
-				}				
-				
-				// get to right place in story
-				story.continueMaximally();
+    // set up default response in case bot has issue processing input
+    currentResponse.responseText = SessionUtils.getReprompt(session);
+    if (currentResponse.responseText == null)
+    {
+      currentResponse.responseText = defaultResponse;
+    }
 
-				// loop through choices find the one that matches intent
-				if (story.getCurrentChoices().size() > 0)
-				{
-					int choiceIndex = 0;
-					for (Choice c : story.getCurrentChoices())
-					{
-						log.info("Checking choice:" + c.getText());
-						if (StringUtils.equalsIgnoreCase(intentMatch.getIntent().getName(), c.getText()))
-						{
-							log.info("Choosing:" + c.getText());
-							story.chooseChoiceIndex(choiceIndex);
+    // preserve hint if we had reprompt hint
+    currentResponse.hint = SessionUtils.getRepromptHint(session);
 
-							// reset reprompt and hint
-							currentResponse.reprompt = null;
-							currentResponse.hint = null;
+    try
+    {
+      // TODO is this efficent or do we need ThreadLocals ?
+      Story story = new Story(inkStoryJson);
 
-							StringBuffer response = new StringBuffer();
-							boolean first = true;
-							while (story.canContinue())
-							{
-								String line = story.Continue();
+      // call hook so externs and other things can be applied
+      afterStoryCreated(story);
 
-								// skip first line as ink replays choice first
-								if (first)
-								{
-									first = false;
-									continue;
-								}
+      SessionUtils.loadInkStoryState(session, story.getState());
 
-								line = line.replaceAll("\n", "");
+      IntentMatch intentMatch = matcher.match(messageText, context);
 
-								log.info("Line {}", line);
+      if (intentMatch != null)
+      {
+        // call after match hook, allows fixups to be applied
+        afterIntentMatch(intentMatch, session, story);
 
-								String trimmedLine = line.trim();
+        // copy any slot values into ink vars
+        for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
+        {
+          story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
+        }
 
-								if (trimmedLine.startsWith(":"))
-								{
-									String functionName = trimmedLine.split(" ")[0].substring(1).trim();
-									String param = trimmedLine.substring(functionName.length() + 1).trim();
+        // get to right place in story
+        story.continueMaximally();
 
-									InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
-									if (function != null)
-									{
-										function.execute(currentResponse, session, intentMatch, story, param);
-									}
-									else
-									{
-										log.warn("Did not find function named {}", functionName);
-									}
-								}
-								else
-								{
-									response.append(line);
-								}
-							}
+        // loop through choices find the one that matches intent
+        if (story.getCurrentChoices().size() > 0)
+        {
+          int choiceIndex = 0;
+          for (Choice c : story.getCurrentChoices())
+          {
+            log.info("Checking choice:" + c.getText());
+            if (StringUtils.equalsIgnoreCase(intentMatch.getIntent().getName(), c.getText()))
+            {
+              log.info("Choosing:" + c.getText());
+              story.chooseChoiceIndex(choiceIndex);
 
-							currentResponse.responseText = response.toString();
+              // reset reprompt and hint
+              currentResponse.reprompt = null;
+              currentResponse.hint = null;
 
-							break;
-						}
-						choiceIndex++;
-					}
+              StringBuffer response = new StringBuffer();
+              boolean first = true;
+              while (story.canContinue())
+              {
+                String line = story.Continue();
 
-					SessionUtils.saveInkStoryState(session, story.getState());
+                // skip first line as ink replays choice first
+                if (first)
+                {
+                  first = false;
+                  continue;
+                }
 
-					if (story.getCurrentChoices().size() == 0)
-					{
-						session.reset();
-						currentResponse.askResponse = false;
-					}
-				}
-				else
-				{
-					session.reset();
-					currentResponse.askResponse = false;
-				}
+                line = line.replaceAll("\n", "");
 
-				if (currentResponse.reprompt != null)
-				{
-					SessionUtils.setReprompt(session, currentResponse.reprompt);
-					SessionUtils.setRepromptHint(session, currentResponse.hint);
-				}
-				else
-				{
-					SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.responseText);
-					SessionUtils.setRepromptHint(session, currentResponse.hint);
-				}
+                log.info("Line {}", line);
 
-			}
+                String trimmedLine = line.trim();
 
-			return new BotResponse(currentResponse.responseText, currentResponse.hint, currentResponse.askResponse, currentResponse.reponseAction, currentResponse.responseActionParams);
-		}
-		catch (Exception e)
-		{
-			log.warn("Unexpected error.", e);
-			return new BotResponse(currentResponse.responseText, currentResponse.hint, true, null, null);
-		}
-	}
+                if (trimmedLine.startsWith(":"))
+                {
+                  String functionName = trimmedLine.split(" ")[0].substring(1).trim();
+                  String param = trimmedLine.substring(functionName.length() + 1).trim();
 
-	public String getDefaultResponse()
-	{
-		return defaultResponse;
-	}
+                  InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
+                  if (function != null)
+                  {
+                    function.execute(currentResponse, session, intentMatch, story, param);
+                  }
+                  else
+                  {
+                    log.warn("Did not find function named {}", functionName);
+                  }
+                }
+                else
+                {
+                  response.append(line);
+                }
+              }
 
-	public void setDefaultResponse(String defaultResponse)
-	{
-		this.defaultResponse = defaultResponse;
-	}
+              currentResponse.responseText = response.toString();
 
-	protected String loadStoryJsonFromClassPath(String inkJsonFileName)
-	{
-		try
-		{
-			InputStream inkJsonStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(inkJsonFileName);
+              break;
+            }
+            choiceIndex++;
+          }
 
-			return IOUtils.toString(inkJsonStream, "UTF-8").replace('\uFEFF', ' ');
-		}
-		catch (Exception e)
-		{
-			throw new IllegalStateException("Failed to load ink json.", e);
-		}
-	}
+          SessionUtils.saveInkStoryState(session, story.getState());
 
-	protected void addFunction(String functionName, InkBotFunction function)
-	{
-		inkBotFunctions.put(functionName.toLowerCase(), function);
-	}
+          if (story.getCurrentChoices().size() == 0)
+          {
+            session.reset();
+            currentResponse.askResponse = false;
+          }
+        }
+        else
+        {
+          session.reset();
+          currentResponse.askResponse = false;
+        }
 
-	public abstract IntentMatcher setUpIntents();
+        if (currentResponse.reprompt != null)
+        {
+          SessionUtils.setReprompt(session, currentResponse.reprompt);
+          SessionUtils.setRepromptHint(session, currentResponse.hint);
+        }
+        else
+        {
+          SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.responseText);
+          SessionUtils.setRepromptHint(session, currentResponse.hint);
+        }
 
-	public abstract String getStoryJson();
+      }
 
-	public abstract void setUpFunctions();
-	
-	protected void afterStoryCreated(Story story)
-	{
-		// do nothing
-	}
-	
-	protected void afterIntentMatch(IntentMatch intentMatch, Session session, Story story)
-	{
-		// do nothing
-	}
+      return new BotResponse(currentResponse.responseText, currentResponse.hint, currentResponse.askResponse, currentResponse.reponseAction,
+          currentResponse.responseActionParams);
+    }
+    catch (Exception e)
+    {
+      log.warn("Unexpected error.", e);
+      return new BotResponse(currentResponse.responseText, currentResponse.hint, true, null, null);
+    }
+  }
+
+  public String getDefaultResponse()
+  {
+    return defaultResponse;
+  }
+
+  public void setDefaultResponse(String defaultResponse)
+  {
+    this.defaultResponse = defaultResponse;
+  }
+
+  protected String loadStoryJsonFromClassPath(String inkJsonFileName)
+  {
+    try
+    {
+      InputStream inkJsonStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(inkJsonFileName);
+
+      return IOUtils.toString(inkJsonStream, "UTF-8").replace('\uFEFF', ' ');
+    }
+    catch (Exception e)
+    {
+      throw new IllegalStateException("Failed to load ink json.", e);
+    }
+  }
+
+  protected void addFunction(String functionName, InkBotFunction function)
+  {
+    inkBotFunctions.put(functionName.toLowerCase(), function);
+  }
+
+  public abstract IntentMatcher setUpIntents();
+
+  public abstract String getStoryJson();
+
+  public abstract void setUpFunctions();
+
+  protected void afterStoryCreated(Story story)
+  {
+    // do nothing
+  }
+
+  protected void afterIntentMatch(IntentMatch intentMatch, Session session, Story story)
+  {
+    // do nothing
+  }
 
 }

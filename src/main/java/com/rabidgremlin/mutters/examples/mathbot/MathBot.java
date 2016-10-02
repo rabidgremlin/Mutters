@@ -11,102 +11,101 @@ import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
-public class MathBot extends AbstractStateMachineBot
+public class MathBot
+    extends AbstractStateMachineBot
 {
 
-	@Override
-	public IntentMatcher setUpIntents()
-	{
-		TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
+  @Override
+  public IntentMatcher setUpIntents()
+  {
+    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
 
-		matcher.addIntent(createAdditionIntent());
-		matcher.addIntent(createNumberIntent());
-		matcher.addIntent(createGenerateGraphIntent());
+    matcher.addIntent(createAdditionIntent());
+    matcher.addIntent(createNumberIntent());
+    matcher.addIntent(createGenerateGraphIntent());
 
-		return matcher;
-	}
-	
-	
-	private TemplatedIntent createAdditionIntent()
-	{
-		TemplatedIntent additionIntent = new TemplatedIntent("Addition");
+    return matcher;
+  }
 
-		additionIntent.addUtterance(new TemplatedUtterance("What's {number1} + {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("What's {number1} plus {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("What is {number1} + {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("What is {number1} plus {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} + {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} plus {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("Add {number1} and {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("Add {number1} to {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("{number1} plus {number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("{number1} + {number2}"));		
-		// TODO tweak Utterance so it can handle tokens not separated by spaces
-		// additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
-		additionIntent.addUtterance(new TemplatedUtterance("Add {number1}"));
-		
+  private TemplatedIntent createAdditionIntent()
+  {
+    TemplatedIntent additionIntent = new TemplatedIntent("Addition");
 
-		NumberSlot number1 = new NumberSlot("number1");
-		NumberSlot number2 = new NumberSlot("number2");
+    additionIntent.addUtterance(new TemplatedUtterance("What's {number1} + {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("What's {number1} plus {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("What is {number1} + {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("What is {number1} plus {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} + {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("Whats {number1} plus {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("Add {number1} and {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("Add {number1} to {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("{number1} plus {number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("{number1} + {number2}"));
+    // TODO tweak Utterance so it can handle tokens not separated by spaces
+    // additionIntent.addUtterance(new Utterance("{number1}+{number2}"));
+    additionIntent.addUtterance(new TemplatedUtterance("Add {number1}"));
 
-		additionIntent.addSlot(number1);
-		additionIntent.addSlot(number2);
+    NumberSlot number1 = new NumberSlot("number1");
+    NumberSlot number2 = new NumberSlot("number2");
 
-		return additionIntent;
-	}
+    additionIntent.addSlot(number1);
+    additionIntent.addSlot(number2);
 
-	private TemplatedIntent createNumberIntent()
-	{
-		TemplatedIntent numberIntent = new TemplatedIntent("Number");
+    return additionIntent;
+  }
 
-		numberIntent.addUtterance(new TemplatedUtterance("{number}"));
+  private TemplatedIntent createNumberIntent()
+  {
+    TemplatedIntent numberIntent = new TemplatedIntent("Number");
 
-		NumberSlot number = new NumberSlot("number");
-		numberIntent.addSlot(number);
+    numberIntent.addUtterance(new TemplatedUtterance("{number}"));
 
-		return numberIntent;
-	}
+    NumberSlot number = new NumberSlot("number");
+    numberIntent.addSlot(number);
 
-	private TemplatedIntent createGenerateGraphIntent()
-	{
-		TemplatedIntent graphIntent = new TemplatedIntent("GenerateGraph");
+    return numberIntent;
+  }
 
-		graphIntent.addUtterance(new TemplatedUtterance("dump graph"));
-		graphIntent.addUtterance(new TemplatedUtterance("show graph"));
-		graphIntent.addUtterance(new TemplatedUtterance("graph"));
+  private TemplatedIntent createGenerateGraphIntent()
+  {
+    TemplatedIntent graphIntent = new TemplatedIntent("GenerateGraph");
 
-		return graphIntent;
-	}
+    graphIntent.addUtterance(new TemplatedUtterance("dump graph"));
+    graphIntent.addUtterance(new TemplatedUtterance("show graph"));
+    graphIntent.addUtterance(new TemplatedUtterance("graph"));
 
-	@Override
-	public StateMachine setUpStateMachine()
-	{
-		StateMachine stateMachine = new StateMachine();
+    return graphIntent;
+  }
 
-		State startState = new StartState();
-		stateMachine.setStartState(startState);
+  @Override
+  public StateMachine setUpStateMachine()
+  {
+    StateMachine stateMachine = new StateMachine();
 
-		State addNumbersState = new AddNumbersState();
-		State secondNumberState = new SecondNumberState();
-		State generateGraphState = new GenerateGraphState(stateMachine);
+    State startState = new StartState();
+    stateMachine.setStartState(startState);
 
-		Guard haveTwoNumbersGuard = new HaveTwoNumbersGuard();
+    State addNumbersState = new AddNumbersState();
+    State secondNumberState = new SecondNumberState();
+    State generateGraphState = new GenerateGraphState(stateMachine);
 
-		PreEventAction setNumberAsFirstNumber = new SetNumberAsFirstNumber();
-		PreEventAction setNumberAsSecondNumber = new SetNumberAsSecondNumber();
+    Guard haveTwoNumbersGuard = new HaveTwoNumbersGuard();
 
-		stateMachine.addTransition("Addition", startState, addNumbersState, haveTwoNumbersGuard);
-		stateMachine.addTransition("Addition", startState, secondNumberState);
+    PreEventAction setNumberAsFirstNumber = new SetNumberAsFirstNumber();
+    PreEventAction setNumberAsSecondNumber = new SetNumberAsSecondNumber();
 
-		stateMachine.addPreEventAction("Number", secondNumberState, setNumberAsSecondNumber);
-		stateMachine.addTransition("Number", secondNumberState, addNumbersState, haveTwoNumbersGuard);
+    stateMachine.addTransition("Addition", startState, addNumbersState, haveTwoNumbersGuard);
+    stateMachine.addTransition("Addition", startState, secondNumberState);
 
-		stateMachine.addPreEventAction("Number", startState, setNumberAsFirstNumber);
-		stateMachine.addTransition("Number", startState, secondNumberState);
+    stateMachine.addPreEventAction("Number", secondNumberState, setNumberAsSecondNumber);
+    stateMachine.addTransition("Number", secondNumberState, addNumbersState, haveTwoNumbersGuard);
 
-		stateMachine.addTransition("GenerateGraph", startState, generateGraphState);
+    stateMachine.addPreEventAction("Number", startState, setNumberAsFirstNumber);
+    stateMachine.addTransition("Number", startState, secondNumberState);
 
-		return stateMachine;
-	}
+    stateMachine.addTransition("GenerateGraph", startState, generateGraphState);
+
+    return stateMachine;
+  }
 
 }

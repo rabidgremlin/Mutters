@@ -15,258 +15,264 @@ import com.rabidgremlin.mutters.session.Session;
 public class StateMachine
 {
 
-	private HashMap<String, State> states = new HashMap<String, State>();
-	private State startState;
-	private HashMap<String, List<Transition>> transitionMap = new HashMap<String, List<Transition>>();
-	private HashSet<String> handledIntents = new HashSet<String>();
-	private HashMap<String, PreEventAction> preEventActions = new HashMap<String, PreEventAction>();
+  private HashMap<String, State> states = new HashMap<String, State>();
 
-	class Transition
-	{
-		public State toState;
-		public Guard guard;
+  private State startState;
 
-		public Transition(State toState, Guard guard)
-		{
-			this.toState = toState;
-			this.guard = guard;
-		}
-	}
+  private HashMap<String, List<Transition>> transitionMap = new HashMap<String, List<Transition>>();
 
-	public void setStartState(State state)
-	{
-		this.startState = state;
-	}
+  private HashSet<String> handledIntents = new HashSet<String>();
 
-	private void addState(State state)
-	{
-		states.put(state.getName(), state);
-		if (startState == null)
-		{
-			startState = state;
-		}
-	}
+  private HashMap<String, PreEventAction> preEventActions = new HashMap<String, PreEventAction>();
 
-	private String makeTransitionKey(String intentName, State state)
-	{
-		return intentName + '-' + state.getName();
-	}
+  class Transition
+  {
+    public State toState;
 
-	private String makeGlobalTransitionKey(String intentName)
-	{
-		return intentName + "-*";
-	}
+    public Guard guard;
 
-	public void addTransition(String intentName, State fromState, State toState)
-	{
-		addTransition(intentName, fromState, toState, null);
-	}
+    public Transition(State toState, Guard guard)
+    {
+      this.toState = toState;
+      this.guard = guard;
+    }
+  }
 
-	public void addPreEventAction(String intentName, State fromState, PreEventAction preEventAction)
-	{
-		preEventActions.put(makeTransitionKey(intentName, fromState), preEventAction);
-	}
+  public void setStartState(State state)
+  {
+    this.startState = state;
+  }
 
-	public void addTransition(String intentName, State fromState, State toState, Guard guard)
-	{
-		if (!states.containsKey(fromState.getName()))
-		{
-			addState(fromState);
-		}
+  private void addState(State state)
+  {
+    states.put(state.getName(), state);
+    if (startState == null)
+    {
+      startState = state;
+    }
+  }
 
-		if (!states.containsKey(toState.getName()))
-		{
-			addState(toState);
-		}
+  private String makeTransitionKey(String intentName, State state)
+  {
+    return intentName + '-' + state.getName();
+  }
 
-		String key = makeTransitionKey(intentName, fromState);
-		List<Transition> transitionList = transitionMap.get(key);
-		if (transitionList == null)
-		{
-			transitionList = new ArrayList<Transition>();
-			transitionMap.put(key, transitionList);
-		}
+  private String makeGlobalTransitionKey(String intentName)
+  {
+    return intentName + "-*";
+  }
 
-		transitionList.add(new Transition(toState, guard));
+  public void addTransition(String intentName, State fromState, State toState)
+  {
+    addTransition(intentName, fromState, toState, null);
+  }
 
-		handledIntents.add(intentName);
-	}
+  public void addPreEventAction(String intentName, State fromState, PreEventAction preEventAction)
+  {
+    preEventActions.put(makeTransitionKey(intentName, fromState), preEventAction);
+  }
 
-	public void addGlobalTransition(String intentName, State toState)
-	{
-		addGlobalTransition(intentName, toState, null);
-	}
+  public void addTransition(String intentName, State fromState, State toState, Guard guard)
+  {
+    if (!states.containsKey(fromState.getName()))
+    {
+      addState(fromState);
+    }
 
-	public void addGlobalTransition(String intentName, State toState, Guard guard)
-	{
+    if (!states.containsKey(toState.getName()))
+    {
+      addState(toState);
+    }
 
-		if (!states.containsKey(toState.getName()))
-		{
-			addState(toState);
-		}
+    String key = makeTransitionKey(intentName, fromState);
+    List<Transition> transitionList = transitionMap.get(key);
+    if (transitionList == null)
+    {
+      transitionList = new ArrayList<Transition>();
+      transitionMap.put(key, transitionList);
+    }
 
-		String key = makeGlobalTransitionKey(intentName);
-		List<Transition> transitionList = transitionMap.get(key);
-		if (transitionList == null)
-		{
-			transitionList = new ArrayList<Transition>();
-			transitionMap.put(key, transitionList);
-		}
+    transitionList.add(new Transition(toState, guard));
 
-		transitionList.add(new Transition(toState, guard));
+    handledIntents.add(intentName);
+  }
 
-		handledIntents.add(intentName);
-	}
+  public void addGlobalTransition(String intentName, State toState)
+  {
+    addGlobalTransition(intentName, toState, null);
+  }
 
-	public IntentResponse trigger(final IntentMatch match, final Session session)
-	{
+  public void addGlobalTransition(String intentName, State toState, Guard guard)
+  {
 
-		State currentState = startState;
+    if (!states.containsKey(toState.getName()))
+    {
+      addState(toState);
+    }
 
-		String currentStateName = (String) session.getAttribute("STATE_MACHINE_JLA1974_currentStateName");
-		if (currentStateName != null)
-		{
-			currentState = states.get(currentStateName);
-			if (currentState == null)
-			{
-				throw new IllegalStateException("Illegal current state in session:" + currentStateName);
-			}
-		}
+    String key = makeGlobalTransitionKey(intentName);
+    List<Transition> transitionList = transitionMap.get(key);
+    if (transitionList == null)
+    {
+      transitionList = new ArrayList<Transition>();
+      transitionMap.put(key, transitionList);
+    }
 
-		Intent intent = match.getIntent();
-		String intentName = (intent != null) ? intent.getName() : null;
+    transitionList.add(new Transition(toState, guard));
 
-		if (intentName == null)
-		{
-			throw new IllegalArgumentException("Request missing intent." + match.toString());
-		}
+    handledIntents.add(intentName);
+  }
 
-		String key = makeTransitionKey(intentName, currentState);
+  public IntentResponse trigger(final IntentMatch match, final Session session)
+  {
 
-		// see if we have a pre-evet action and execute it if we have it
-		PreEventAction preEventAction = preEventActions.get(key);
-		if (preEventAction != null)
-		{
-			preEventAction.execute(match, session);
-		}
+    State currentState = startState;
 
-		List<Transition> transitionToStateList = transitionMap.get(key);
+    String currentStateName = (String) session.getAttribute("STATE_MACHINE_JLA1974_currentStateName");
+    if (currentStateName != null)
+    {
+      currentState = states.get(currentStateName);
+      if (currentState == null)
+      {
+        throw new IllegalStateException("Illegal current state in session:" + currentStateName);
+      }
+    }
 
-		if (transitionToStateList == null)
-		{
-			key = makeGlobalTransitionKey(intentName);
-			transitionToStateList = transitionMap.get(key);
+    Intent intent = match.getIntent();
+    String intentName = (intent != null) ? intent.getName() : null;
 
-			if (transitionToStateList == null)
-			{
-				throw new IllegalStateException("Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
-			}
-		}
+    if (intentName == null)
+    {
+      throw new IllegalArgumentException("Request missing intent." + match.toString());
+    }
 
-		State transitionToState = null;
+    String key = makeTransitionKey(intentName, currentState);
 
-		// find first matching to state, checking guards
-		for (Transition transition : transitionToStateList)
-		{
-			if (transition.guard == null)
-			{
-				transitionToState = transition.toState;
-				break;
-			}
-			else
-			{
-				if (transition.guard.passes(match, session))
-				{
-					transitionToState = transition.toState;
-					break;
-				}
-			}
-		}
+    // see if we have a pre-evet action and execute it if we have it
+    PreEventAction preEventAction = preEventActions.get(key);
+    if (preEventAction != null)
+    {
+      preEventAction.execute(match, session);
+    }
 
-		// didn't find any matching states
-		if (transitionToState == null)
-		{
-			throw new IllegalStateException("Could not find state to transition to. Failed all guards. Intent: " + intentName + " Current State: " + currentState);
-		}
+    List<Transition> transitionToStateList = transitionMap.get(key);
 
-		IntentResponse response = transitionToState.execute(match, session);
+    if (transitionToStateList == null)
+    {
+      key = makeGlobalTransitionKey(intentName);
+      transitionToStateList = transitionMap.get(key);
 
-		session.setAttribute("STATE_MACHINE_JLA1974_currentStateName", transitionToState.name);
+      if (transitionToStateList == null)
+      {
+        throw new IllegalStateException("Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
+      }
+    }
 
-		return response;
-	}
+    State transitionToState = null;
 
-	public boolean canHandleRequest(final IntentMatch request)
-	{
-		return request.getIntent() != null && handledIntents.contains(request.getIntent().getName());
-	}
+    // find first matching to state, checking guards
+    for (Transition transition : transitionToStateList)
+    {
+      if (transition.guard == null)
+      {
+        transitionToState = transition.toState;
+        break;
+      }
+      else
+      {
+        if (transition.guard.passes(match, session))
+        {
+          transitionToState = transition.toState;
+          break;
+        }
+      }
+    }
 
-	public void dump(Writer writer) throws IOException
-	{
-		// dummy state for global transitions
-		final State anyState = new State("<<ANY>>")
-		{
+    // didn't find any matching states
+    if (transitionToState == null)
+    {
+      throw new IllegalStateException("Could not find state to transition to. Failed all guards. Intent: " + intentName + " Current State: " + currentState);
+    }
 
-			@Override
-			public IntentResponse execute(IntentMatch intentMatch, Session session)
-			{
-				return null;
-			}
-		};
+    IntentResponse response = transitionToState.execute(match, session);
 
-		PrintWriter out = new PrintWriter(writer);
+    session.setAttribute("STATE_MACHINE_JLA1974_currentStateName", transitionToState.name);
 
-		out.println("digraph g {");
+    return response;
+  }
 
-		out.println("rankdir=LR;");
-		out.println("overlap=false;");
-		out.println("nodesep=0.25;");
+  public boolean canHandleRequest(final IntentMatch request)
+  {
+    return request.getIntent() != null && handledIntents.contains(request.getIntent().getName());
+  }
 
-		for (State state : states.values())
-		{
-			out.print(state.getName());
-			out.println(";");
-		}
+  public void dump(Writer writer)
+    throws IOException
+  {
+    // dummy state for global transitions
+    final State anyState = new State("<<ANY>>")
+    {
 
-		for (String key : transitionMap.keySet())
-		{
-			String[] splitKey = key.split("-");
-			String intent = splitKey[0];
-			State fromState;
+      @Override
+      public IntentResponse execute(IntentMatch intentMatch, Session session)
+      {
+        return null;
+      }
+    };
 
-			// handle global transitions
-			if (splitKey[1].equals("*"))
-			{
-				fromState = anyState;
-			}
-			else
-			{
-				fromState = states.get(splitKey[1]);
-			}
+    PrintWriter out = new PrintWriter(writer);
 
-			List<Transition> transitionToStateList = transitionMap.get(key);
+    out.println("digraph g {");
 
-			for (Transition transition : transitionToStateList)
-			{
-				out.print(fromState.getName());
-				out.print(" -> ");
-				out.print(transition.toState.getName());
-				out.print(" [label=\"");
-				out.print(intent);
+    out.println("rankdir=LR;");
+    out.println("overlap=false;");
+    out.println("nodesep=0.25;");
 
-				if (transition.guard != null)
-				{
-					out.print(" [");
-					out.print(transition.guard.getDescription());
-					out.print("]");
-				}
+    for (State state : states.values())
+    {
+      out.print(state.getName());
+      out.println(";");
+    }
 
-				out.println("\"];");
-			}
+    for (String key : transitionMap.keySet())
+    {
+      String[] splitKey = key.split("-");
+      String intent = splitKey[0];
+      State fromState;
 
-		}
+      // handle global transitions
+      if (splitKey[1].equals("*"))
+      {
+        fromState = anyState;
+      }
+      else
+      {
+        fromState = states.get(splitKey[1]);
+      }
 
-		out.println("}");
-		out.flush();
-	}
+      List<Transition> transitionToStateList = transitionMap.get(key);
+
+      for (Transition transition : transitionToStateList)
+      {
+        out.print(fromState.getName());
+        out.print(" -> ");
+        out.print(transition.toState.getName());
+        out.print(" [label=\"");
+        out.print(intent);
+
+        if (transition.guard != null)
+        {
+          out.print(" [");
+          out.print(transition.guard.getDescription());
+          out.print("]");
+        }
+
+        out.println("\"];");
+      }
+
+    }
+
+    out.println("}");
+    out.flush();
+  }
 }

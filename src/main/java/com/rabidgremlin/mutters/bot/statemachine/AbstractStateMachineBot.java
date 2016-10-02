@@ -15,95 +15,103 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.StateMachine;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public abstract class AbstractStateMachineBot implements Bot
+public abstract class AbstractStateMachineBot
+    implements Bot
 {
-	private Logger log = LoggerFactory.getLogger(AbstractStateMachineBot.class);
-	protected IntentMatcher matcher;
-	protected StateMachine stateMachine;
-	protected String defaultResponse = "Pardon?";
+  private Logger log = LoggerFactory.getLogger(AbstractStateMachineBot.class);
 
-	public AbstractStateMachineBot()
-	{
-		matcher = setUpIntents();
-		stateMachine = setUpStateMachine();
-	}
+  protected IntentMatcher matcher;
 
-	/* (non-Javadoc)
-	 * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session, com.rabidgremlin.mutters.core.Context, java.lang.String)
-	 */
-	@Override
-	public BotResponse respond(Session session, Context context, String messageText)
-	{
-		log.debug("session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
-		
-		// set up default response in case bot has issue processing input
-		String responseText = SessionUtils.getReprompt(session);
-		if (responseText == null)
-		{
-			responseText = defaultResponse;
-		}
-		
-		// default to reprompt hint if we have one
-		String hint = SessionUtils.getRepromptHint(session);;
-		
-		try
-		{			
-			String reprompt = null;
-			String reponseAction = null;
-			Map<String, Object> responseActionParams = null;
-			boolean askResponse = true;
+  protected StateMachine stateMachine;
 
-			IntentMatch intentMatch = matcher.match(messageText, context);
+  protected String defaultResponse = "Pardon?";
 
-			if (intentMatch != null)
-			{
-				IntentResponse response = stateMachine.trigger(intentMatch, session);
-				responseText = response.getResponse();
-				hint = response.getHint();
-				reprompt = response.getReprompt();
-				reponseAction = response.getAction();
-				responseActionParams = response.getActionParams();
+  public AbstractStateMachineBot()
+  {
+    matcher = setUpIntents();
+    stateMachine = setUpStateMachine();
+  }
 
-				if (response.isSessionEnded())
-				{
-					session.reset();
-					askResponse = false;
-				}
-				else
-				{
-					if (reprompt != null)
-					{
-						SessionUtils.setReprompt(session, reprompt);
-						SessionUtils.setRepromptHint(session, hint);
-					}
-					else
-					{
-						SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
-						SessionUtils.setRepromptHint(session, null);
-					}
-				}
-			}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session,
+   * com.rabidgremlin.mutters.core.Context, java.lang.String)
+   */
+  @Override
+  public BotResponse respond(Session session, Context context, String messageText)
+  {
+    log.debug("session: {} context: {} messageText: {}", new Object[]{ session, context, messageText });
 
-			return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams);
-		}
-		catch (IllegalStateException e)
-		{
-			log.warn("Hit illegal state", e);
-			return new BotResponse(responseText, hint, true, null, null);
-		}
-	}
+    // set up default response in case bot has issue processing input
+    String responseText = SessionUtils.getReprompt(session);
+    if (responseText == null)
+    {
+      responseText = defaultResponse;
+    }
 
-	public String getDefaultResponse()
-	{
-		return defaultResponse;
-	}
+    // default to reprompt hint if we have one
+    String hint = SessionUtils.getRepromptHint(session);
+    ;
 
-	public void setDefaultResponse(String defaultResponse)
-	{
-		this.defaultResponse = defaultResponse;
-	}
+    try
+    {
+      String reprompt = null;
+      String reponseAction = null;
+      Map<String, Object> responseActionParams = null;
+      boolean askResponse = true;
 
-	public abstract IntentMatcher setUpIntents();
+      IntentMatch intentMatch = matcher.match(messageText, context);
 
-	public abstract StateMachine setUpStateMachine();
+      if (intentMatch != null)
+      {
+        IntentResponse response = stateMachine.trigger(intentMatch, session);
+        responseText = response.getResponse();
+        hint = response.getHint();
+        reprompt = response.getReprompt();
+        reponseAction = response.getAction();
+        responseActionParams = response.getActionParams();
+
+        if (response.isSessionEnded())
+        {
+          session.reset();
+          askResponse = false;
+        }
+        else
+        {
+          if (reprompt != null)
+          {
+            SessionUtils.setReprompt(session, reprompt);
+            SessionUtils.setRepromptHint(session, hint);
+          }
+          else
+          {
+            SessionUtils.setReprompt(session, defaultResponse + " " + responseText);
+            SessionUtils.setRepromptHint(session, null);
+          }
+        }
+      }
+
+      return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams);
+    }
+    catch (IllegalStateException e)
+    {
+      log.warn("Hit illegal state", e);
+      return new BotResponse(responseText, hint, true, null, null);
+    }
+  }
+
+  public String getDefaultResponse()
+  {
+    return defaultResponse;
+  }
+
+  public void setDefaultResponse(String defaultResponse)
+  {
+    this.defaultResponse = defaultResponse;
+  }
+
+  public abstract IntentMatcher setUpIntents();
+
+  public abstract StateMachine setUpStateMachine();
 }

@@ -8,28 +8,29 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * Slot that handles a string literal. Included for completeness. Always matches.
  *
  */
-public class LiteralSlot extends Slot
+public class LiteralSlot
+    extends Slot
 {
 
-	private String name;
+  private String name;
 
-	public LiteralSlot(String name)
-	{
-		this.name = name;
-	}
+  public LiteralSlot(String name)
+  {
+    this.name = name;
+  }
 
-	@Override
-	public SlotMatch match(String token, Context context)
-	{
+  @Override
+  public SlotMatch match(String token, Context context)
+  {
 
-		return new SlotMatch(this, token, token.toLowerCase());
+    return new SlotMatch(this, token, token.toLowerCase());
 
-	}
+  }
 
-	@Override
-	public String getName()
-	{
-		return name;
-	}
+  @Override
+  public String getName()
+  {
+    return name;
+  }
 
 }

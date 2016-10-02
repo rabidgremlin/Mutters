@@ -17,52 +17,52 @@ import com.rabidgremlin.mutters.util.Utils;
 public class TestLiteralSlot
 {
 
-	@Test
-	public void testBasicMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("My name is {name}");
+  @Test
+  public void testBasicMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("My name is {name}");
 
-		CleanedInput input = InputCleaner.cleanInput("My Name is Kilroy Jones");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("My Name is Kilroy Jones");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		LiteralSlot slot = new LiteralSlot("name");
-		slots.add(slot);
+    LiteralSlot slot = new LiteralSlot("name");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("Kilroy Jones"));
-		assertThat(slotMatch.getValue(), is("kilroy jones"));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("Kilroy Jones"));
+    assertThat(slotMatch.getValue(), is("kilroy jones"));
+  }
 
-	@Test
-	public void testMidUtteranceMatch()
-	{
-		TemplatedUtterance utterance = new TemplatedUtterance("The {something} is good");
+  @Test
+  public void testMidUtteranceMatch()
+  {
+    TemplatedUtterance utterance = new TemplatedUtterance("The {something} is good");
 
-		CleanedInput input = InputCleaner.cleanInput("The pinot noir is good");
-		Slots slots = new Slots();
-		Context context = new Context();
+    CleanedInput input = InputCleaner.cleanInput("The pinot noir is good");
+    Slots slots = new Slots();
+    Context context = new Context();
 
-		LiteralSlot slot = new LiteralSlot("something");
-		slots.add(slot);
+    LiteralSlot slot = new LiteralSlot("something");
+    slots.add(slot);
 
-		TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-		assertThat(match, is(notNullValue()));
-		assertThat(match.isMatched(), is(true));
-		assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+    assertThat(match.getSlotMatches().size(), is(1));
 
-		SlotMatch slotMatch = match.getSlotMatches().get(slot);
-		assertThat(slotMatch, is(notNullValue()));
-		assertThat(slotMatch.getOrginalValue(), is("pinot noir"));
-		assertThat(slotMatch.getValue(), is("pinot noir"));
-	}
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    assertThat(slotMatch, is(notNullValue()));
+    assertThat(slotMatch.getOrginalValue(), is("pinot noir"));
+    assertThat(slotMatch.getValue(), is("pinot noir"));
+  }
 
 }

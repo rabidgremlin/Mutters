@@ -5,19 +5,20 @@ import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.state.PreEventAction;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class SetNumberAsSecondNumber implements PreEventAction
+public class SetNumberAsSecondNumber
+    implements PreEventAction
 {
 
-	@Override
-	public void execute(IntentMatch intentMatch, Session session)
-	{
+  @Override
+  public void execute(IntentMatch intentMatch, Session session)
+  {
 
-		Number number = SessionUtils.getNumberSlot(intentMatch, "number", null);
+    Number number = SessionUtils.getNumberSlot(intentMatch, "number", null);
 
-		if (number != null)
-		{
-			SessionUtils.setNumberSlotIntoSession(session, "number2", number);
-		}
-	}
+    if (number != null)
+    {
+      SessionUtils.setNumberSlotIntoSession(session, "number2", number);
+    }
+  }
 
 }

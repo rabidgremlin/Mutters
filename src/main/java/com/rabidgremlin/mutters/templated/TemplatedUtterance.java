@@ -23,106 +23,108 @@ import com.rabidgremlin.mutters.util.Utils;
 public class TemplatedUtterance
 {
 
-	private String template;
-	private CleanedInput tokens;
-	// private HashMap<Integer, String> slotNames = new HashMap<Integer,
-	// String>();
-	private HashSet<String> slotNames = new HashSet<String>();
+  private String template;
 
-	private Pattern matchPattern;
+  private CleanedInput tokens;
 
-	public TemplatedUtterance(String template)
-	{
-		this.template = template;
-		tokens = InputCleaner.cleanInput(template);
+  // private HashMap<Integer, String> slotNames = new HashMap<Integer,
+  // String>();
+  private HashSet<String> slotNames = new HashSet<String>();
 
-		List<String> cleanedTokens = tokens.getCleanedTokens();
+  private Pattern matchPattern;
 
-		String regexStr = "^";
+  public TemplatedUtterance(String template)
+  {
+    this.template = template;
+    tokens = InputCleaner.cleanInput(template);
 
-		for (String token : cleanedTokens)
-		{
-			if (token.startsWith("{") && token.endsWith("}"))
-			{
-				String slotName = token.substring(1, token.length() - 1);
+    List<String> cleanedTokens = tokens.getCleanedTokens();
 
-				regexStr += "(?<" + slotName + ">.*) ";
+    String regexStr = "^";
 
-				slotNames.add(slotName);
-			}
-			else
-			{
-				regexStr += Pattern.quote(token) + " ";
-			}
-		}
+    for (String token : cleanedTokens)
+    {
+      if (token.startsWith("{") && token.endsWith("}"))
+      {
+        String slotName = token.substring(1, token.length() - 1);
 
-		//System.out.println(regexStr);
-		matchPattern = Pattern.compile(regexStr.trim() +"$", Pattern.CASE_INSENSITIVE);
-	}
+        regexStr += "(?<" + slotName + ">.*) ";
 
-	public String getTemplate()
-	{
-		return template;
-	}
+        slotNames.add(slotName);
+      }
+      else
+      {
+        regexStr += Pattern.quote(token) + " ";
+      }
+    }
 
-	// NOTE input should be cleaned
-	public TemplatedUtteranceMatch matches(CleanedInput input, Slots slots, Context context)
-	{
-		String inputString = StringUtils.join(input.getCleanedTokens(), ' ');
+    // System.out.println(regexStr);
+    matchPattern = Pattern.compile(regexStr.trim() + "$", Pattern.CASE_INSENSITIVE);
+  }
 
-		Matcher match = matchPattern.matcher(inputString);
+  public String getTemplate()
+  {
+    return template;
+  }
 
-		if (!match.find())
-		{
-			return new TemplatedUtteranceMatch(false);
-		}
+  // NOTE input should be cleaned
+  public TemplatedUtteranceMatch matches(CleanedInput input, Slots slots, Context context)
+  {
+    String inputString = StringUtils.join(input.getCleanedTokens(), ' ');
 
-		TemplatedUtteranceMatch theMatch = new TemplatedUtteranceMatch(true);
+    Matcher match = matchPattern.matcher(inputString);
 
-		for (String slotName : slotNames)
-		{
-			Slot slot = slots.getSlot(slotName);
+    if (!match.find())
+    {
+      return new TemplatedUtteranceMatch(false);
+    }
 
-			if (slot == null)
-			{
-				throw new IllegalStateException("Cannot find slot '" + slotName + " reference by utterace '" + template + "'");
-			}
+    TemplatedUtteranceMatch theMatch = new TemplatedUtteranceMatch(true);
 
-			String cleanedMatchString = match.group(slotName);
-			@SuppressWarnings("unchecked")
-			List<String> matchedTokens = Arrays.asList(cleanedMatchString.split(" "));
+    for (String slotName : slotNames)
+    {
+      Slot slot = slots.getSlot(slotName);
 
-			int matchPos = Collections.indexOfSubList(input.getCleanedTokens(), matchedTokens);
-			if (matchPos == -1)
-			{
-				throw new IllegalStateException("Was unable to find '" + cleanedMatchString + "' in '" + inputString + "'");
-			}
+      if (slot == null)
+      {
+        throw new IllegalStateException("Cannot find slot '" + slotName + " reference by utterace '" + template + "'");
+      }
 
-			List<String> orginalTokens = new ArrayList<>();
-			for (int loop = matchPos; loop < matchedTokens.size() + matchPos; loop++)
-			{
-				orginalTokens.add(input.getOriginalTokens().get(loop));
-			}
+      String cleanedMatchString = match.group(slotName);
+      @SuppressWarnings("unchecked")
+      List<String> matchedTokens = Arrays.asList(cleanedMatchString.split(" "));
 
-			SlotMatch slotMatch = slot.match(StringUtils.join(orginalTokens, ' '), context);
+      int matchPos = Collections.indexOfSubList(input.getCleanedTokens(), matchedTokens);
+      if (matchPos == -1)
+      {
+        throw new IllegalStateException("Was unable to find '" + cleanedMatchString + "' in '" + inputString + "'");
+      }
 
-			if (slotMatch != null)
-			{
-				theMatch.getSlotMatches().put(slot, slotMatch);
-			}
-			else
-			{
-				return new TemplatedUtteranceMatch(false);
-			}
-		}
+      List<String> orginalTokens = new ArrayList<>();
+      for (int loop = matchPos; loop < matchedTokens.size() + matchPos; loop++)
+      {
+        orginalTokens.add(input.getOriginalTokens().get(loop));
+      }
 
-		return theMatch;
-	}
+      SlotMatch slotMatch = slot.match(StringUtils.join(orginalTokens, ' '), context);
 
-	@Override
-	public String toString()
-	{
-		return "Utterance [template=" + template + ", tokens=" + tokens + "]";
-	}
+      if (slotMatch != null)
+      {
+        theMatch.getSlotMatches().put(slot, slotMatch);
+      }
+      else
+      {
+        return new TemplatedUtteranceMatch(false);
+      }
+    }
+
+    return theMatch;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Utterance [template=" + template + ", tokens=" + tokens + "]";
+  }
 
 }

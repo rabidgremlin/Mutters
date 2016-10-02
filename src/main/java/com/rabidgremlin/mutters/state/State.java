@@ -6,24 +6,24 @@ import com.rabidgremlin.mutters.session.Session;
 public abstract class State
 {
 
-	protected String name;
+  protected String name;
 
-	public State(String name)
-	{
-		this.name = name;
-	}
+  public State(String name)
+  {
+    this.name = name;
+  }
 
-	public abstract IntentResponse execute(final IntentMatch intentMatch, final Session session);
+  public abstract IntentResponse execute(final IntentMatch intentMatch, final Session session);
 
-	public String getName()
-	{
-		return name;
-	}
+  public String getName()
+  {
+    return name;
+  }
 
-	@Override
-	public String toString()
-	{
-		return "State [name=" + name + "]";
-	}
+  @Override
+  public String toString()
+  {
+    return "State [name=" + name + "]";
+  }
 
 }

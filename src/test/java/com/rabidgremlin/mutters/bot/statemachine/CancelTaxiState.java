@@ -6,18 +6,19 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
-public class CancelTaxiState extends State
+public class CancelTaxiState
+    extends State
 {
 
-	public CancelTaxiState()
-	{
-		super("CancelTaxiState");
-	}
+  public CancelTaxiState()
+  {
+    super("CancelTaxiState");
+  }
 
-	@Override
-	public IntentResponse execute(IntentMatch intentMatch, Session session)
-	{				
-		return IntentResponse.newTellResponse("Your taxi has been cancelled"); 
-	}
+  @Override
+  public IntentResponse execute(IntentMatch intentMatch, Session session)
+  {
+    return IntentResponse.newTellResponse("Your taxi has been cancelled");
+  }
 
 }

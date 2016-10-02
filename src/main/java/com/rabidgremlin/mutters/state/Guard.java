@@ -5,7 +5,7 @@ import com.rabidgremlin.mutters.session.Session;
 
 public interface Guard
 {
-	public boolean passes(final IntentMatch request, final Session session);
+  public boolean passes(final IntentMatch request, final Session session);
 
-	public String getDescription();
+  public String getDescription();
 }
