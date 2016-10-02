@@ -20,6 +20,7 @@ public class MathBotExample
   {
     mathBot = new MathBot();
     session = new Session();
+    context = new Context();
   }
 
   public void run()

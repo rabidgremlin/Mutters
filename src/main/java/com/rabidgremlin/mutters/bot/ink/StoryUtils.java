@@ -66,12 +66,20 @@ public final class StoryUtils
     }
   }
 
-  public static Boolean getBoolean(Story story, String varName)
+  /**
+   * This method returns the boolean value of the specified story variable. Note Ink stores booleans values as integers,
+   * 1 is true. This method returns false if variable does not exist.
+   * 
+   * @param story The story to extract the variable from.
+   * @param varName The name of variable. Case sensitive.
+   * @return The value of variable, or false if the variable does not exist.
+   */
+  public static boolean getBoolean(Story story, String varName)
   {
     Integer boolVal = (Integer) story.getVariablesState().get(varName);
     if (boolVal == null)
     {
-      return null;
+      return false;
     }
 
     try
@@ -84,7 +92,7 @@ public final class StoryUtils
     }
     catch (IllegalArgumentException e)
     {
-      return null;
+      return false;
     }
   }
 
