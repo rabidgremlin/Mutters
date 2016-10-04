@@ -108,8 +108,13 @@ public abstract class AbstractInkBot
 
     try
     {
-      // TODO is this efficent or do we need ThreadLocals ?
-      Story story = new Story(inkStoryJson);
+      Story story = null;
+
+      // HACK: wrap create in synchronized block because something in JSON parsing is not threadsafe
+      synchronized (this)
+      {
+        story = new Story(inkStoryJson);
+      }
 
       // call hook so externs and other things can be applied
       afterStoryCreated(story);
@@ -226,8 +231,9 @@ public abstract class AbstractInkBot
           currentResponse.responseActionParams);
     }
     catch (Exception e)
-    {
-      log.warn("Unexpected error.", e);
+    {      
+      log.error("Unexpected error", e);
+      // TODO: Raise an exception so caller can handle
       return new BotResponse(currentResponse.responseText, currentResponse.hint, true, null, null);
     }
   }
