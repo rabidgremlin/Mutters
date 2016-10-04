@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.bladecoder.ink.runtime.Choice;
 import com.bladecoder.ink.runtime.Story;
 import com.rabidgremlin.mutters.bot.Bot;
+import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -90,6 +91,7 @@ public abstract class AbstractInkBot
    */
   @Override
   public BotResponse respond(Session session, Context context, String messageText)
+    throws BotException
   {
     log.info("============================================================== \n session: {} context: {} messageText: {}",
         new Object[]{ session, context, messageText });
@@ -231,10 +233,8 @@ public abstract class AbstractInkBot
           currentResponse.responseActionParams);
     }
     catch (Exception e)
-    {      
-      log.error("Unexpected error", e);
-      // TODO: Raise an exception so caller can handle
-      return new BotResponse(currentResponse.responseText, currentResponse.hint, true, null, null);
+    {
+      throw new BotException("Unexpected error", e);
     }
   }
 

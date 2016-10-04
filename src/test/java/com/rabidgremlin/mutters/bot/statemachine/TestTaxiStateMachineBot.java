@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
@@ -25,7 +26,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithAddress()
+  public void testOrderTaxiWithAddress() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -38,7 +39,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithOutAddress()
+  public void testOrderTaxiWithOutAddress() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -57,7 +58,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testCancelTaxi()
+  public void testCancelTaxi() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -70,7 +71,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testTaxiStatus()
+  public void testTaxiStatus() throws BotException
   {
     Session session = new Session();
     Context context = new Context();

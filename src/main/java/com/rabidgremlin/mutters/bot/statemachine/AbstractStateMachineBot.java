@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.bot.Bot;
+import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -39,7 +40,7 @@ public abstract class AbstractStateMachineBot
    * com.rabidgremlin.mutters.core.Context, java.lang.String)
    */
   @Override
-  public BotResponse respond(Session session, Context context, String messageText)
+  public BotResponse respond(Session session, Context context, String messageText) throws BotException
   {
     log.debug("session: {} context: {} messageText: {}", new Object[]{ session, context, messageText });
 
@@ -52,8 +53,7 @@ public abstract class AbstractStateMachineBot
 
     // default to reprompt hint if we have one
     String hint = SessionUtils.getRepromptHint(session);
-    ;
-
+    
     try
     {
       String reprompt = null;
@@ -96,8 +96,7 @@ public abstract class AbstractStateMachineBot
     }
     catch (IllegalStateException e)
     {
-      log.warn("Hit illegal state", e);
-      return new BotResponse(responseText, hint, true, null, null);
+      throw new BotException("Hit illegal state", e);      
     }
   }
 
