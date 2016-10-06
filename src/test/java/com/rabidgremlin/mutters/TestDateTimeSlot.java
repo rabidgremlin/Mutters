@@ -2,7 +2,6 @@ package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertThat;
 
 import java.util.TimeZone;
@@ -21,7 +20,6 @@ import com.rabidgremlin.mutters.slots.DateSlot;
 import com.rabidgremlin.mutters.slots.DateTimeSlot;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TestDateTimeSlot
 {
@@ -72,7 +70,8 @@ public class TestDateTimeSlot
     SlotMatch slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-    assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
+    assertThat(slotMatch.getValue(),
+        is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
   }
 
   @Test

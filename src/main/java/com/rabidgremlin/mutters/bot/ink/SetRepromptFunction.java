@@ -26,9 +26,10 @@ public class SetRepromptFunction
    * session, IntentMatch intentMatch, Story story, String param)
    */
   @Override
-  public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+  public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
+    Story story, String param)
   {
-    currentResponse.reprompt = param;
+    currentResponse.setReprompt(param);
   }
 
 }

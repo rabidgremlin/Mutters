@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Intent;
-import com.rabidgremlin.mutters.core.Slot;
-import com.rabidgremlin.mutters.core.Slots;
 
 public class TemplatedIntent
     extends Intent
@@ -44,7 +42,8 @@ public class TemplatedIntent
       TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
       if (match.isMatched())
       {
-        log.debug("------------ Matched to {} match: {} -------------", utterance.getTemplate(), match);
+        log.debug("------------ Matched to {} match: {} -------------", utterance.getTemplate(),
+            match);
         return match;
       }
     }

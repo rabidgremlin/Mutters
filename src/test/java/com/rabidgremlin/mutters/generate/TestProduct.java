@@ -1,12 +1,13 @@
 package com.rabidgremlin.mutters.generate;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Arrays;
 
 public class TestProduct
 {

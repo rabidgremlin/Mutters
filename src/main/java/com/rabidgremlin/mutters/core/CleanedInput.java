@@ -28,7 +28,8 @@ public class CleanedInput
   @Override
   public String toString()
   {
-    return "CleanedInput [originalTokens=" + originalTokens + ", cleanedTokens=" + cleanedTokens + "]";
+    return "CleanedInput [originalTokens=" + originalTokens + ", cleanedTokens=" + cleanedTokens
+        + "]";
   }
 
 }

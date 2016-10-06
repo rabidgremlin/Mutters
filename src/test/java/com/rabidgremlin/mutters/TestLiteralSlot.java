@@ -1,7 +1,9 @@
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
@@ -12,7 +14,6 @@ import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.LiteralSlot;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TestLiteralSlot
 {

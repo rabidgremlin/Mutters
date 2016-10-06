@@ -1,14 +1,11 @@
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.IsCloseTo.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.TimeZone;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Test;
 
@@ -17,12 +14,9 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.slots.DateSlot;
-import com.rabidgremlin.mutters.slots.DateTimeSlot;
 import com.rabidgremlin.mutters.slots.TimeSlot;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TestTimeSlot
 {

@@ -56,20 +56,21 @@ public abstract class AbstractInkBot
   public BotResponse respond(Session session, Context context, String messageText)
     throws BotException
   {
-    log.info("============================================================== \n session: {} context: {} messageText: {}",
+    log.info(
+        "============================================================== \n session: {} context: {} messageText: {}",
         new Object[]{ session, context, messageText });
 
     CurrentResponse currentResponse = new CurrentResponse();
 
     // set up default response in case bot has issue processing input
-    currentResponse.responseText = SessionUtils.getReprompt(session);
-    if (currentResponse.responseText == null)
+    currentResponse.setResponseText(SessionUtils.getReprompt(session));
+    if (currentResponse.getResponseText() == null)
     {
-      currentResponse.responseText = defaultResponse;
+      currentResponse.setResponseText(defaultResponse);
     }
 
     // preserve hint if we had reprompt hint
-    currentResponse.hint = SessionUtils.getRepromptHint(session);
+    currentResponse.setHint(SessionUtils.getRepromptHint(session));
 
     try
     {
@@ -96,7 +97,8 @@ public abstract class AbstractInkBot
         // copy any slot values into ink vars
         for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
         {
-          story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
+          story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
+              slotMatch.getValue().toString());
         }
 
         // get to right place in story
@@ -115,8 +117,8 @@ public abstract class AbstractInkBot
               story.chooseChoiceIndex(choiceIndex);
 
               // reset reprompt and hint
-              currentResponse.reprompt = null;
-              currentResponse.hint = null;
+              currentResponse.setReprompt(null);
+              currentResponse.setHint(null);
 
               StringBuffer response = new StringBuffer();
               boolean first = true;
@@ -158,7 +160,7 @@ public abstract class AbstractInkBot
                 }
               }
 
-              currentResponse.responseText = response.toString();
+              currentResponse.setResponseText(response.toString());
 
               break;
             }
@@ -170,30 +172,31 @@ public abstract class AbstractInkBot
           if (story.getCurrentChoices().size() == 0)
           {
             session.reset();
-            currentResponse.askResponse = false;
+            currentResponse.setAskResponse(false);
           }
         }
         else
         {
           session.reset();
-          currentResponse.askResponse = false;
+          currentResponse.setAskResponse(false);
         }
 
-        if (currentResponse.reprompt != null)
+        if (currentResponse.getReprompt() != null)
         {
-          SessionUtils.setReprompt(session, currentResponse.reprompt);
-          SessionUtils.setRepromptHint(session, currentResponse.hint);
+          SessionUtils.setReprompt(session, currentResponse.getReprompt());
+          SessionUtils.setRepromptHint(session, currentResponse.getHint());
         }
         else
         {
-          SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.responseText);
-          SessionUtils.setRepromptHint(session, currentResponse.hint);
+          SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
+          SessionUtils.setRepromptHint(session, currentResponse.getHint());
         }
 
       }
 
-      return new BotResponse(currentResponse.responseText, currentResponse.hint, currentResponse.askResponse, currentResponse.reponseAction,
-          currentResponse.responseActionParams);
+      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(),
+          currentResponse.isAskResponse(), currentResponse.getReponseAction(),
+          currentResponse.getResponseActionParams());
     }
     catch (Exception e)
     {
@@ -215,7 +218,8 @@ public abstract class AbstractInkBot
   {
     try
     {
-      InputStream inkJsonStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(inkJsonFileName);
+      InputStream inkJsonStream = Thread.currentThread().getContextClassLoader()
+          .getResourceAsStream(inkJsonFileName);
 
       return IOUtils.toString(inkJsonStream, "UTF-8").replace('\uFEFF', ' ');
     }

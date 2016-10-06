@@ -64,6 +64,7 @@ public class NumberSlot
 
   // based on
   // http://stackoverflow.com/questions/26948858/converting-words-to-numbers-in-java
+//CHECKSTYLE:OFF Yep it's complex and long
   public Number wordStringToNumber(String wordString)
   {
     if (wordString == null || wordString.length() < 1)
@@ -232,5 +233,6 @@ public class NumberSlot
     result = 0;
     return finalResult;
   }
+  //CHECKSTYLE:ON
 
 }

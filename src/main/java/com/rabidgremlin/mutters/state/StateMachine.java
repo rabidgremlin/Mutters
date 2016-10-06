@@ -27,15 +27,36 @@ public class StateMachine
 
   class Transition
   {
-    public State toState;
+    private State toState;
 
-    public Guard guard;
+    private Guard guard;
 
-    public Transition(State toState, Guard guard)
+    Transition(State toState, Guard guard)
     {
       this.toState = toState;
       this.guard = guard;
     }
+
+    public State getToState()
+    {
+      return toState;
+    }
+
+    public void setToState(State toState)
+    {
+      this.toState = toState;
+    }
+
+    public Guard getGuard()
+    {
+      return guard;
+    }
+
+    public void setGuard(Guard guard)
+    {
+      this.guard = guard;
+    }
+
   }
 
   public void setStartState(State state)
@@ -128,7 +149,8 @@ public class StateMachine
 
     State currentState = startState;
 
-    String currentStateName = (String) session.getAttribute("STATE_MACHINE_JLA1974_currentStateName");
+    String currentStateName = (String) session
+        .getAttribute("STATE_MACHINE_JLA1974_currentStateName");
     if (currentStateName != null)
     {
       currentState = states.get(currentStateName);
@@ -164,7 +186,8 @@ public class StateMachine
 
       if (transitionToStateList == null)
       {
-        throw new IllegalStateException("Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
+        throw new IllegalStateException("Could not find state to transition to. Intent: "
+            + intentName + " Current State: " + currentState);
       }
     }
 
@@ -191,7 +214,9 @@ public class StateMachine
     // didn't find any matching states
     if (transitionToState == null)
     {
-      throw new IllegalStateException("Could not find state to transition to. Failed all guards. Intent: " + intentName + " Current State: " + currentState);
+      throw new IllegalStateException(
+          "Could not find state to transition to. Failed all guards. Intent: " + intentName
+              + " Current State: " + currentState);
     }
 
     IntentResponse response = transitionToState.execute(match, session);

@@ -33,12 +33,14 @@ public class IntentResponse
     return new IntentResponse(false, response, reprompt, hint, null, null);
   }
 
-  public static IntentResponse newAskResponse(String response, String action, Map<String, Object> actionParams)
+  public static IntentResponse newAskResponse(String response, String action,
+    Map<String, Object> actionParams)
   {
     return new IntentResponse(false, response, null, null, action, actionParams);
   }
 
-  public static IntentResponse newAskResponse(String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
+  public static IntentResponse newAskResponse(String response, String reprompt, String hint,
+    String action, Map<String, Object> actionParams)
   {
     return new IntentResponse(false, response, null, null, action, actionParams);
   }
@@ -48,12 +50,14 @@ public class IntentResponse
     return new IntentResponse(true, response, null, null, null, null);
   }
 
-  public static IntentResponse newTellResponse(String response, String action, Map<String, Object> actionParams)
+  public static IntentResponse newTellResponse(String response, String action,
+    Map<String, Object> actionParams)
   {
     return new IntentResponse(true, response, null, null, action, actionParams);
   }
 
-  public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint, String action, Map<String, Object> actionParams)
+  public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint,
+    String action, Map<String, Object> actionParams)
   {
 
     this.sessionEnded = sessionEnded;

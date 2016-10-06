@@ -17,7 +17,8 @@ public class BotException
     super();
   }
 
-  public BotException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+  public BotException(String message, Throwable cause, boolean enableSuppression,
+    boolean writableStackTrace)
   {
     super(message, cause, enableSuppression, writableStackTrace);
   }

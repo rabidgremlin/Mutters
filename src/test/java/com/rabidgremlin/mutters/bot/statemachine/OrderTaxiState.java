@@ -25,7 +25,8 @@ public class OrderTaxiState
     // get the numbers
     String address = SessionUtils.getStringFromSlotOrSession(intentMatch, session, "address", null);
 
-    return IntentResponse.newTellResponse(String.format("Taxi %s is on its way", Integer.toHexString(address.hashCode()).substring(0, 4)));
+    return IntentResponse.newTellResponse(String.format("Taxi %s is on its way",
+        Integer.toHexString(address.hashCode()).substring(0, 4)));
   }
 
 }

@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.codec.language.Soundex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InputCleaner
+public final class InputCleaner
 {
   private static Logger log = LoggerFactory.getLogger(InputCleaner.class);
 

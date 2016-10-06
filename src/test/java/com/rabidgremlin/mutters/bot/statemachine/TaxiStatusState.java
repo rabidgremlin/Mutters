@@ -4,7 +4,6 @@ import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
-import com.rabidgremlin.mutters.util.SessionUtils;
 
 public class TaxiStatusState
     extends State

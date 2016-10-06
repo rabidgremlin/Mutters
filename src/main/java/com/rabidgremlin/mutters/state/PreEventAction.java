@@ -5,5 +5,5 @@ import com.rabidgremlin.mutters.session.Session;
 
 public interface PreEventAction
 {
-  public void execute(final IntentMatch intentMatch, final Session session);
+  void execute(final IntentMatch intentMatch, final Session session);
 }

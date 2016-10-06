@@ -1,11 +1,13 @@
 package com.rabidgremlin.mutters;
 
-import static org.junit.Assert.*;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.slots.CustomSlot;
@@ -13,7 +15,6 @@ import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
-import com.rabidgremlin.mutters.core.Context;
 
 public class TestIntentMatcher
 {
@@ -45,11 +46,11 @@ public class TestIntentMatcher
 
     SlotMatch number1Match = intentMatch.getSlotMatches().get(number1);
     assertThat(number1Match, is(notNullValue()));
-    assertThat(number1Match.getValue(), is(1l));
+    assertThat(number1Match.getValue(), is(1L));
 
     SlotMatch number2Match = intentMatch.getSlotMatches().get(number2);
     assertThat(number2Match, is(notNullValue()));
-    assertThat(number2Match.getValue(), is(5l));
+    assertThat(number2Match.getValue(), is(5L));
 
   }
 

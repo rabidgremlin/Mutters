@@ -30,6 +30,7 @@ public interface InkBotFunction
    * @param story The current ink story.
    * @param param The param that was passed to the function. This is all the text after the function identifier.
    */
-  void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param);
+  void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
+    Story story, String param);
 
 }

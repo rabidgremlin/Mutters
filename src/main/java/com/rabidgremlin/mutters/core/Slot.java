@@ -1,7 +1,5 @@
 package com.rabidgremlin.mutters.core;
 
-import com.rabidgremlin.mutters.slots.CustomSlot;
-
 public abstract class Slot
 {
 
@@ -9,7 +7,8 @@ public abstract class Slot
 
   public abstract String getName();
 
-  // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog ugly
+  // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog
+  // ugly
   @Override
   public int hashCode()
   {
@@ -19,27 +18,38 @@ public abstract class Slot
     return result;
   }
 
-  // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog ugly
+  // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog
+  // ugly
   @Override
   public boolean equals(Object obj)
   {
     if (this == obj)
+    {
       return true;
+    }
     if (obj == null)
+    {
       return false;
+    }
     if (!(obj instanceof Slot))
+    {
       return false;
+    }
 
     Slot other = (Slot) obj;
     if (getName() == null)
     {
       if (other.getName() != null)
+      {
         return false;
+      }
     }
     else
     {
       if (!getName().equals(other.getName()))
+      {
         return false;
+      }
     }
 
     return true;

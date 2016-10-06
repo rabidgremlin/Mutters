@@ -1,8 +1,8 @@
 package com.rabidgremlin.mutters.ml;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.IsCloseTo.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
@@ -10,10 +10,6 @@ import org.junit.Test;
 
 import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.tokenize.SimpleTokenizer;
-import opennlp.tools.util.Span;
 
 public class TestCategorization
 {
@@ -22,7 +18,8 @@ public class TestCategorization
   public void testModelLoad()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-cat-taxi-intents.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-cat-taxi-intents.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     DoccatModel model = new DoccatModel(modelUrl);
@@ -33,7 +30,8 @@ public class TestCategorization
   public void testCategorization()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-cat-taxi-intents.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-cat-taxi-intents.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     DoccatModel model = new DoccatModel(modelUrl);
@@ -49,7 +47,8 @@ public class TestCategorization
     assertThat(category, is(notNullValue()));
     assertThat(category, is("OrderTaxi"));
 
-    category = myCategorizer.getBestCategory(myCategorizer.categorize("Send a taxi to 12 Pleasent Street"));
+    category = myCategorizer
+        .getBestCategory(myCategorizer.categorize("Send a taxi to 12 Pleasent Street"));
     assertThat(category, is(notNullValue()));
     assertThat(category, is("OrderTaxi"));
 
@@ -61,7 +60,8 @@ public class TestCategorization
     assertThat(category, is(notNullValue()));
     assertThat(category, is("WhereTaxi"));
 
-    category = myCategorizer.getBestCategory(myCategorizer.categorize("The address is 136 River Road"));
+    category = myCategorizer
+        .getBestCategory(myCategorizer.categorize("The address is 136 River Road"));
     assertThat(category, is(notNullValue()));
     assertThat(category, is("GaveAddress"));
   }

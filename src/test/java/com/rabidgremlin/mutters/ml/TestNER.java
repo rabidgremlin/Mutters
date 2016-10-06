@@ -1,8 +1,8 @@
 package com.rabidgremlin.mutters.ml;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.IsCloseTo.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
@@ -20,7 +20,8 @@ public class TestNER
   public void testModelLoad()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-persons.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-ner-persons.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
@@ -31,14 +32,16 @@ public class TestNER
   public void testPersonNER()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-persons.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-ner-persons.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
     assertThat(model, is(notNullValue()));
 
     NameFinderME nameFinder = new NameFinderME(model);
-    String[] tokens = SimpleTokenizer.INSTANCE.tokenize("Mr. John Smith of New York, married Anne Green of London today.");
+    String[] tokens = SimpleTokenizer.INSTANCE
+        .tokenize("Mr. John Smith of New York, married Anne Green of London today.");
     assertThat(tokens.length, is(15));
 
     Span[] spans = nameFinder.find(tokens);
@@ -54,14 +57,16 @@ public class TestNER
   public void testLocationNER()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-locations.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-ner-locations.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
     assertThat(model, is(notNullValue()));
 
     NameFinderME nameFinder = new NameFinderME(model);
-    String[] tokens = SimpleTokenizer.INSTANCE.tokenize("Mr. John Smith of New York, married Anne Green of London today.");
+    String[] tokens = SimpleTokenizer.INSTANCE
+        .tokenize("Mr. John Smith of New York, married Anne Green of London today.");
     assertThat(tokens.length, is(15));
 
     Span[] spans = nameFinder.find(tokens);
@@ -77,14 +82,16 @@ public class TestNER
   public void testDateNER()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-dates.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-ner-dates.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);
     assertThat(model, is(notNullValue()));
 
     NameFinderME nameFinder = new NameFinderME(model);
-    String[] tokens = SimpleTokenizer.INSTANCE.tokenize("Mr. John Smith of New York, married Anne Green of London today.");
+    String[] tokens = SimpleTokenizer.INSTANCE
+        .tokenize("Mr. John Smith of New York, married Anne Green of London today.");
     assertThat(tokens.length, is(15));
 
     Span[] spans = nameFinder.find(tokens);
@@ -99,7 +106,8 @@ public class TestNER
   public void testAddressNER()
     throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-ner-address.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader()
+        .getResource("models/en-ner-address.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     TokenNameFinderModel model = new TokenNameFinderModel(modelUrl);

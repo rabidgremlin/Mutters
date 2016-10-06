@@ -35,7 +35,8 @@ public class BotResponse
    * @param action Any action that the client should take. eg opening a URL, displaying a button etc
    * @param actionParams The parameters for the action.
    */
-  public BotResponse(String response, String hint, boolean askResponse, String action, Map<String, Object> actionParams)
+  public BotResponse(String response, String hint, boolean askResponse, String action,
+    Map<String, Object> actionParams)
   {
     this.response = response;
     this.hint = hint;

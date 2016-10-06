@@ -9,8 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
@@ -18,7 +16,6 @@ import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TemplatedUtterance
 {
@@ -87,7 +84,8 @@ public class TemplatedUtterance
 
       if (slot == null)
       {
-        throw new IllegalStateException("Cannot find slot '" + slotName + " reference by utterace '" + template + "'");
+        throw new IllegalStateException(
+            "Cannot find slot '" + slotName + " reference by utterace '" + template + "'");
       }
 
       String cleanedMatchString = match.group(slotName);
@@ -97,7 +95,8 @@ public class TemplatedUtterance
       int matchPos = Collections.indexOfSubList(input.getCleanedTokens(), matchedTokens);
       if (matchPos == -1)
       {
-        throw new IllegalStateException("Was unable to find '" + cleanedMatchString + "' in '" + inputString + "'");
+        throw new IllegalStateException(
+            "Was unable to find '" + cleanedMatchString + "' in '" + inputString + "'");
       }
 
       List<String> orginalTokens = new ArrayList<>();

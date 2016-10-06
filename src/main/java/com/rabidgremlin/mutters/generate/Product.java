@@ -2,12 +2,15 @@ package com.rabidgremlin.mutters.generate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 // TODO optimise and reduce memory usage
-public class Product
+public final class Product
 {
+  private Product()
+  {
+    // private constructor for utility class
+  }
 
   public static <T> List<List<T>> generate(List<T>... lists)
   {

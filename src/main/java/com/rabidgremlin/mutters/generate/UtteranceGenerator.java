@@ -2,7 +2,6 @@ package com.rabidgremlin.mutters.generate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +37,8 @@ public class UtteranceGenerator
 
     }
 
-    // arrgggh need this crap because Java generics suck and you cannot create arrays of generics also type erasure...
+    // arrgggh need this crap because Java generics suck and you cannot create arrays of generics
+    // also type erasure...
     List[] listArray = new ArrayList[lists.size()];
     for (int loop = 0; loop < lists.size(); loop++)
     {
@@ -52,7 +52,8 @@ public class UtteranceGenerator
     List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
     for (List<String> templateParts : templates)
     {
-      utterances.add(new TemplatedUtterance(StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
+      utterances.add(new TemplatedUtterance(
+          StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
     }
 
     return utterances;

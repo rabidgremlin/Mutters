@@ -48,12 +48,16 @@ public class TaxiInkBot
     addFunction(new InkBotFunction()
     {
       @Override
-      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
+        Story story, String param)
       {
         try
         {
           story.getVariablesState().set("taxiNo",
-              Integer.toHexString(SessionUtils.getStringFromSlotOrSession(intentMatch, session, "address", "").hashCode()).substring(0, 4));
+              Integer
+                  .toHexString(SessionUtils
+                      .getStringFromSlotOrSession(intentMatch, session, "address", "").hashCode())
+                  .substring(0, 4));
         }
         catch (Exception e)
         {

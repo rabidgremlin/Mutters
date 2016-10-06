@@ -1,25 +1,20 @@
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-
-import java.util.List;
 
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.InputCleaner;
-import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.CustomSlot;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TestUtterance
 {
@@ -164,7 +159,8 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("City", new String[]{ "Wellington", "San Francisco", "Auckland" });
+    CustomSlot color = new CustomSlot("City",
+        new String[]{ "Wellington", "San Francisco", "Auckland" });
     slots.add(color);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);

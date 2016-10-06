@@ -1,7 +1,10 @@
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
@@ -9,11 +12,9 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
-import com.rabidgremlin.mutters.slots.LiteralSlot;
 import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
-import com.rabidgremlin.mutters.util.Utils;
 
 public class TestNumberSlot
 {
@@ -23,7 +24,8 @@ public class TestNumberSlot
   {
     TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
 
-    CleanedInput input = InputCleaner.cleanInput("The balance is One hundred two thousand and thirty four");
+    CleanedInput input = InputCleaner
+        .cleanInput("The balance is One hundred two thousand and thirty four");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -39,17 +41,18 @@ public class TestNumberSlot
     SlotMatch slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("One hundred two thousand and thirty four"));
-    assertThat(slotMatch.getValue(), is(102034l));
+    assertThat(slotMatch.getValue(), is(102034L));
   }
 
   @Test
   public void testWordStringToNumber()
   {
     NumberSlot slot = new NumberSlot("test");
-    Number result = slot.wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
+    Number result = slot
+        .wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
 
     assertThat(result, is(notNullValue()));
-    assertThat(result, is(352261l));
+    assertThat(result, is(352261L));
 
     result = slot.wordStringToNumber("Three hundred and bad");
     assertThat(result, is(nullValue()));
@@ -76,7 +79,7 @@ public class TestNumberSlot
     SlotMatch slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("123"));
-    assertThat(slotMatch.getValue(), is(123l));
+    assertThat(slotMatch.getValue(), is(123L));
   }
 
   @Test

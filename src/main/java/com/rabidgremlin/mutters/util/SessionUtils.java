@@ -49,7 +49,8 @@ public class SessionUtils
   {
     try
     {
-      String stateJson = (String) session.getAttribute(SLOT_PREFIX + "0987654321STORYSTATE1234567890");
+      String stateJson = (String) session
+          .getAttribute(SLOT_PREFIX + "0987654321STORYSTATE1234567890");
       if (stateJson != null)
       {
         storyState.loadJson(stateJson);
@@ -81,12 +82,14 @@ public class SessionUtils
     session.setAttribute(SLOT_PREFIX + slotName, value);
   }
 
-  public static void setLocalDateSlotIntoSession(Session session, String slotName, LocalDate value)
+  public static void setLocalDateSlotIntoSession(Session session, String slotName,
+    LocalDate value)
   {
     session.setAttribute(SLOT_PREFIX + slotName, value);
   }
 
-  public static void setLocalTimeSlotIntoSession(Session session, String slotName, LocalTime value)
+  public static void setLocalTimeSlotIntoSession(Session session, String slotName,
+    LocalTime value)
   {
     session.setAttribute(SLOT_PREFIX + slotName, value);
   }
@@ -117,7 +120,8 @@ public class SessionUtils
     }
   }
 
-  public static LocalDate getLocalDateSlot(IntentMatch match, String slotName, LocalDate defaultValue)
+  public static LocalDate getLocalDateSlot(IntentMatch match, String slotName,
+    LocalDate defaultValue)
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
@@ -130,7 +134,8 @@ public class SessionUtils
     }
   }
 
-  public static LocalTime getLocalTimeSlot(IntentMatch match, String slotName, LocalTime defaultValue)
+  public static LocalTime getLocalTimeSlot(IntentMatch match, String slotName,
+    LocalTime defaultValue)
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
@@ -151,7 +156,8 @@ public class SessionUtils
     }
   }
 
-  public static String getStringFromSlotOrSession(IntentMatch match, Session session, String slotName, String defaultValue)
+  public static String getStringFromSlotOrSession(IntentMatch match, Session session,
+    String slotName, String defaultValue)
   {
     String sessionValue = (String) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -162,7 +168,8 @@ public class SessionUtils
     return getStringSlot(match, slotName, defaultValue);
   }
 
-  public static Number getNumberFromSlotOrSession(IntentMatch match, Session session, String slotName, Number defaultValue)
+  public static Number getNumberFromSlotOrSession(IntentMatch match, Session session,
+    String slotName, Number defaultValue)
   {
     Number sessionValue = (Number) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -173,7 +180,8 @@ public class SessionUtils
     return getNumberSlot(match, slotName, defaultValue);
   }
 
-  public static LocalDate getLocalDateFromSlotOrSession(IntentMatch match, Session session, String slotName, LocalDate defaultValue)
+  public static LocalDate getLocalDateFromSlotOrSession(IntentMatch match, Session session,
+    String slotName, LocalDate defaultValue)
   {
     LocalDate sessionValue = (LocalDate) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -184,7 +192,8 @@ public class SessionUtils
     return getLocalDateSlot(match, slotName, defaultValue);
   }
 
-  public static LocalTime getLocalTimeFromSlotOrSession(IntentMatch match, Session session, String slotName, LocalTime defaultValue)
+  public static LocalTime getLocalTimeFromSlotOrSession(IntentMatch match, Session session,
+    String slotName, LocalTime defaultValue)
   {
     LocalTime sessionValue = (LocalTime) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)

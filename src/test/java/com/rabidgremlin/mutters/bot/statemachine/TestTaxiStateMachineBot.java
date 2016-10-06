@@ -1,7 +1,8 @@
 package com.rabidgremlin.mutters.bot.statemachine;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,10 +11,6 @@ import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
-import com.rabidgremlin.mutters.util.SessionUtils;
-
-import java.util.List;
-import java.util.Arrays;
 
 public class TestTaxiStateMachineBot
 {

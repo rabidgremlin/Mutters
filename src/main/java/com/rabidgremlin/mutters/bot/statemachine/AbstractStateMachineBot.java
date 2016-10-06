@@ -43,7 +43,8 @@ public abstract class AbstractStateMachineBot
   public BotResponse respond(Session session, Context context, String messageText)
     throws BotException
   {
-    log.debug("session: {} context: {} messageText: {}", new Object[]{ session, context, messageText });
+    log.debug("session: {} context: {} messageText: {}",
+        new Object[]{ session, context, messageText });
 
     // set up default response in case bot has issue processing input
     String responseText = SessionUtils.getReprompt(session);

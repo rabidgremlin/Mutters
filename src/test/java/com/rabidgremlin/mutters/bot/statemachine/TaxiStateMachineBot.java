@@ -1,6 +1,5 @@
 package com.rabidgremlin.mutters.bot.statemachine;
 
-import com.rabidgremlin.mutters.bot.statemachine.AbstractStateMachineBot;
 import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.ml.MLIntent;
 import com.rabidgremlin.mutters.ml.MLIntentMatcher;

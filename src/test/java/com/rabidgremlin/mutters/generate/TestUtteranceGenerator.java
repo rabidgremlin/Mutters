@@ -1,14 +1,14 @@
 package com.rabidgremlin.mutters.generate;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
-
-import java.util.List;
-import java.util.Arrays;
 
 public class TestUtteranceGenerator
 {
@@ -17,7 +17,8 @@ public class TestUtteranceGenerator
   {
     UtteranceGenerator generator = new UtteranceGenerator();
 
-    List<TemplatedUtterance> utterances = generator.generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
+    List<TemplatedUtterance> utterances = generator
+        .generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
 
     System.out.println(utterances);
 

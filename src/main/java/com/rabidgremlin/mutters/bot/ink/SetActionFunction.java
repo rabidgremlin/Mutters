@@ -28,7 +28,8 @@ public class SetActionFunction
    * session, IntentMatch intentMatch, Story story, String param)
    */
   @Override
-  public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
+  public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
+    Story story, String param)
   {
     // HACK HACK doesn't handle spaces in name value pairs
     // OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo}
@@ -36,15 +37,16 @@ public class SetActionFunction
     String actionName = trimmedLine.split(" ")[0].substring(0).trim();
     String[] nameValues = trimmedLine.substring(actionName.length() + 1).trim().split(" ");
 
-    currentResponse.reponseAction = actionName;
-    currentResponse.responseActionParams = new HashMap<String, Object>();
+    currentResponse.setReponseAction(actionName);
+    HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+    currentResponse.setResponseActionParams(paramsMap);
 
     for (String nameValue : nameValues)
     {
       String name = nameValue.split(":")[0].substring(0).trim();
       String value = nameValue.substring(name.length() + 1).trim();
 
-      currentResponse.responseActionParams.put(name, value);
+      paramsMap.put(name, value);
     }
   }
 
