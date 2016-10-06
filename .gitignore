@@ -6,4 +6,6 @@ src/test/resources/models/*.bin
 .project
 .classpath
 .settings
+.checkstyle
+
 
