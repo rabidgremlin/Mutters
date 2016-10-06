@@ -5,6 +5,12 @@ import org.joda.time.LocalDate;
 
 import com.bladecoder.ink.runtime.Story;
 
+/**
+ * Utility class for manipulating ink variables in a story. Note that ink variable names are case sensitive.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public final class StoryUtils
 {
   protected StoryUtils()
@@ -12,9 +18,16 @@ public final class StoryUtils
     // utility class, hide constructor
   }
 
+  /**
+   * Returns the specified variable as a Number.
+   * 
+   * @param story The story to get the variable from.
+   * @param varName The name of the variable (case-sensitive).
+   * @return The Number or null if the variable does not exist or is not a number.
+   */
   public static Number getNumber(Story story, String varName)
   {
-    // TODO figure out why numbers are sometimes strings....
+    // sometimes numbers are strings
     try
     {
       return (int) story.getVariablesState().get(varName);
@@ -48,6 +61,14 @@ public final class StoryUtils
     }
   }
 
+  /**
+   * Returns the specified variable as a LocalDate. Note LocalDates should be stored as an ink string in the format
+   * yyyy-MM-dd.
+   * 
+   * @param story The story to get the variable from.
+   * @param varName The name of the variable (case-sensitive).
+   * @return The LocalDate or null if the variable does not exist or is not a LocalDate.
+   */
   public static LocalDate getLocalDate(Story story, String varName)
   {
     String dateStr = (String) story.getVariablesState().get(varName);
@@ -96,8 +117,22 @@ public final class StoryUtils
     }
   }
 
+  /**
+   * Returns the specified variable as a String.
+   * 
+   * @param story The story to get the variable from.
+   * @param varName The name of the variable (case-sensitive).
+   * @return The String or null if the variable does not exist or it is not a string.
+   */
   public static String getString(Story story, String varName)
   {
-    return (String) story.getVariablesState().get(varName);
+    try
+    {
+      return (String) story.getVariablesState().get(varName);
+    }
+    catch (java.lang.ClassCastException cce)
+    {
+      return null;
+    }
   }
 }

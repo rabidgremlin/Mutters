@@ -9,14 +9,6 @@ import java.util.Map;
  * @author rabidgremlin
  *
  */
-/**
- * @author ackej1
- *
- */
-/**
- * @author ackej1
- *
- */
 public class BotResponse
 {
   /** The response text. */

@@ -26,7 +26,8 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithAddress() throws BotException
+  public void testOrderTaxiWithAddress()
+    throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -39,7 +40,8 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithOutAddress() throws BotException
+  public void testOrderTaxiWithOutAddress()
+    throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -58,7 +60,8 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testCancelTaxi() throws BotException
+  public void testCancelTaxi()
+    throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -71,7 +74,8 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testTaxiStatus() throws BotException
+  public void testTaxiStatus()
+    throws BotException
   {
     Session session = new Session();
     Context context = new Context();

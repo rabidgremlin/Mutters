@@ -20,6 +20,7 @@ public interface Bot
    * @throws BotException Thrown if the bot has had a failure during processing.
    * @return The response from the bot.
    */
-  BotResponse respond(Session session, Context context, String messageText) throws BotException;
+  BotResponse respond(Session session, Context context, String messageText)
+    throws BotException;
 
 }

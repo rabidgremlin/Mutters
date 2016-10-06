@@ -45,7 +45,7 @@ public class TaxiInkBot
   @Override
   public void setUpFunctions()
   {
-    addFunction("ORDER_TAXI", new InkBotFunction()
+    addFunction(new InkBotFunction()
     {
       @Override
       public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
@@ -59,6 +59,12 @@ public class TaxiInkBot
         {
           throw new RuntimeException("Unable to set taxi no", e);
         }
+      }
+
+      @Override
+      public String getFunctionName()
+      {
+        return "ORDER_TAXI";
       }
     });
   }

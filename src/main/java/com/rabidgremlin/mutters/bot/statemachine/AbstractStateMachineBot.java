@@ -40,7 +40,8 @@ public abstract class AbstractStateMachineBot
    * com.rabidgremlin.mutters.core.Context, java.lang.String)
    */
   @Override
-  public BotResponse respond(Session session, Context context, String messageText) throws BotException
+  public BotResponse respond(Session session, Context context, String messageText)
+    throws BotException
   {
     log.debug("session: {} context: {} messageText: {}", new Object[]{ session, context, messageText });
 
@@ -53,7 +54,7 @@ public abstract class AbstractStateMachineBot
 
     // default to reprompt hint if we have one
     String hint = SessionUtils.getRepromptHint(session);
-    
+
     try
     {
       String reprompt = null;
@@ -96,7 +97,7 @@ public abstract class AbstractStateMachineBot
     }
     catch (IllegalStateException e)
     {
-      throw new BotException("Hit illegal state", e);      
+      throw new BotException("Hit illegal state", e);
     }
   }
 

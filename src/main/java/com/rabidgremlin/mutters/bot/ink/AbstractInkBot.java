@@ -38,47 +38,10 @@ public abstract class AbstractInkBot
     matcher = setUpIntents();
     inkStoryJson = getStoryJson();
 
-    addFunction("SET_HINT", new InkBotFunction()
-    {
-      @Override
-      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-      {
-        currentResponse.hint = param;
-      }
-    });
-
-    addFunction("SET_REPROMPT", new InkBotFunction()
-    {
-      @Override
-      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-      {
-        currentResponse.reprompt = param;
-      }
-    });
-
-    addFunction("SET_ACTION", new InkBotFunction()
-    {
-      @Override
-      public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param)
-      {
-        // HACK HACK doesn't handle spaces in name value pairs
-        // OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo}
-        String trimmedLine = param.trim();
-        String actionName = trimmedLine.split(" ")[0].substring(0).trim();
-        String[] nameValues = trimmedLine.substring(actionName.length() + 1).trim().split(" ");
-
-        currentResponse.reponseAction = actionName;
-        currentResponse.responseActionParams = new HashMap<String, Object>();
-
-        for (String nameValue : nameValues)
-        {
-          String name = nameValue.split(":")[0].substring(0).trim();
-          String value = nameValue.substring(name.length() + 1).trim();
-
-          currentResponse.responseActionParams.put(name, value);
-        }
-      }
-    });
+    // Add default functions
+    addFunction(new SetHintFunction());
+    addFunction(new SetRepromptFunction());
+    addFunction(new SetActionFunction());
 
     setUpFunctions();
   }
@@ -262,9 +225,9 @@ public abstract class AbstractInkBot
     }
   }
 
-  protected void addFunction(String functionName, InkBotFunction function)
+  protected void addFunction(InkBotFunction function)
   {
-    inkBotFunctions.put(functionName.toLowerCase(), function);
+    inkBotFunctions.put(function.getFunctionName().toLowerCase(), function);
   }
 
   public abstract IntentMatcher setUpIntents();
