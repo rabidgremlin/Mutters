@@ -16,20 +16,41 @@ import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.StateMachine;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
+/**
+ * This is the base bot class for bots that use a state machine to manage conversation state.
+ * 
+ * See the <a href=
+ * "https://github.com/rabidgremlin/Mutters/blob/master/src/test/java/com/rabidgremlin/mutters/bot/statemachine/TaxiStateMachineBot.java"
+ * target="_blank">TaxiStateMachineBot</a> for an example of how this type of bot works.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public abstract class AbstractStateMachineBot
     implements Bot
 {
+  /** Logger for the bot. */
   private Logger log = LoggerFactory.getLogger(AbstractStateMachineBot.class);
 
+  /** The intent matcher for the bot. */
   protected IntentMatcher matcher;
 
+  /** The state machine for the bot. */
   protected StateMachine stateMachine;
 
+  /** Default response for when the bot cannot figure out what was said to it. */
   protected String defaultResponse = "Pardon?";
 
+  /**
+   * Constructs the bot.
+   * 
+   */
   public AbstractStateMachineBot()
   {
+    // get the matcher set up
     matcher = setUpIntents();
+
+    // get the state machine set up
     stateMachine = setUpStateMachine();
   }
 
@@ -102,17 +123,38 @@ public abstract class AbstractStateMachineBot
     }
   }
 
+  /**
+   * Returns the default response of the bot.
+   * 
+   * @return The default response.
+   */
   public String getDefaultResponse()
   {
     return defaultResponse;
   }
 
+  /**
+   * Sets the default response for the bot. This is the bot's response if it doesn't understand what was said.
+   * 
+   * @param defaultResponse The new default bot response.
+   */
   public void setDefaultResponse(String defaultResponse)
   {
     this.defaultResponse = defaultResponse;
   }
 
+  /**
+   * This method should create and populate an IntentMatcher. This IntentMatcher will be used by the bot to determine
+   * what a user said to the bot.
+   * 
+   * @return The IntentMatcher for the bot to use.
+   */
   public abstract IntentMatcher setUpIntents();
 
+  /**
+   * This method should create the StateMachine used by the bot to track the state of the user's conversation.
+   * 
+   * @return The StateMachine for the bot to use.
+   */
   public abstract StateMachine setUpStateMachine();
 }
