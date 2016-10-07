@@ -165,3 +165,22 @@ Taxi {taxiNo} is on its way
 :SET_ACTION OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo} 
 -> END 
 ```
+
+## Usage
+Currently SNAPSHOT builds are avilable in the Sonatype OSSRH repository. We are expecting to publish a stable version to Maven Central in the next few weeks.
+
+Using Gradle you can pull the snapshot using:
+
+```
+repositories {
+    mavenCentral()    
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+dependencies {
+        compile 'com.rabidgremlin:mutters:1.0.0-SNAPSHOT'
+}        
+```
+
