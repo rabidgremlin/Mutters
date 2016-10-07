@@ -1,5 +1,5 @@
 # Mutters
-A Java framework for building bot brains. Heavily inspired by Amazon Echo's natural understanding model.  
+A Java framework for building bot brains. Heavily inspired by Amazon Echo's natural language understanding model.  
 
 Implements:
 
@@ -167,7 +167,7 @@ Taxi {taxiNo} is on its way
 ```
 
 ## Usage
-Currently SNAPSHOT builds are avilable in the Sonatype OSSRH repository. We are expecting to publish a stable version to Maven Central in the next few weeks.
+Currently SNAPSHOT builds are available in the Sonatype OSSRH repository. We are expecting to publish a stable version to Maven Central in the next few weeks.
 
 Using Gradle you can pull the snapshot using:
 
