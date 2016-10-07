@@ -4,7 +4,9 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
 
 /**
- * Interface implemented by all bots.
+ * Interface implemented by all bots. 
+ * 
+ * Note: bots should be designed to be thread-safe.
  * 
  * @author rabidgremlin
  *

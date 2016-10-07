@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'de.undercouch:gradle-download-task:3.1.1'
+        classpath 'ch.raffael.pegdown-doclet:pegdown-doclet:1.2'
     }
 }
 
@@ -11,6 +12,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'de.undercouch.download'
+apply plugin: 'ch.raffael.pegdown-doclet' // to allow markdown in the javadoc
 
 
 repositories {   

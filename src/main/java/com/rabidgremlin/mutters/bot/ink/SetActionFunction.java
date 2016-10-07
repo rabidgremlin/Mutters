@@ -6,6 +6,24 @@ import com.bladecoder.ink.runtime.Story;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.session.Session;
 
+/**
+ * This class implements the SET_ACTION Ink bot function. It is added by default to the AbstractInkBot. The SET_ACTION
+ * function allows the bot to pass actions to the client that the user is using to talk to the bot with. It could be
+ * used to pass button lists or URL opening requests or any other such actions.
+ * 
+ * For example in the ink script you could have:
+ * 
+ * ``` 
+ * I'm opening a website with that information... 
+ * :SET_ACTION OPEN_URL url:https:\/\/en.wikipedia.org/wiki/Chatbot
+ * ```
+ * 
+ * This function uses the first word as the action name that is returned by the bot. The rest of the line is assumed to
+ * be name-value pairs which are returned as action parameters by the bot.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class SetActionFunction
     implements InkBotFunction
 {

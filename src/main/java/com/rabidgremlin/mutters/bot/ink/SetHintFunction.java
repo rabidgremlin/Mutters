@@ -4,6 +4,21 @@ import com.bladecoder.ink.runtime.Story;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.session.Session;
 
+/**
+ * This class implements the SET_HINT Ink bot function. It is added by default to the AbstractInkBot. The SET_HINT
+ * function allows the bot to pass hints to the user's client about how the bot expects them to respond. The user's
+ * client can then display the hint as an appropriate visual cue.
+ * 
+ * For example in the ink script you could have:
+ * 
+ * ``` 
+ * Which date ? 
+ * :SET_HINT dd/mm or next friday 
+ * ```
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class SetHintFunction
     implements InkBotFunction
 {
