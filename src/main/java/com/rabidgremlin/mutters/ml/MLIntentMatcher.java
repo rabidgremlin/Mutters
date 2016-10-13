@@ -34,8 +34,18 @@ public class MLIntentMatcher
 
   private HashMap<String, TokenNameFinderModel> slotModels = new HashMap<String, TokenNameFinderModel>();
 
+  private static final float MIN_MATCH_SCORE = 0.75f;
+
+  private float minMatchScore;
+
   public MLIntentMatcher(String intentModel)
   {
+    this(intentModel, MIN_MATCH_SCORE);
+  }
+
+  public MLIntentMatcher(String intentModel, float minMatchScore)
+  {
+    this.minMatchScore = minMatchScore;
     try
     {
       URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(intentModel);
@@ -81,8 +91,15 @@ public class MLIntentMatcher
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
     log.info("Sorted scores were: {}", scoredCats);
 
-    String category = intentCategorizer.getBestCategory(intentCategorizer.categorize(utterance));
+    double bestScore = scoredCats.lastKey();
+    String category = (String) scoredCats.get(bestScore).toArray()[0];
     log.info("Best Match was:" + category);
+
+    if (bestScore < minMatchScore)
+    {
+      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", category, minMatchScore);
+      return null;
+    }
 
     MLIntent bestIntent = intents.get(category.toUpperCase());
     if (bestIntent == null)

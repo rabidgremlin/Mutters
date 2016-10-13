@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bladecoder.ink.runtime.Choice;
 import com.bladecoder.ink.runtime.Story;
+import com.bladecoder.ink.runtime.StoryException;
 import com.rabidgremlin.mutters.bot.Bot;
 import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
@@ -57,6 +58,9 @@ public abstract class AbstractInkBot
 
   /** Map of InkBotFunctions the bot knows. */
   protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
+
+  /** Map of global intents for the bot. */
+  protected HashMap<String, String> globalIntents = new HashMap<String, String>();
 
   /**
    * Constructs the bot.
@@ -136,83 +140,50 @@ public abstract class AbstractInkBot
         // get to right place in story
         story.continueMaximally();
 
-        // loop through choices find the one that matches intent
-        if (story.getCurrentChoices().size() > 0)
+        // check if this is a global intent
+        String knotName = globalIntents.get(intentMatch.getIntent().getName().toLowerCase());
+
+        // if global intent then jump to knot, otherwise pick choice
+        if (knotName != null)
         {
-          int choiceIndex = 0;
-          for (Choice c : story.getCurrentChoices())
-          {
-            log.debug("Checking choice: {}", c.getText());
-            if (StringUtils.equalsIgnoreCase(intentMatch.getIntent().getName(), c.getText()))
-            {
-              log.debug("Choosing: {}", c.getText());
-              story.chooseChoiceIndex(choiceIndex);
-
-              // reset reprompt and hint
-              currentResponse.setReprompt(null);
-              currentResponse.setHint(null);
-
-              StringBuffer response = new StringBuffer();
-              boolean first = true;
-              while (story.canContinue())
-              {
-                String line = story.Continue();
-
-                // skip first line as ink replays choice first
-                if (first)
-                {
-                  first = false;
-                  continue;
-                }
-
-                line = line.replaceAll("\n", "");
-
-                log.debug("Line {}", line);
-
-                String trimmedLine = line.trim();
-
-                if (trimmedLine.startsWith(":"))
-                {
-                  String functionName = trimmedLine.split(" ")[0].substring(1).trim();
-                  String param = trimmedLine.substring(functionName.length() + 1).trim();
-
-                  InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
-                  if (function != null)
-                  {
-                    function.execute(currentResponse, session, intentMatch, story, param);
-                  }
-                  else
-                  {
-                    log.warn("Did not find function named {}", functionName);
-                  }
-                }
-                else
-                {
-                  response.append(line);
-                }
-              }
-
-              currentResponse.setResponseText(response.toString());
-
-              break;
-            }
-            choiceIndex++;
-          }
-
-          SessionUtils.saveInkStoryState(session, story.getState());
-
-          if (story.getCurrentChoices().size() == 0)
-          {
-            session.reset();
-            currentResponse.setAskResponse(false);
-          }
+          story.choosePathString(knotName);
+          getResponseText(session, currentResponse, story, intentMatch, false);
         }
         else
         {
+          // loop through choices find the one that matches intent
+          if (story.getCurrentChoices().size() > 0)
+          {
+            int choiceIndex = 0;
+            for (Choice c : story.getCurrentChoices())
+            {
+              log.debug("Checking choice: {}", c.getText());
+              if (StringUtils.equalsIgnoreCase(intentMatch.getIntent().getName(), c.getText()))
+              {
+                log.debug("Choosing: {}", c.getText());
+                story.chooseChoiceIndex(choiceIndex);
+
+                getResponseText(session, currentResponse, story, intentMatch, true);
+
+                break;
+              }
+              choiceIndex++;
+            }
+          }
+        }
+
+        // save current story state
+        SessionUtils.saveInkStoryState(session, story.getState());
+
+        // does story have any more choices ? 
+        if (story.getCurrentChoices().size() == 0)
+        {
+          // no, conversation is done, wipe session and we are not returning an ask response
           session.reset();
           currentResponse.setAskResponse(false);
         }
-
+        
+        // set reprompt into session
         if (currentResponse.getReprompt() != null)
         {
           SessionUtils.setReprompt(session, currentResponse.getReprompt());
@@ -223,17 +194,67 @@ public abstract class AbstractInkBot
           SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
           SessionUtils.setRepromptHint(session, currentResponse.getHint());
         }
-
       }
 
-      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(),
-          currentResponse.isAskResponse(), currentResponse.getReponseAction(),
+      
+
+      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
           currentResponse.getResponseActionParams());
     }
     catch (Exception e)
     {
       throw new BotException("Unexpected error", e);
     }
+  }
+
+  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst)
+    throws StoryException, Exception
+  {
+    // reset reprompt and hint
+    currentResponse.setReprompt(null);
+    currentResponse.setHint(null);
+
+    StringBuffer response = new StringBuffer();
+    boolean first = true;
+    while (story.canContinue())
+    {
+      String line = story.Continue();
+
+      // skip first line as ink replays choice first
+      if (first && skipfirst)
+      {
+        first = false;
+        continue;
+      }
+
+      line = line.replaceAll("\n", "");
+
+      log.debug("Line {}", line);
+
+      String trimmedLine = line.trim();
+
+      if (trimmedLine.startsWith(":"))
+      {
+        String functionName = trimmedLine.split(" ")[0].substring(1).trim();
+        String param = trimmedLine.substring(functionName.length() + 1).trim();
+
+        InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
+        if (function != null)
+        {
+          function.execute(currentResponse, session, intentMatch, story, param);
+        }
+        else
+        {
+          log.warn("Did not find function named {}", functionName);
+        }
+      }
+      else
+      {
+        response.append(line);
+      }
+    }
+
+    currentResponse.setResponseText(response.toString());
   }
 
   /**
@@ -334,6 +355,11 @@ public abstract class AbstractInkBot
   protected void afterIntentMatch(IntentMatch intentMatch, Session session, Story story)
   {
     // do nothing
+  }
+
+  protected void setGlobalIntent(String intentName, String knotName)
+  {
+    globalIntents.put(intentName.toLowerCase(), knotName);
   }
 
 }

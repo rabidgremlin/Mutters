@@ -13,6 +13,14 @@ public class TaxiInkBot
     extends AbstractInkBot
 {
 
+  public TaxiInkBot()
+  {
+    super();
+
+    setGlobalIntent("Stop", "stop");
+    setGlobalIntent("Help", "help");
+  }
+
   @Override
   public IntentMatcher setUpIntents()
   {
@@ -31,6 +39,12 @@ public class TaxiInkBot
 
     intent = new MLIntent("GaveAddress");
     intent.addSlot(new LiteralSlot("Address"));
+    matcher.addIntent(intent);
+
+    intent = new MLIntent("Stop");
+    matcher.addIntent(intent);
+
+    intent = new MLIntent("Help");
     matcher.addIntent(intent);
 
     return matcher;

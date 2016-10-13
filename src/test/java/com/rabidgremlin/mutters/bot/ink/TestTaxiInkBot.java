@@ -3,6 +3,7 @@ package com.rabidgremlin.mutters.bot.ink;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import org.junit.BeforeClass;
@@ -111,7 +112,7 @@ public class TestTaxiInkBot
     response = taxiBot.respond(session, context, "yes");
 
     assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("Pardon? Where would you like to be picked up ?"));
+    assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
     assertThat(response.getHint(), is("123 Someplace Rd"));
 
@@ -137,5 +138,66 @@ public class TestTaxiInkBot
     assertThat(response.isAskResponse(), is(false));
     assertThat(response.getAction(), is("OPEN_URL"));
     assertThat(response.getActionParams().get("url"), is("http://trackcab.example.com/t/1e1f"));
+  }
+  
+  
+  @Test
+  public void testStop()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+    
+    BotResponse response = taxiBot.respond(session, context, "Order me a taxi");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("What is the pick up address ?"));
+    assertThat(response.isAskResponse(), is(true));
+
+    response = taxiBot.respond(session, context, "Stop");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Ok"));
+    assertThat(response.isAskResponse(), is(false));
+  }
+  
+  @Test
+  public void testHelp()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "help");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), startsWith("I can help you order a taxi or"));
+    assertThat(response.isAskResponse(), is(false));
+  }
+  
+  @Test
+  public void testNoPardonFollowedByPardon()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "The sky is blue");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+    
+    response = taxiBot.respond(session, context, "and roses are red");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+    
+    response = taxiBot.respond(session, context, "pigs don't fly");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
   }
 }

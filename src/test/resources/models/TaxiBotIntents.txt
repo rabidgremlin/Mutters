@@ -25,3 +25,10 @@ GaveAddress The pick up is at 740 Evergreen Terrace
 GaveAddress 890 Fifth Avenue
 GaveAddress The address is 13 China Ave
 GaveAddress 136 River Road
+Help Help
+Help help
+Help Help me
+Help How do you work ?
+Stop Stop
+Stop Stop it
+Stop Quit
