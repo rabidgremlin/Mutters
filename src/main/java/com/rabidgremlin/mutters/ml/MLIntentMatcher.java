@@ -21,28 +21,59 @@ import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.util.Span;
 
+/**
+ * This intent matcher uses machine learning (ML) in the form of a document categoriser to match a user's utterance to
+ * an intent.
+ * 
+ * It also uses named entity recognition (NER) models to identify text to extract for an intent's slots.
+ * 
+ * See the <a href=
+ * "https://github.com/rabidgremlin/Mutters/blob/master/src/test/java/com/rabidgremlin/mutters/bot/ink/TaxiInkBot.java"
+ * target="_blank">TaxiInkBot</a> for an example of how a MLIntentMatcher is configured.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class MLIntentMatcher
     implements IntentMatcher
 {
+  /** Logger. */
   private Logger log = LoggerFactory.getLogger(MLIntentMatcher.class);
 
+  /** The document categoriser for the intent matcher. */
   private DoccatModel model;
 
+  /** Map of intents to match on. */
   private HashMap<String, MLIntent> intents = new HashMap<String, MLIntent>();
 
+  /** Map of NER models. */
   private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<String, TokenNameFinderModel>();
 
+  /** Map of slot models. These share the NER models. */
   private HashMap<String, TokenNameFinderModel> slotModels = new HashMap<String, TokenNameFinderModel>();
 
+  /** Default minimum match score. */
   private static final float MIN_MATCH_SCORE = 0.75f;
 
+  /** The minium match score. The match must have at least this probability to be considered good. */
   private float minMatchScore;
 
+  /**
+   * Constructor. Sets up the matcher to use the specified model.
+   * 
+   * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
+   */
   public MLIntentMatcher(String intentModel)
   {
     this(intentModel, MIN_MATCH_SCORE);
   }
 
+  /**
+   * Constructor. Sets up the matcher to use the specified model and specifies the minimum match score.
+   * 
+   * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
+   * @param minMatchScore The minimum match score for an intent match to be considered good.
+   */
   public MLIntentMatcher(String intentModel, float minMatchScore)
   {
     this.minMatchScore = minMatchScore;
@@ -57,6 +88,12 @@ public class MLIntentMatcher
     }
   }
 
+  /**
+   * This set the NER model to use for a slot.
+   * 
+   * @param slotName The name of the slot. Should match the name of slots on intents added to the matcher.
+   * @param nerModel The file name of the NER model. This file must be on the classpath.
+   */
   public void addSlotModel(String slotName, String nerModel)
   {
     TokenNameFinderModel tnfModel = nerModels.get(nerModel);
@@ -76,18 +113,26 @@ public class MLIntentMatcher
     slotModels.put(slotName.toLowerCase(), tnfModel);
   }
 
+  /**
+   * Adds an intent to the matcher.
+   * 
+   * @param intent The intent.
+   */
   public void addIntent(MLIntent intent)
   {
     intents.put(intent.getName().toUpperCase(), intent);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context)
+   */
   @Override
   public IntentMatch match(String utterance, Context context)
   {
-    // TODO look into thread safety of DocumentCategorizerME
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
-    // TODO extract match probablity and filter out low ones...
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
     log.info("Sorted scores were: {}", scoredCats);
 

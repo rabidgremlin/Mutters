@@ -10,6 +10,35 @@ import org.apache.commons.lang.StringUtils;
 
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
+/**
+ * This class generates a list of templated utterances, given a template string. Can be used to generate lots of options
+ * to match on given only one string.
+ * 
+ * Groups of options are enclosed in ~'s and separated by |
+ * 
+ * For example, given a template string of:
+ * 
+ * ```
+ * ~what|what's|what is~ ~the|~ time ~in|at~ {Place}
+ * ```
+ * 
+ * The generator will generate 12 different TemplatedUtterances, inlcude:
+ * 
+ * ```
+ * what the time in {Place}
+ * what's the time in {Place}
+ * what is the time in {Place}
+ * what is the time at {Place}
+ * what is time at {Place}
+ * etc
+ * ```
+ * 
+ * 
+ * @see com.rabidgremlin.mutters.generate.TestUtteranceGenerator
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class UtteranceGenerator
 {
   private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");

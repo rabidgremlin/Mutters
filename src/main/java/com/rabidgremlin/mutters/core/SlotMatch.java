@@ -64,7 +64,7 @@ public class SlotMatch
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core#getName()
+   * @see java.lang.String#toString()
    * 
    */
   @Override
