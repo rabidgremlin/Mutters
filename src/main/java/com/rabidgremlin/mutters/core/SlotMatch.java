@@ -1,14 +1,29 @@
 package com.rabidgremlin.mutters.core;
 
+/**
+ * This class holds the details of a slot match.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class SlotMatch
 {
-
+  /** The slot that was matched. */
   private Slot slot;
 
+  /** The original value that was used to matched on. */
   private String orginalValue;
 
+  /** The value that was matched. */
   private Object value;
 
+  /**
+   * Constrcutor.
+   * 
+   * @param slot The slot that was matched.
+   * @param orginalValue The original value that was used to match on.
+   * @param value The value that was matched.
+   */
   public SlotMatch(Slot slot, String orginalValue, Object value)
   {
     this.slot = slot;
@@ -16,21 +31,42 @@ public class SlotMatch
     this.value = value;
   }
 
+  /**
+   * Gets the slot that was matched on.
+   * 
+   * @return The slot that was matched on.
+   */
   public Slot getSlot()
   {
     return slot;
   }
 
+  /**
+   * Gets the original value that was matched on.
+   * 
+   * @return The original value that was matched on.
+   */
   public String getOrginalValue()
   {
     return orginalValue;
   }
 
+  /**
+   * Gets the value that was matched on.
+   * 
+   * @return the value that was matched on.
+   */
   public Object getValue()
   {
     return value;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.rabidgremlin.mutters.core#getName()
+   * 
+   */
   @Override
   public String toString()
   {
