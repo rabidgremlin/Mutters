@@ -227,8 +227,6 @@ public abstract class AbstractInkBot
         continue;
       }
 
-      line = line.replaceAll("\n", "");
-
       log.debug("Line {}", line);
 
       String trimmedLine = line.trim();
@@ -254,7 +252,7 @@ public abstract class AbstractInkBot
       }
     }
 
-    currentResponse.setResponseText(response.toString());
+    currentResponse.setResponseText(response.toString().replaceAll("\n", ""));
   }
 
   /**
