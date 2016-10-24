@@ -251,8 +251,15 @@ public abstract class AbstractInkBot
         response.append(line);
       }
     }
+    
+    
+    // chop off last \n 
+    if (response.length() > 0 && response.charAt(response.length()-1) == '\n')
+    {
+      response.setLength(response.length()-1);
+    }
 
-    currentResponse.setResponseText(response.toString().replaceAll("\n", ""));
+    currentResponse.setResponseText(response.toString());
   }
 
   /**
