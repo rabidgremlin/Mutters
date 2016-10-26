@@ -200,4 +200,36 @@ public class TestTaxiInkBot
     assertThat(response.getResponse(), is("Pardon?"));
     assertThat(response.isAskResponse(), is(true));
   }
+  
+  @Test
+  public void testParagraphsPreserved()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "help");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), startsWith("I can help you order a taxi or find out the location of your current taxi.\nTry say "));
+    assertThat(response.isAskResponse(), is(false));    
+  }
+  
+  @Test
+  public void testSessionEndClearsReprompts()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "Where is my ride ?");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Your taxi is about 7 minutes away"));
+    assertThat(response.isAskResponse(), is(false));
+    
+    response = taxiBot.respond(session, context, "and roses are red");
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+  }
 }

@@ -175,28 +175,28 @@ public abstract class AbstractInkBot
         // save current story state
         SessionUtils.saveInkStoryState(session, story.getState());
 
-        // does story have any more choices ? 
+        // does story have any more choices ?
         if (story.getCurrentChoices().size() == 0)
         {
           // no, conversation is done, wipe session and we are not returning an ask response
           session.reset();
           currentResponse.setAskResponse(false);
         }
-        
-        // set reprompt into session
-        if (currentResponse.getReprompt() != null)
-        {
-          SessionUtils.setReprompt(session, currentResponse.getReprompt());
-          SessionUtils.setRepromptHint(session, currentResponse.getHint());
-        }
         else
         {
-          SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-          SessionUtils.setRepromptHint(session, currentResponse.getHint());
+          // set reprompt into session
+          if (currentResponse.getReprompt() != null)
+          {
+            SessionUtils.setReprompt(session, currentResponse.getReprompt());
+            SessionUtils.setRepromptHint(session, currentResponse.getHint());
+          }
+          else
+          {
+            SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
+            SessionUtils.setRepromptHint(session, currentResponse.getHint());
+          }
         }
       }
-
-      
 
       return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
           currentResponse.getResponseActionParams());
@@ -251,12 +251,11 @@ public abstract class AbstractInkBot
         response.append(line);
       }
     }
-    
-    
-    // chop off last \n 
-    if (response.length() > 0 && response.charAt(response.length()-1) == '\n')
+
+    // chop off last \n
+    if (response.length() > 0 && response.charAt(response.length() - 1) == '\n')
     {
-      response.setLength(response.length()-1);
+      response.setLength(response.length() - 1);
     }
 
     currentResponse.setResponseText(response.toString());

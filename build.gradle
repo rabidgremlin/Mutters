@@ -25,7 +25,7 @@ dependencies {
     compile 'com.joestelmach:natty:0.12'    
     compile 'commons-codec:commons-codec:1.10'   
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.bladecoder.ink:blade-ink:0.2.0'         
+    compile 'com.bladecoder.ink:blade-ink:0.3.0'         
     compile 'commons-io:commons-io:2.5'
     
     
