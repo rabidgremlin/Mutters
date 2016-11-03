@@ -140,6 +140,9 @@ public abstract class AbstractInkBot
         // get to right place in story
         story.continueMaximally();
 
+        // did we match something flag. Used so we can set reprompt correctly
+        boolean foundMatch = false;
+
         // check if this is a global intent
         String knotName = globalIntents.get(intentMatch.getIntent().getName().toLowerCase());
 
@@ -148,6 +151,7 @@ public abstract class AbstractInkBot
         {
           story.choosePathString(knotName);
           getResponseText(session, currentResponse, story, intentMatch, false);
+          foundMatch = true;
         }
         else
         {
@@ -165,6 +169,7 @@ public abstract class AbstractInkBot
 
                 getResponseText(session, currentResponse, story, intentMatch, true);
 
+                foundMatch = true;
                 break;
               }
               choiceIndex++;
@@ -184,16 +189,19 @@ public abstract class AbstractInkBot
         }
         else
         {
-          // set reprompt into session
-          if (currentResponse.getReprompt() != null)
+          if (foundMatch)
           {
-            SessionUtils.setReprompt(session, currentResponse.getReprompt());
-            SessionUtils.setRepromptHint(session, currentResponse.getHint());
-          }
-          else
-          {
-            SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-            SessionUtils.setRepromptHint(session, currentResponse.getHint());
+            // set reprompt into session
+            if (currentResponse.getReprompt() != null)
+            {
+              SessionUtils.setReprompt(session, currentResponse.getReprompt());
+              SessionUtils.setRepromptHint(session, currentResponse.getHint());
+            }
+            else
+            {
+              SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
+              SessionUtils.setRepromptHint(session, currentResponse.getHint());
+            }
           }
         }
       }

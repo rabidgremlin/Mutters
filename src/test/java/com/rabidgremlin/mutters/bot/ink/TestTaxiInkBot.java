@@ -202,6 +202,35 @@ public class TestTaxiInkBot
   }
   
   @Test
+  public void testNoPardonFollowedByPardonSecondCase()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    // valid but out of sequence answer
+    BotResponse response = taxiBot.respond(session, context, "I like pink");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+    
+    // then a nonsense reply
+    response = taxiBot.respond(session, context, "and roses are red");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+    
+    // then a nonsense reply
+    response = taxiBot.respond(session, context, "pigs don't fly");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Pardon?"));
+    assertThat(response.isAskResponse(), is(true));
+  }
+  
+  @Test
   public void testParagraphsPreserved()
     throws BotException
   {

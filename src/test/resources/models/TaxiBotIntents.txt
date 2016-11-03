@@ -32,3 +32,6 @@ Help How do you work ?
 Stop Stop
 Stop Stop it
 Stop Quit
+FavColor My favorite color is blue
+FavColor I like green 
+FavColor Purple is the best color

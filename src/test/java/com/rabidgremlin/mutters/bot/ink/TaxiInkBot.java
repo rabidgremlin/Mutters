@@ -46,6 +46,9 @@ public class TaxiInkBot
 
     intent = new MLIntent("Help");
     matcher.addIntent(intent);
+    
+    intent = new MLIntent("FavColor");
+    matcher.addIntent(intent);
 
     return matcher;
   }
