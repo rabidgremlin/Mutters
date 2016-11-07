@@ -123,7 +123,8 @@ public abstract class AbstractInkBot
 
       SessionUtils.loadInkStoryState(session, story.getState());
 
-      IntentMatch intentMatch = matcher.match(messageText, context);
+      // TODO: Implement intent filtering via expected intents
+      IntentMatch intentMatch = matcher.match(messageText, context, null);
 
       if (intentMatch != null)
       {

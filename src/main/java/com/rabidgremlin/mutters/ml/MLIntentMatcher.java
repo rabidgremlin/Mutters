@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,11 +127,16 @@ public class MLIntentMatcher
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context)
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context, Set<String> expectedIntents)
    */
   @Override
-  public IntentMatch match(String utterance, Context context)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
+    if (expectedIntents != null)
+    {
+      throw new NotImplementedException("expectedIntents not yet implemented for TemplatedIntentMatcher");
+    }
+    
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);

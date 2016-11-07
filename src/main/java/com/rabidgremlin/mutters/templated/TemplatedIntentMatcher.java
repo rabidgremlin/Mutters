@@ -3,6 +3,9 @@ package com.rabidgremlin.mutters.templated;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang.NotImplementedException;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
@@ -24,11 +27,15 @@ public class TemplatedIntentMatcher
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(java.lang.String, com.rabidgremlin.mutters.core.Context)
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(java.lang.String, com.rabidgremlin.mutters.core.Context, Set<String> expectedIntents)
    */
   @Override
-  public IntentMatch match(String utterance, Context context)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
+    if (expectedIntents != null)
+    {
+      throw new NotImplementedException("expectedIntents not yet implemented for TemplatedIntentMatcher");
+    }
 
     CleanedInput cleanedUtterance = InputCleaner.cleanInput(utterance);
 

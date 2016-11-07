@@ -38,7 +38,7 @@ public class TestIntentMatcher
     TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
     matcher.addIntent(additionIntent);
 
-    IntentMatch intentMatch = matcher.match("What is 1 + 5", new Context());
+    IntentMatch intentMatch = matcher.match("What is 1 + 5", new Context(), null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(additionIntent));
@@ -66,7 +66,7 @@ public class TestIntentMatcher
     TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
     matcher.addIntent(intent);
 
-    IntentMatch intentMatch = matcher.match("book this flight", new Context());
+    IntentMatch intentMatch = matcher.match("book this flight", new Context(), null);
 
     assertThat(intentMatch, is(nullValue()));
   }
@@ -83,7 +83,7 @@ public class TestIntentMatcher
     TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
     matcher.addIntent(intent);
 
-    IntentMatch intentMatch = matcher.match("next friday", new Context());
+    IntentMatch intentMatch = matcher.match("next friday", new Context(), null);
 
     assertThat(intentMatch, is(nullValue()));
   }

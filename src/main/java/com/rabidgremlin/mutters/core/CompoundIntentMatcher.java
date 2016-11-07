@@ -1,5 +1,7 @@
 package com.rabidgremlin.mutters.core;
 
+import java.util.Set;
+
 /**
  * An IntentMatcher that is a combination of two other intent matchers. Useful for instance for combining a
  * TemplatedIntentMatcher and a MLIntentMatcher. Class will stop on the first match returned by a matcher.
@@ -31,19 +33,20 @@ public class CompoundIntentMatcher
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context)
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context, Set<String>
+   * expectedIntents)
    * 
    */
   @Override
-  public IntentMatch match(String utterance, Context context)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
     // see if we can find match in first matcher
-    IntentMatch match = firstMatcher.match(utterance, context);
+    IntentMatch match = firstMatcher.match(utterance, context, expectedIntents);
 
     // no ? try second one
     if (match == null)
     {
-      match = secondMatcher.match(utterance, context);
+      match = secondMatcher.match(utterance, context, expectedIntents);
     }
 
     return match;

@@ -84,7 +84,8 @@ public abstract class AbstractStateMachineBot
       Map<String, Object> responseActionParams = null;
       boolean askResponse = true;
 
-      IntentMatch intentMatch = matcher.match(messageText, context);
+      // TODO: Implement intent filtering via expected intents
+      IntentMatch intentMatch = matcher.match(messageText, context, null);
 
       if (intentMatch != null)
       {
