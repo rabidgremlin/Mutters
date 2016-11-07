@@ -127,32 +127,77 @@ public class MLIntentMatcher
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context, Set<String> expectedIntents)
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance, Context context, Set<String>
+   * expectedIntents)
    */
   @Override
   public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
-    if (expectedIntents != null)
-    {
-      throw new NotImplementedException("expectedIntents not yet implemented for TemplatedIntentMatcher");
-    }
-    
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
     log.info("Sorted scores were: {}", scoredCats);
 
-    double bestScore = scoredCats.lastKey();
-    String category = (String) scoredCats.get(bestScore).toArray()[0];
-    log.info("Best Match was:" + category);
+    double bestScore = 0;
+    String bestCategory = null;
+
+    // were we passed a set of expected intents ?
+    if (expectedIntents == null)
+    {
+      // no, grab the first of the best matches
+      bestScore = scoredCats.lastKey();
+      bestCategory = (String) scoredCats.get(bestScore).toArray()[0];
+    }
+    else
+    {
+      // yep, find the best match that is also in the set of expected intents
+      while (!scoredCats.isEmpty())
+      {
+        // get score of best category
+        bestScore = scoredCats.lastKey();
+
+        // get the cats with the best score
+        Set<String> cats = scoredCats.get(bestScore);
+        for (String cat : cats)
+        {
+          // is the cat in the expected cat set ?
+          if (expectedIntents.contains(cat))
+          {
+            // yep, found one
+            bestCategory = cat;
+            break;
+          }
+
+          log.info("Dropping match for {} wasn't in expected intents {}", cat, expectedIntents);
+        }
+
+        // did we find cat ?
+        if (bestCategory != null)
+        {
+          // yep break
+          break;
+        }
+
+        // nope, try next in list
+        scoredCats.remove(scoredCats.lastKey());
+      }
+
+      if (bestCategory == null)
+      {
+        log.info("No matches, matching expectedIntents.");
+        return null;
+      }
+    }
+
+    log.info("Best Match was:" + bestCategory);
 
     if (bestScore < minMatchScore)
     {
-      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", category, minMatchScore);
+      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", bestCategory, minMatchScore);
       return null;
     }
 
-    MLIntent bestIntent = intents.get(category.toUpperCase());
+    MLIntent bestIntent = intents.get(bestCategory.toUpperCase());
     if (bestIntent == null)
     {
       return null;

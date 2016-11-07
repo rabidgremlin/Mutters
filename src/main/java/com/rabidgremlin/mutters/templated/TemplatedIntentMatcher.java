@@ -27,16 +27,12 @@ public class TemplatedIntentMatcher
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(java.lang.String, com.rabidgremlin.mutters.core.Context, Set<String> expectedIntents)
+   * @see com.rabidgremlin.mutters.core.IntentMatcher#match(java.lang.String, com.rabidgremlin.mutters.core.Context,
+   * Set<String> expectedIntents)
    */
   @Override
   public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
-    if (expectedIntents != null)
-    {
-      throw new NotImplementedException("expectedIntents not yet implemented for TemplatedIntentMatcher");
-    }
-
     CleanedInput cleanedUtterance = InputCleaner.cleanInput(utterance);
 
     for (TemplatedIntent intent : intents)
@@ -44,7 +40,10 @@ public class TemplatedIntentMatcher
       TemplatedUtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
       if (utteranceMatch.isMatched())
       {
-        return new IntentMatch(intent, utteranceMatch.getSlotMatches(), utterance);
+        if (expectedIntents == null || (expectedIntents.contains(intent.getName())))
+        {
+          return new IntentMatch(intent, utteranceMatch.getSlotMatches(), utterance);
+        }
       }
     }
 
