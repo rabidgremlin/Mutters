@@ -2,6 +2,7 @@ package com.rabidgremlin.mutters.bot.ink;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -121,10 +122,24 @@ public abstract class AbstractInkBot
       // call hook so externs and other things can be applied
       afterStoryCreated(story);
 
+      // restore the story state
       SessionUtils.loadInkStoryState(session, story.getState());
 
-      // TODO: Implement intent filtering via expected intents
-      IntentMatch intentMatch = matcher.match(messageText, context, null);
+      // get to right place in story
+      story.continueMaximally();
+
+      // build expected intents set
+      HashSet<String> expectedIntents = new HashSet<String>();
+      // add all the names of the global intents
+      expectedIntents.addAll(globalIntents.keySet());
+      // add all the choices
+      for (Choice choice : story.getCurrentChoices())
+      {
+        expectedIntents.add(choice.getText());
+      }
+
+      // match the intents
+      IntentMatch intentMatch = matcher.match(messageText, context, expectedIntents);
 
       if (intentMatch != null)
       {
@@ -138,14 +153,11 @@ public abstract class AbstractInkBot
               slotMatch.getValue().toString());
         }
 
-        // get to right place in story
-        story.continueMaximally();
-
         // did we match something flag. Used so we can set reprompt correctly
         boolean foundMatch = false;
 
         // check if this is a global intent
-        String knotName = globalIntents.get(intentMatch.getIntent().getName().toLowerCase());
+        String knotName = globalIntents.get(intentMatch.getIntent().getName());
 
         // if global intent then jump to knot, otherwise pick choice
         if (knotName != null)
@@ -372,7 +384,7 @@ public abstract class AbstractInkBot
 
   protected void setGlobalIntent(String intentName, String knotName)
   {
-    globalIntents.put(intentName.toLowerCase(), knotName);
+    globalIntents.put(intentName, knotName);
   }
 
 }
