@@ -3,6 +3,7 @@ package com.rabidgremlin.mutters.bot.ink;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -54,14 +55,17 @@ public abstract class AbstractInkBot
   /** The ink JSON for the bot. */
   protected String inkStoryJson;
 
-  /** Default response for when the bot cannot figure out what was said to it. */
-  protected String defaultResponse = "Pardon?";
+  /** Default responses for when the bot cannot figure out what was said to it. */
+  protected String[] defaultResponses = { "Pardon?" };
 
   /** Map of InkBotFunctions the bot knows. */
   protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
 
   /** Map of global intents for the bot. */
   protected HashMap<String, String> globalIntents = new HashMap<String, String>();
+
+  /** Random for default reponses. */
+  private Random rand = new Random();
 
   /**
    * Constructs the bot.
@@ -98,6 +102,9 @@ public abstract class AbstractInkBot
         new Object[]{ session, context, messageText });
 
     CurrentResponse currentResponse = new CurrentResponse();
+
+    // choose a default response
+    String defaultResponse = defaultResponses[rand.nextInt(defaultResponses.length)];
 
     // set up default response in case bot has issue processing input
     currentResponse.setResponseText(SessionUtils.getReprompt(session));
@@ -283,23 +290,23 @@ public abstract class AbstractInkBot
   }
 
   /**
-   * Returns the default response of the bot.
+   * Returns the default responses of the bot.
    * 
-   * @return The default response.
+   * @return The default responses.
    */
-  public String getDefaultResponse()
+  public String[] getDefaultResponses()
   {
-    return defaultResponse;
+    return defaultResponses;
   }
 
   /**
    * Sets the default response for the bot. This is the bot's response if it doesn't understand what was said.
    * 
-   * @param defaultResponse The new default bot response.
+   * @param defaultResponses The new default bot responses.
    */
-  public void setDefaultResponse(String defaultResponse)
+  public void setDefaultResponses(String[] defaultResponses)
   {
-    this.defaultResponse = defaultResponse;
+    this.defaultResponses = defaultResponses;
   }
 
   /**
