@@ -157,7 +157,7 @@ public abstract class AbstractInkBot
         for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
         {
           story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
-              slotMatch.getValue().toString());
+              slotMatch.getValue());
         }
 
         // did we match something flag. Used so we can set reprompt correctly
