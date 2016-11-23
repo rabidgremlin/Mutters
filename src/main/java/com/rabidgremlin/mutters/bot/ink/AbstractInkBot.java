@@ -156,8 +156,16 @@ public abstract class AbstractInkBot
         // copy any slot values into ink vars
         for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
         {
-          story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
-              slotMatch.getValue());
+          if (slotMatch.getValue() instanceof Number)
+          {
+            story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
+                slotMatch.getValue());
+          }
+          else
+          {
+            story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
+                slotMatch.getValue().toString());
+          }
         }
 
         // did we match something flag. Used so we can set reprompt correctly
