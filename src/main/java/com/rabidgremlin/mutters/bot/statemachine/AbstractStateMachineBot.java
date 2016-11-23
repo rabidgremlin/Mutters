@@ -116,7 +116,7 @@ public abstract class AbstractStateMachineBot
         }
       }
 
-      return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams);
+      return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams, null);
     }
     catch (IllegalStateException e)
     {

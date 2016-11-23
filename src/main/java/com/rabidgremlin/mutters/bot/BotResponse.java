@@ -26,6 +26,9 @@ public class BotResponse
   /** The parameters for the action. */
   private Map<String, Object> actionParams;
 
+  /** Map of debug values. Added by particular bot implementation. */
+  private Map<String, Object> debugValues;
+
   /**
    * Constructor.
    * 
@@ -34,15 +37,17 @@ public class BotResponse
    * @param askResponse True if this the bot is expecting a further response from the user.
    * @param action Any action that the client should take. eg opening a URL, displaying a button etc
    * @param actionParams The parameters for the action.
+   * @param debugValues Map of debug values. Specific to bot implementation.
    */
   public BotResponse(String response, String hint, boolean askResponse, String action,
-    Map<String, Object> actionParams)
+    Map<String, Object> actionParams, Map<String, Object> debugValues)
   {
     this.response = response;
     this.hint = hint;
     this.askResponse = askResponse;
     this.action = action;
     this.actionParams = actionParams;
+    this.debugValues = debugValues;
   }
 
   /**
@@ -100,6 +105,21 @@ public class BotResponse
   public String getHint()
   {
     return hint;
+  }
+
+  /**
+   * Returns the debug values for this response.
+   * 
+   * @return The debug values or null.
+   */
+  public Map<String, Object> getDebugValues()
+  {
+    if (debugValues == null)
+    {
+      return null;
+    }
+
+    return Collections.unmodifiableMap(debugValues);
   }
 
 }

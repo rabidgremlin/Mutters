@@ -67,6 +67,9 @@ public abstract class AbstractInkBot
   /** Random for default reponses. */
   private Random rand = new Random();
 
+  /** Debug value key for matched intent. */
+  public final static String DK_MATCHED_EVENT = "matchedEvent";
+
   /**
    * Constructs the bot.
    * 
@@ -116,6 +119,9 @@ public abstract class AbstractInkBot
     // preserve hint if we had reprompt hint
     currentResponse.setHint(SessionUtils.getRepromptHint(session));
 
+    // keep hold of matched intent for logging and debug
+    String matchedIntent = null;
+
     try
     {
       Story story = null;
@@ -150,6 +156,9 @@ public abstract class AbstractInkBot
 
       if (intentMatch != null)
       {
+        // record name of intent we matched on
+        matchedIntent = intentMatch.getIntent().getName();
+
         // call after match hook, allows fixups to be applied
         afterIntentMatch(intentMatch, session, story);
 
@@ -234,8 +243,16 @@ public abstract class AbstractInkBot
         }
       }
 
+      // build and populate debug values map
+      HashMap<String, Object> debugValues = null;
+      if (matchedIntent != null)
+      {
+        debugValues = new HashMap<String, Object>();
+        debugValues.put(DK_MATCHED_EVENT, matchedIntent);
+      }
+
       return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
-          currentResponse.getResponseActionParams());
+          currentResponse.getResponseActionParams(), debugValues);
     }
     catch (Exception e)
     {
