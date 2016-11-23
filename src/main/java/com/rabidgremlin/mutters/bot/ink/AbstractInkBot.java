@@ -68,7 +68,7 @@ public abstract class AbstractInkBot
   private Random rand = new Random();
 
   /** Debug value key for matched intent. */
-  public final static String DK_MATCHED_EVENT = "matchedEvent";
+  public final static String DK_MATCHED_INTENT = "matchedIntent";
 
   /**
    * Constructs the bot.
@@ -248,7 +248,7 @@ public abstract class AbstractInkBot
       if (matchedIntent != null)
       {
         debugValues = new HashMap<String, Object>();
-        debugValues.put(DK_MATCHED_EVENT, matchedIntent);
+        debugValues.put(DK_MATCHED_INTENT, matchedIntent);
       }
 
       return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
