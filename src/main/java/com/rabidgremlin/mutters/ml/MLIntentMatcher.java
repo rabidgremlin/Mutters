@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedMap;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +31,12 @@ import opennlp.tools.util.Span;
  * "https://github.com/rabidgremlin/Mutters/blob/master/src/test/java/com/rabidgremlin/mutters/bot/ink/TaxiInkBot.java"
  * target="_blank">TaxiInkBot</a> for an example of how a MLIntentMatcher is configured.
  * 
+ * Maybe intent match: If a maybeMatchScore is specified then the intent matcher will generate a MaybeXXXXX intent match
+ * where XXXXX is the best matched intent which does not meet the specified min match score. In this case the maybe
+ * match will be returned if the score difference between the best match and the next best match is higher than the
+ * specified maybeMatchScore. If maybeMatchScore score is set to -1 then maybe intent matching is disabled.
+ * 
+ * 
  * @author rabidgremlin
  *
  */
@@ -56,8 +61,13 @@ public class MLIntentMatcher
   /** Default minimum match score. */
   private static final float MIN_MATCH_SCORE = 0.75f;
 
-  /** The minium match score. The match must have at least this probability to be considered good. */
+  /** The minimum match score. The match must have at least this probability to be considered good. */
   private float minMatchScore;
+
+  /** Maybe match score. */
+  private float maybeMatchScore = -1;
+
+  private static final String MAYBE_INTENT_PREFIX = "Maybe";
 
   /**
    * Constructor. Sets up the matcher to use the specified model.
@@ -66,7 +76,7 @@ public class MLIntentMatcher
    */
   public MLIntentMatcher(String intentModel)
   {
-    this(intentModel, MIN_MATCH_SCORE);
+    this(intentModel, MIN_MATCH_SCORE, -1);
   }
 
   /**
@@ -74,10 +84,12 @@ public class MLIntentMatcher
    * 
    * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
    * @param minMatchScore The minimum match score for an intent match to be considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
    */
-  public MLIntentMatcher(String intentModel, float minMatchScore)
+  public MLIntentMatcher(String intentModel, float minMatchScore, float maybeMatchScore)
   {
     this.minMatchScore = minMatchScore;
+    this.maybeMatchScore = maybeMatchScore;
     try
     {
       URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(intentModel);
@@ -140,6 +152,7 @@ public class MLIntentMatcher
 
     double bestScore = 0;
     String bestCategory = null;
+    boolean hasMaybeIntent = false;
 
     // were we passed a set of expected intents ?
     if (expectedIntents == null)
@@ -147,6 +160,13 @@ public class MLIntentMatcher
       // no, grab the first of the best matches
       bestScore = scoredCats.lastKey();
       bestCategory = (String) scoredCats.get(bestScore).toArray()[0];
+
+      // if we don't have a list of expected intents but do have a maybeMatchScore then assume we can have a Maybe
+      // intent
+      if (maybeMatchScore != -1)
+      {
+        hasMaybeIntent = true;
+      }
     }
     else
     {
@@ -165,6 +185,13 @@ public class MLIntentMatcher
           {
             // yep, found one
             bestCategory = cat;
+
+            // if we have a maybeMatchScore then check we have a maybe intent in the expected intents list
+            if (maybeMatchScore != -1 && expectedIntents.contains(MAYBE_INTENT_PREFIX + cat))
+            {
+              hasMaybeIntent = true;
+            }
+
             break;
           }
 
@@ -191,16 +218,60 @@ public class MLIntentMatcher
 
     log.info("Best Match was:" + bestCategory);
 
-    if (bestScore < minMatchScore)
-    {
-      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", bestCategory, minMatchScore);
-      return null;
-    }
-
+    // find the intent
     MLIntent bestIntent = intents.get(bestCategory.toUpperCase());
     if (bestIntent == null)
     {
+      log.warn("Missing MLIntent named {}", bestCategory);
       return null;
+    }
+
+    // are we below min score matching ?
+    if (bestScore < minMatchScore)
+    {
+      // log failure
+      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", bestCategory, minMatchScore);
+
+      // do we have a maybe intent ?
+      if (hasMaybeIntent)
+      {
+        // yes, was the score difference between best and next best good enough
+        // to meet maybeMatchScore ?
+        Double scoreDiff = calcScoreDifference(scoredCats);
+        log.info("Checking if difference between best and next best score of {} is better than maybeMatchScore of {}", scoreDiff, maybeMatchScore);
+        if (scoreDiff != null && scoreDiff > maybeMatchScore)
+        {
+          // yes, so lets return maybe intent
+          MLIntent maybeIntent = intents.get((MAYBE_INTENT_PREFIX + bestCategory).toUpperCase());
+          // don't have a maybe intent so clone the best intent
+          if (maybeIntent == null)
+          {
+            maybeIntent = new MLIntent(MAYBE_INTENT_PREFIX + bestCategory);
+
+            // copy slots from best intent
+            for (Slot slot : bestIntent.getSlots())
+            {
+              maybeIntent.addSlot(slot);
+            }
+
+            // store for future reuse
+            this.addIntent(maybeIntent);
+          }
+
+          // return maybe intent instead of best intent
+          bestIntent = maybeIntent;
+          log.info("Matching to maybe intent: {}", bestIntent.getName());
+        }
+        else
+        {
+          log.info("Score difference between best and next best too low. Skipping maybe intent");
+          return null;
+        }
+      }
+      else
+      {
+        return null;
+      }
     }
 
     String[] tokens = SimpleTokenizer.INSTANCE.tokenize(utterance);
@@ -247,6 +318,19 @@ public class MLIntentMatcher
 
     return new IntentMatch(bestIntent, matchedSlots, utterance);
 
+  }
+
+  private Double calcScoreDifference(SortedMap<Double, Set<String>> scoredCats)
+  {
+    if (scoredCats.size() < 2)
+    {
+      return null;
+    }
+
+    Double score1 = scoredCats.lastKey();
+    Double score2 = scoredCats.headMap(score1).lastKey();
+
+    return new Double(score1 - score2);
   }
 
 }
