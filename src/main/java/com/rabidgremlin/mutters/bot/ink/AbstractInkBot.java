@@ -69,8 +69,9 @@ public abstract class AbstractInkBot
 
   /** Debug value key for matched intent. */
   public final static String DK_MATCHED_INTENT = "matchedIntent";
-  
+
   private int maxAttemptsBeforeConfused = -1;
+
   private String confusedKnotName = null;
 
   /**
@@ -124,6 +125,9 @@ public abstract class AbstractInkBot
 
     // keep hold of matched intent for logging and debug
     String matchedIntent = null;
+
+    int failedToUnderstandCount = SessionUtils.getFailedToUnderstandCount(session);
+    log.info("initial failed count is {}", failedToUnderstandCount);
 
     try
     {
@@ -231,6 +235,9 @@ public abstract class AbstractInkBot
         {
           if (foundMatch)
           {
+            // reset failed count
+            failedToUnderstandCount = 0;
+
             // set reprompt into session
             if (currentResponse.getReprompt() != null)
             {
@@ -243,8 +250,37 @@ public abstract class AbstractInkBot
               SessionUtils.setRepromptHint(session, currentResponse.getHint());
             }
           }
+          else
+          {
+            failedToUnderstandCount += 1;
+          }
         }
       }
+      else
+      {
+        failedToUnderstandCount += 1;
+      }
+
+      log.info("failed count is now {}", failedToUnderstandCount);
+
+      if (confusedKnotName != null && failedToUnderstandCount >= maxAttemptsBeforeConfused)
+      {
+        log.info("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})", failedToUnderstandCount, maxAttemptsBeforeConfused);
+        log.info("jumping to {} ", confusedKnotName);
+        story.choosePathString(confusedKnotName);
+        getResponseText(session, currentResponse, story, intentMatch, false);
+        failedToUnderstandCount = 0;
+
+        // does story have any more choices ?
+        if (story.getCurrentChoices().size() == 0)
+        {
+          // no, conversation is done, wipe session and we are not returning an ask response
+          session.reset();
+          currentResponse.setAskResponse(false);
+        }
+      }
+
+      SessionUtils.setFailedToUnderstandCount(session, failedToUnderstandCount);
 
       // build and populate debug values map
       HashMap<String, Object> debugValues = null;
@@ -421,7 +457,7 @@ public abstract class AbstractInkBot
   {
     globalIntents.put(intentName, knotName);
   }
-  
+
   protected void setConfusedKnot(int maxAttemptsBeforeConfused, String confusedKnotName)
   {
     this.maxAttemptsBeforeConfused = maxAttemptsBeforeConfused;

@@ -18,6 +18,25 @@ public class SessionUtils
     // utility class
   }
 
+  public static void setFailedToUnderstandCount(Session session, int count)
+  {
+    session.setAttribute(SLOT_PREFIX + "0987654321FAILEDCOUNT1234567890", new Integer(count));
+  }
+
+  public static int getFailedToUnderstandCount(Session session)
+  {
+    Integer failedToUnderstandCount = (Integer)session.getAttribute(SLOT_PREFIX + "0987654321FAILEDCOUNT1234567890");
+
+    if (failedToUnderstandCount == null)
+    {
+      return 0;
+    }
+    else
+    {
+      return failedToUnderstandCount;
+    }
+  }
+
   public static void removeSlotfromSession(Session session, String slotName)
   {
     session.removeAttribute(SLOT_PREFIX + slotName);
