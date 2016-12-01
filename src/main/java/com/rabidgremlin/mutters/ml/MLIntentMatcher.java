@@ -273,8 +273,10 @@ public class MLIntentMatcher
         return null;
       }
     }
+    
 
-    String[] tokens = SimpleTokenizer.INSTANCE.tokenize(utterance);
+    // use tokenizer of model for parsing utterance
+    String[] tokens = model.getFactory().getTokenizer().tokenize(utterance);
 
     HashMap<Slot, SlotMatch> matchedSlots = new HashMap<Slot, SlotMatch>();
 
