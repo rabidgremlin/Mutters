@@ -69,6 +69,9 @@ public abstract class AbstractInkBot
 
   /** Debug value key for matched intent. */
   public final static String DK_MATCHED_INTENT = "matchedIntent";
+  
+  private int maxAttemptsBeforeConfused = -1;
+  private String confusedKnotName = null;
 
   /**
    * Constructs the bot.
@@ -417,6 +420,12 @@ public abstract class AbstractInkBot
   protected void setGlobalIntent(String intentName, String knotName)
   {
     globalIntents.put(intentName, knotName);
+  }
+  
+  protected void setConfusedKnot(int maxAttemptsBeforeConfused, String confusedKnotName)
+  {
+    this.maxAttemptsBeforeConfused = maxAttemptsBeforeConfused;
+    this.confusedKnotName = confusedKnotName;
   }
 
 }

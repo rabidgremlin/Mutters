@@ -53,7 +53,7 @@ task generateIntentModel(type:JavaExec) {
            '-params',
            'src/test/resources/models/TaxiBotIntentsParams.txt',
            '-tokenizer',
-           'opennlp.tools.tokenize.SimpleTokenizer']
+           'opennlp.tools.tokenize.WhitespaceTokenizer']
 }
 
 task generateAddressModel(type:JavaExec) {
