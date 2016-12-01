@@ -127,7 +127,7 @@ public abstract class AbstractInkBot
     String matchedIntent = null;
 
     int failedToUnderstandCount = SessionUtils.getFailedToUnderstandCount(session);
-    log.info("initial failed count is {}", failedToUnderstandCount);
+    log.debug("current failed count is {}", failedToUnderstandCount);
 
     try
     {
@@ -221,66 +221,64 @@ public abstract class AbstractInkBot
           }
         }
 
-        // save current story state
-        SessionUtils.saveInkStoryState(session, story.getState());
+        // did we match to global or choice ?
+        if (foundMatch)
+        {
+          // reset failed count
+          failedToUnderstandCount = 0;
 
-        // does story have any more choices ?
-        if (story.getCurrentChoices().size() == 0)
-        {
-          // no, conversation is done, wipe session and we are not returning an ask response
-          session.reset();
-          currentResponse.setAskResponse(false);
-        }
-        else
-        {
-          if (foundMatch)
+          // set reprompt into session
+          if (currentResponse.getReprompt() != null)
           {
-            // reset failed count
-            failedToUnderstandCount = 0;
-
-            // set reprompt into session
-            if (currentResponse.getReprompt() != null)
-            {
-              SessionUtils.setReprompt(session, currentResponse.getReprompt());
-              SessionUtils.setRepromptHint(session, currentResponse.getHint());
-            }
-            else
-            {
-              SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-              SessionUtils.setRepromptHint(session, currentResponse.getHint());
-            }
+            SessionUtils.setReprompt(session, currentResponse.getReprompt());
+            SessionUtils.setRepromptHint(session, currentResponse.getHint());
           }
           else
           {
-            failedToUnderstandCount += 1;
+            SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
+            SessionUtils.setRepromptHint(session, currentResponse.getHint());
           }
+        }
+        else
+        {
+          // found intent but did not match global or choice so increment fail count
+          failedToUnderstandCount += 1;
         }
       }
       else
       {
+        // did not find intent so increment fail account
         failedToUnderstandCount += 1;
       }
 
-      log.info("failed count is now {}", failedToUnderstandCount);
+      log.debug("failed count is now {}", failedToUnderstandCount);
 
+      // do we have confused knot and failed attempt > max failed attempts ?
       if (confusedKnotName != null && failedToUnderstandCount >= maxAttemptsBeforeConfused)
       {
-        log.info("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})", failedToUnderstandCount, maxAttemptsBeforeConfused);
-        log.info("jumping to {} ", confusedKnotName);
+        log.debug("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})", failedToUnderstandCount, maxAttemptsBeforeConfused);
+        log.debug("jumping to {} ", confusedKnotName);
+        // jump to confused knot
         story.choosePathString(confusedKnotName);
+        // continue story
         getResponseText(session, currentResponse, story, intentMatch, false);
+        // reset failed count
         failedToUnderstandCount = 0;
-
-        // does story have any more choices ?
-        if (story.getCurrentChoices().size() == 0)
-        {
-          // no, conversation is done, wipe session and we are not returning an ask response
-          session.reset();
-          currentResponse.setAskResponse(false);
-        }
       }
 
+      // save failed count
       SessionUtils.setFailedToUnderstandCount(session, failedToUnderstandCount);
+
+      // save current story state
+      SessionUtils.saveInkStoryState(session, story.getState());
+
+      // does story have any more choices ?
+      if (story.getCurrentChoices().size() == 0)
+      {
+        // no, conversation is done, wipe session and we are not returning an ask response
+        session.reset();
+        currentResponse.setAskResponse(false);
+      }
 
       // build and populate debug values map
       HashMap<String, Object> debugValues = null;
@@ -290,6 +288,7 @@ public abstract class AbstractInkBot
         debugValues.put(DK_MATCHED_INTENT, matchedIntent);
       }
 
+      // build and return response
       return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
           currentResponse.getResponseActionParams(), debugValues);
     }

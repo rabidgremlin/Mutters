@@ -94,6 +94,33 @@ public class TestConfusedBot
     assertThat(response.getResponse(), startsWith("I'm sorry I'm not understanding you at all"));
     assertThat(response.isAskResponse(), is(false));
   }
+  
+  
+  @Test
+  public void testStopConfusion()
+    throws BotException
+  { 
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "Order me a taxi");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("What is the pick up address ?"));
+    assertThat(response.isAskResponse(), is(true));
+
+    response = taxiBot.respond(session, context, "etretret ret");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
+    assertThat(response.isAskResponse(), is(true));
+    
+    response = taxiBot.respond(session, context, "136 River Road");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), startsWith("Taxi 1983 is on its way"));
+    assertThat(response.isAskResponse(), is(false));
+  }
 
 
 }
