@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,6 @@ import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.util.Span;
 
 /**
@@ -145,6 +145,12 @@ public class MLIntentMatcher
   @Override
   public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
+    // utterance is blank, nothing to match on
+    if (StringUtils.isBlank(utterance))
+    {
+      return null;
+    }
+    
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
@@ -33,6 +33,12 @@ public class TemplatedIntentMatcher
   @Override
   public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
   {
+    // utterance is blank, nothing to match on
+    if (StringUtils.isBlank(utterance))
+    {
+      return null;
+    }
+    
     CleanedInput cleanedUtterance = InputCleaner.cleanInput(utterance);
 
     for (TemplatedIntent intent : intents)
