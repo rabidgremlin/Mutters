@@ -26,31 +26,58 @@ public class DateSlot
     this.name = name;
   }
 
+  private LocalDate tryParse(String token, DateTimeFormatter fmt)
+  {
+    try
+    {
+      return fmt.parseLocalDate(token);
+    }
+    catch (IllegalArgumentException e)
+    {
+      return null;
+    }
+  }
+
+  private DateTimeFormatter fixupFormatter(Context context, int currentYear, DateTimeFormatter fmt)
+  {
+    return fmt.withLocale(context.getLocale()).withDefaultYear(currentYear).withPivotYear(currentYear);
+  }
+
   @Override
   public SlotMatch match(String token, Context context)
   {
-    // first try parse as NZ date as natty doesn't support NZ date formats
-    // TODO: use locale on context to choose correct "full" date format to try parse first
-    try
+    // grab current year to use as default and pivot year
+    int currentYear = LocalDate.now().getYear();
+
+    // try parse in short format for locale
+    LocalDate date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.shortDate()));
+    if (date != null)
     {
-      DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
-      LocalDate nzDate = fmt.parseLocalDate(token);
-      return new SlotMatch(this, token, nzDate);
-    }
-    catch (IllegalArgumentException e)
-    {
-      // do nothing
+      return new SlotMatch(this, token, date);
     }
 
-    try
+    // try parse in medium format for locale
+    date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.mediumDate()));
+    if (date != null)
     {
-      DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM");
-      LocalDate nzDate = fmt.parseLocalDate(token);
-      return new SlotMatch(this, token, nzDate);
+      return new SlotMatch(this, token, date);
     }
-    catch (IllegalArgumentException e)
+
+    // try parse in long format for locale
+    date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.longDate()));
+    if (date != null)
     {
-      // do nothing
+      return new SlotMatch(this, token, date);
+    }
+
+    // HACK: try parse dd/MM format if we are in NZ
+    if (context.getLocale().getCountry().equals("NZ"))
+    {
+      date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.forPattern("dd/MM")));
+      if (date != null)
+      {
+        return new SlotMatch(this, token, date);
+      }
     }
 
     // try parse with natty

@@ -4,9 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
@@ -87,38 +90,17 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(false));
   }
+  
 
   @Test
-  public void testNZDate()
-  {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
-
-    CleanedInput input = InputCleaner.cleanInput("2 Aug");
-    Slots slots = new Slots();
-    Context context = new Context();
-
-    DateSlot slot = new DateSlot("date");
-    slots.add(slot);
-
-    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
-
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
-    LocalDate dateMatch = (LocalDate) slotMatch.getValue();
-    assertThat(dateMatch.getDayOfMonth(), is(2));
-    assertThat(dateMatch.getMonthOfYear(), is(8));
-  }
-
-  @Test
-  public void testNZDate2()
+  public void testNZDateFullNumeric()
   {
     TemplatedUtterance utterance = new TemplatedUtterance("{date}");
 
     CleanedInput input = InputCleaner.cleanInput("20/5/2016");
     Slots slots = new Slots();
     Context context = new Context();
+    context.setLocale(new Locale("en","NZ"));
 
     DateSlot slot = new DateSlot("date");
     slots.add(slot);
@@ -133,6 +115,81 @@ public class TestDateSlot
     assertThat(dateMatch.getDayOfMonth(), is(20));
     assertThat(dateMatch.getMonthOfYear(), is(5));
     assertThat(dateMatch.getYear(), is(2016));
+  }
+  
+  @Test
+  public void testNZDateShortYear()
+  { 
+    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+
+    CleanedInput input = InputCleaner.cleanInput("20/5/16");
+    Slots slots = new Slots();
+    Context context = new Context();
+    context.setLocale(new Locale("en","NZ"));
+
+    DateSlot slot = new DateSlot("date");
+    slots.add(slot);
+
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+    assertThat(dateMatch.getDayOfMonth(), is(20));
+    assertThat(dateMatch.getMonthOfYear(), is(5));
+    assertThat(dateMatch.getYear(), is(2016));
+  }
+  
+  @Test
+  public void testNZDateDayMonthOnly()
+  { 
+    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+
+    CleanedInput input = InputCleaner.cleanInput("20/5");
+    Slots slots = new Slots();
+    Context context = new Context();
+    context.setLocale(new Locale("en","NZ"));
+
+    DateSlot slot = new DateSlot("date");
+    slots.add(slot);
+
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+    assertThat(dateMatch.getDayOfMonth(), is(20));
+    assertThat(dateMatch.getMonthOfYear(), is(5));
+    assertThat(dateMatch.getYear(), is(LocalDate.now().year().get()));
+  }
+  
+  @Test
+  public void testNZDateDayMonthAsTextOnly()
+  { 
+    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+
+    CleanedInput input = InputCleaner.cleanInput("1 dec");
+    Slots slots = new Slots();
+    Context context = new Context();
+    context.setLocale(new Locale("en","NZ"));
+
+    DateSlot slot = new DateSlot("date");
+    slots.add(slot);
+
+    TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
+
+    assertThat(match, is(notNullValue()));
+    assertThat(match.isMatched(), is(true));
+
+    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    LocalDate dateMatch = (LocalDate) slotMatch.getValue();
+    assertThat(dateMatch.getDayOfMonth(), is(1));
+    assertThat(dateMatch.getMonthOfYear(), is(12));
+    assertThat(dateMatch.getYear(), is(LocalDate.now().year().get()));
   }
 
   // TODO handle different TZ in context
