@@ -167,7 +167,20 @@ Taxi {taxiNo} is on its way
 ```
 
 ## Usage
-Currently SNAPSHOT builds are available in the Sonatype OSSRH repository. We are expecting to publish a stable version to Maven Central in the next few weeks.
+If you are using Gradle you can pull the latest release with:
+
+```
+repositories {
+    mavenCentral()    
+}
+
+dependencies {
+        compile 'com.rabidgremlin:mutters:1.0.0'
+}
+```
+
+
+Currently SNAPSHOT builds are available in the Sonatype OSSRH repository. 
 
 Using Gradle you can pull the snapshot using:
 
@@ -180,7 +193,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters:1.0.1-SNAPSHOT'
 }        
 ```
 
