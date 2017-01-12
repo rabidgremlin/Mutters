@@ -80,7 +80,7 @@ public class MLIntentMatcher
   }
 
   /**
-   * Constructor. Sets up the matcher to use the specified model and specifies the minimum match score.
+   * Constructor. Sets up the matcher to use the specified model (on the classpath) and specifies the minimum and maybe match scores.
    * 
    * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
    * @param minMatchScore The minimum match score for an intent match to be considered good.
@@ -88,12 +88,23 @@ public class MLIntentMatcher
    */
   public MLIntentMatcher(String intentModel, float minMatchScore, float maybeMatchScore)
   {
+    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), minMatchScore, maybeMatchScore);    
+  }
+  
+  /**
+   * Constructor. Sets up the matcher to use the specified model (via a URL) and specifies the minimum and maybe match score.
+   * 
+   * @param intentModelUrl A URL pointing at the document categoriser model file to load.
+   * @param minMatchScore The minimum match score for an intent match to be considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
+   */
+  public MLIntentMatcher(URL intentModelUrl, float minMatchScore, float maybeMatchScore)
+  {
     this.minMatchScore = minMatchScore;
     this.maybeMatchScore = maybeMatchScore;
     try
-    {
-      URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(intentModel);
-      model = new DoccatModel(modelUrl);
+    {      
+      model = new DoccatModel(intentModelUrl);
     }
     catch (Exception e)
     {
