@@ -193,7 +193,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.1.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters:1.1.1-SNAPSHOT'
 }        
 ```
 
