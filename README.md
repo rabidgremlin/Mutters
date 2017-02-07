@@ -175,7 +175,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.1.0'
+        compile 'com.rabidgremlin:mutters:1.2.0'
 }
 ```
 
@@ -193,7 +193,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.1.1-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters:1.2.0-SNAPSHOT'
 }        
 ```
 
