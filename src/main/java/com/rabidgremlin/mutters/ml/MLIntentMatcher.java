@@ -68,6 +68,9 @@ public class MLIntentMatcher
   private float maybeMatchScore = -1;
 
   private static final String MAYBE_INTENT_PREFIX = "Maybe";
+  
+  /** Debug value key for intent matching scores. */
+  public final static String DEBUG_MATCHING_SCORES = "intentMatchingScores";
 
   /**
    * Constructor. Sets up the matcher to use the specified model.
@@ -154,7 +157,7 @@ public class MLIntentMatcher
    * expectedIntents)
    */
   @Override
-  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents, HashMap<String, Object> debugValues)
   {
     // utterance is blank, nothing to match on
     if (StringUtils.isBlank(utterance))
@@ -166,6 +169,12 @@ public class MLIntentMatcher
 
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
     log.info("Sorted scores were: {}", scoredCats);
+    
+    // if we have a debugValues object then populate it with scores
+    if (debugValues != null)
+    {
+      debugValues.put(DEBUG_MATCHING_SCORES, scoredCats);
+    }
 
     double bestScore = 0;
     String bestCategory = null;

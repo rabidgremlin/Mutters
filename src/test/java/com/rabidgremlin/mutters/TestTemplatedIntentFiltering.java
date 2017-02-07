@@ -46,14 +46,14 @@ public class TestTemplatedIntentFiltering
   public void testNoFiltering()
   {
     // should match on hello intent
-    IntentMatch intentMatch = matcher.match("hello", new Context(), null);
+    IntentMatch intentMatch = matcher.match("hello", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
     assertThat(intentMatch.getIntent().getName(), is("HelloIntent"));
     
     // should match on goodbye intent
-    intentMatch = matcher.match("bye", new Context(), null);
+    intentMatch = matcher.match("bye", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
@@ -67,14 +67,14 @@ public class TestTemplatedIntentFiltering
     expectedIntents.add("HelloIntent");
     
     // should match on hello intent
-    IntentMatch intentMatch = matcher.match("hello", new Context(), expectedIntents);
+    IntentMatch intentMatch = matcher.match("hello", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
     assertThat(intentMatch.getIntent().getName(), is("HelloIntent"));
     
     // should not match on goodbye intent (its not in expected intents)
-    intentMatch = matcher.match("bye", new Context(), expectedIntents);
+    intentMatch = matcher.match("bye", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(nullValue()));    
   }

@@ -1,5 +1,6 @@
 package com.rabidgremlin.mutters.core;
 
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -38,15 +39,15 @@ public class CompoundIntentMatcher
    * 
    */
   @Override
-  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents, HashMap<String, Object> debugValues)
   {
     // see if we can find match in first matcher
-    IntentMatch match = firstMatcher.match(utterance, context, expectedIntents);
+    IntentMatch match = firstMatcher.match(utterance, context, expectedIntents, debugValues);
 
     // no ? try second one
     if (match == null)
     {
-      match = secondMatcher.match(utterance, context, expectedIntents);
+      match = secondMatcher.match(utterance, context, expectedIntents, debugValues);
     }
 
     return match;

@@ -20,6 +20,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.core.SlotMatch;
+import com.rabidgremlin.mutters.ml.MLIntentMatcher;
 import com.rabidgremlin.mutters.session.Session;
 import com.rabidgremlin.mutters.util.SessionUtils;
 
@@ -69,6 +70,9 @@ public abstract class AbstractInkBot
 
   /** Debug value key for matched intent. */
   public final static String DK_MATCHED_INTENT = "matchedIntent";
+  
+  /** Debug value key for intent matching scores. */
+  public final static String DK_INTENT_MATCHING_SCORES = MLIntentMatcher.DEBUG_MATCHING_SCORES;
 
   private int maxAttemptsBeforeConfused = -1;
 
@@ -158,8 +162,13 @@ public abstract class AbstractInkBot
         expectedIntents.add(choice.getText());
       }
 
+      
+      // create debug values map
+      HashMap<String, Object> debugValues = new HashMap<String, Object>(); 
+      
       // match the intents
-      IntentMatch intentMatch = matcher.match(messageText, context, expectedIntents);
+      IntentMatch intentMatch = matcher.match(messageText, context, expectedIntents, debugValues);
+           
 
       if (intentMatch != null)
       {
@@ -280,11 +289,9 @@ public abstract class AbstractInkBot
         currentResponse.setAskResponse(false);
       }
 
-      // build and populate debug values map
-      HashMap<String, Object> debugValues = null;
+      // populate debug values map with matched intent     
       if (matchedIntent != null)
-      {
-        debugValues = new HashMap<String, Object>();
+      {       
         debugValues.put(DK_MATCHED_INTENT, matchedIntent);
       }
 

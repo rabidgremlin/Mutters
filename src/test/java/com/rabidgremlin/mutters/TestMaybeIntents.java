@@ -39,7 +39,7 @@ public class TestMaybeIntents
   public void testBestMatchWorks()
   {
     // should match on order taxi intent
-    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), null);
+    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
@@ -50,7 +50,7 @@ public class TestMaybeIntents
   public void testMaybeMatchWithNoExpectedIntents()
   {
     // should match on maybe order taxi
-    IntentMatch intentMatch = matcher.match("Order", new Context(), null);
+    IntentMatch intentMatch = matcher.match("Order", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
@@ -65,7 +65,7 @@ public class TestMaybeIntents
     expectedIntents.add("MaybeOrderTaxi");
 
     // should match on maybe order taxi
-    IntentMatch intentMatch = matcher.match("Order", new Context(), expectedIntents);
+    IntentMatch intentMatch = matcher.match("Order", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
@@ -79,7 +79,7 @@ public class TestMaybeIntents
     expectedIntents.add("OrderTaxi");
 
     // should not match
-    IntentMatch intentMatch = matcher.match("Order", new Context(), expectedIntents);
+    IntentMatch intentMatch = matcher.match("Order", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(nullValue()));
   }

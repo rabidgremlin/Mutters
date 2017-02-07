@@ -85,7 +85,8 @@ public abstract class AbstractStateMachineBot
       boolean askResponse = true;
 
       // TODO: Implement intent filtering via expected intents
-      IntentMatch intentMatch = matcher.match(messageText, context, null);
+      // TODO: Implement debug values
+      IntentMatch intentMatch = matcher.match(messageText, context, null, null);
 
       if (intentMatch != null)
       {

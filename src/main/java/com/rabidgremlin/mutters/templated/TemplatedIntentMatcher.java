@@ -2,6 +2,7 @@ package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class TemplatedIntentMatcher
    * Set<String> expectedIntents)
    */
   @Override
-  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents)
+  public IntentMatch match(String utterance, Context context, Set<String> expectedIntents, HashMap<String, Object> debugValues)
   {
     // utterance is blank, nothing to match on
     if (StringUtils.isBlank(utterance))

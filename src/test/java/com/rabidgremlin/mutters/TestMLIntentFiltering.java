@@ -41,14 +41,14 @@ public class TestMLIntentFiltering
   public void testNoFiltering()
   {
     // should match on order intent
-    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), null);
+    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
     assertThat(intentMatch.getIntent().getName(), is("OrderTaxi"));
     
     // should match on where intent
-    intentMatch = matcher.match("How far away is my taxi ?", new Context(), null);
+    intentMatch = matcher.match("How far away is my taxi ?", new Context(), null, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
@@ -62,14 +62,14 @@ public class TestMLIntentFiltering
     expectedIntents.add("OrderTaxi");
     
     // should match on order intent
-    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), expectedIntents);
+    IntentMatch intentMatch = matcher.match("Order a taxi", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getIntent(), is(notNullValue()));
     assertThat(intentMatch.getIntent().getName(), is("OrderTaxi"));
     
     // should not match on where intent (its not in expected intents)
-    intentMatch = matcher.match("How far away is my taxi ?", new Context(), expectedIntents);
+    intentMatch = matcher.match("How far away is my taxi ?", new Context(), expectedIntents, null);
 
     assertThat(intentMatch, is(nullValue()));        
   }
