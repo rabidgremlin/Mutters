@@ -34,9 +34,8 @@ public final class InputCleaner
    * @return The cleaned input.
    */
   public static CleanedInput cleanInput(String inputString)
-  {
-    // TODO more punctuation and white space removal..
-    List<String> originalTokens = Arrays.asList((inputString.replaceAll("\\?", "").split("\\s+")));
+  {    
+    List<String> originalTokens = Arrays.asList((inputString.trim().replaceAll("[\\?|!|,]*", "").split("\\s+")));
     List<String> cleanedTokens = new ArrayList<String>();
 
     for (String token : originalTokens)

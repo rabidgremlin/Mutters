@@ -1,5 +1,11 @@
 package com.rabidgremlin.mutters;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.CleanedInput;
@@ -7,32 +13,62 @@ import com.rabidgremlin.mutters.core.InputCleaner;
 
 public class TestInputCleaning
 {
-
-  // TODO make this a real test
-  @Test
-  public void testBasicCleaning()
+  private void checkResult(String inputText, String[] expectedTokens)
   {
-    CleanedInput cleanedInput = InputCleaner.cleanInput("What's the time");
-    cleanedInput = InputCleaner.cleanInput("What is the time");
-    cleanedInput = InputCleaner.cleanInput("Whats the time");
-    cleanedInput = InputCleaner.cleanInput("Whats teh time");
-    cleanedInput = InputCleaner.cleanInput("Wats the time");
-    cleanedInput = InputCleaner.cleanInput("Whats the tim");
-    cleanedInput = InputCleaner.cleanInput("Whats the tiem");
+    CleanedInput cleanedInput = InputCleaner.cleanInput(inputText);
+    assertThat(cleanedInput, is(notNullValue()));
 
-    cleanedInput = InputCleaner.cleanInput("san francisco");
-    cleanedInput = InputCleaner.cleanInput("San Franscisoco");
-    cleanedInput = InputCleaner.cleanInput("Sun Fransisco");
+    List<String> cleanedTokens = cleanedInput.getCleanedTokens();
+    assertThat(cleanedTokens, is(notNullValue()));
+    assertThat(cleanedTokens.size(), is(expectedTokens.length));
 
-    cleanedInput = InputCleaner.cleanInput("Auckland");
-    cleanedInput = InputCleaner.cleanInput("Awkland");
-    cleanedInput = InputCleaner.cleanInput("Oakland");
+    for (int loop = 0; loop < expectedTokens.length; loop++)
+    {
+      assertThat(cleanedTokens.get(loop), is(expectedTokens[loop]));
+    }
+  }
 
-    cleanedInput = InputCleaner.cleanInput("I like {Color}");
-    cleanedInput = InputCleaner.cleanInput("I like {Color} and {Food}");
-    cleanedInput = InputCleaner.cleanInput("I like red and burgers");
-    cleanedInput = InputCleaner.cleanInput("I like bright pink and fish and chips");
+  @Test
+  public void testRemoveQuestionMarks()
+  {
+    checkResult("What's the time?", new String[]{ "What's", "the", "time" });
+    checkResult("What's the time ?", new String[]{ "What's", "the", "time" });
+    checkResult("What's the time ????", new String[]{ "What's", "the", "time" });
+    checkResult("What's the time????", new String[]{ "What's", "the", "time" });
+    checkResult("Is this a test? I'm not sure", new String[]{ "Is", "this", "a", "test", "I'm", "not", "sure" });
+  }
 
+  @Test
+  public void testRemoveExclamationMarks()
+  {
+    checkResult("Hello there!", new String[]{ "Hello", "there" });
+    checkResult("Hello there !", new String[]{ "Hello", "there" });
+    checkResult("Hello there !!!!", new String[]{ "Hello", "there" });
+    checkResult("Hello there!!!!", new String[]{ "Hello", "there" });
+    checkResult("Hello! there!", new String[]{ "Hello", "there" });
+  }
+
+  @Test
+  public void testRemoveCommaMarks()
+  {
+    checkResult("Hello, there", new String[]{ "Hello", "there" });
+    checkResult("Hello there,", new String[]{ "Hello", "there" });
+    checkResult("Hello,, there", new String[]{ "Hello", "there" });
+    checkResult("Hello ,, there", new String[]{ "Hello", "there" });
+    checkResult("Hello, there,", new String[]{ "Hello", "there" });
+  }
+
+  @Test
+  public void testTrimming()
+  {
+    checkResult(" Hi  there ", new String[]{ "Hi", "there" });
+    checkResult(" Hi", new String[]{ "Hi" });
+  }
+
+  @Test
+  public void testSlots()
+  {
+    checkResult("I like {Color} and {Food}", new String[]{ "I", "like", "{Color}", "and", "{Food}" });
   }
 
 }
