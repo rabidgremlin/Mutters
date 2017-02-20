@@ -168,7 +168,7 @@ public class MLIntentMatcher
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
     SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
-    log.info("Sorted scores were: {}", scoredCats);
+    log.debug("Sorted scores were: {}", scoredCats);
     
     // if we have a debugValues object then populate it with scores
     if (debugValues != null)
@@ -221,7 +221,7 @@ public class MLIntentMatcher
             break;
           }
 
-          log.info("Dropping match for {} wasn't in expected intents {}", cat, expectedIntents);
+          log.debug("Dropping match for {} wasn't in expected intents {}", cat, expectedIntents);
         }
 
         // did we find cat ?
@@ -237,12 +237,12 @@ public class MLIntentMatcher
 
       if (bestCategory == null)
       {
-        log.info("No matches, matching expectedIntents.");
+        log.debug("No matches, matching expectedIntents.");
         return null;
       }
     }
 
-    log.info("Best Match was:" + bestCategory);
+    log.debug("Best Match was:" + bestCategory);
 
     // find the intent
     MLIntent bestIntent = intents.get(bestCategory.toUpperCase());
@@ -256,7 +256,7 @@ public class MLIntentMatcher
     if (bestScore < minMatchScore)
     {
       // log failure
-      log.info("Best score for {} lower then minMatchScore of {}. Failing match.", bestCategory, minMatchScore);
+      log.debug("Best score for {} lower then minMatchScore of {}. Failing match.", bestCategory, minMatchScore);
 
       // do we have a maybe intent ?
       if (hasMaybeIntent)
@@ -264,7 +264,7 @@ public class MLIntentMatcher
         // yes, was the score difference between best and next best good enough
         // to meet maybeMatchScore ?
         Double scoreDiff = calcScoreDifference(scoredCats);
-        log.info("Checking if difference between best and next best score of {} is better than maybeMatchScore of {}", scoreDiff, maybeMatchScore);
+        log.debug("Checking if difference between best and next best score of {} is better than maybeMatchScore of {}", scoreDiff, maybeMatchScore);
         if (scoreDiff != null && scoreDiff > maybeMatchScore)
         {
           // yes, so lets return maybe intent
@@ -286,11 +286,11 @@ public class MLIntentMatcher
 
           // return maybe intent instead of best intent
           bestIntent = maybeIntent;
-          log.info("Matching to maybe intent: {}", bestIntent.getName());
+          log.debug("Matching to maybe intent: {}", bestIntent.getName());
         }
         else
         {
-          log.info("Score difference between best and next best too low. Skipping maybe intent");
+          log.debug("Score difference between best and next best too low. Skipping maybe intent");
           return null;
         }
       }
@@ -308,7 +308,7 @@ public class MLIntentMatcher
 
     for (Slot slot : bestIntent.getSlots())
     {
-      log.info("Looking for Slot {}", slot.getName());
+      log.debug("Looking for Slot {}", slot.getName());
 
       TokenNameFinderModel tnfModel = slotModels.get(slot.getName().toLowerCase());
       if (tnfModel == null)
@@ -324,23 +324,23 @@ public class MLIntentMatcher
       {
         String[] matches = Span.spansToStrings(spans, tokens);
 
-        log.info("Matching for {} against {}", slot.getName(), matches);
+        log.debug("Matching for {} against {}", slot.getName(), matches);
 
         // TODO what to do with multi matches?
         SlotMatch match = slot.match(matches[0], context);
         if (match != null)
         {
           matchedSlots.put(slot, match);
-          log.info("Match found {}", match);
+          log.debug("Match found {}", match);
         }
         else
         {
-          log.info("No Match found slot: {} text: {} ", slot.getName(), matches);
+          log.debug("No Match found slot: {} text: {} ", slot.getName(), matches);
         }
       }
       else
       {
-        log.info("Did not find slot {} utterance {} ", slot.getName(), utterance);
+        log.debug("Did not find slot {} utterance {} ", slot.getName(), utterance);
       }
     }
 
