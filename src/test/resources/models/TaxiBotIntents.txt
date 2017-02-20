@@ -35,3 +35,4 @@ Stop Quit
 FavColor My favorite color is blue
 FavColor I like green 
 FavColor Purple is the best color
+Shouting i am shouting

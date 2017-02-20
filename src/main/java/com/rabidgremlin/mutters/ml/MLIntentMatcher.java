@@ -36,6 +36,10 @@ import opennlp.tools.util.Span;
  * match will be returned if the score difference between the best match and the next best match is higher than the
  * specified maybeMatchScore. If maybeMatchScore score is set to -1 then maybe intent matching is disabled.
  * 
+ * If the lowerCaseUtteranceForMatching flag is set to true in the constructor then the utterance is lower cased before matching
+ * takes place. This can improve matching in some cases. Note if this flag is set to true then the training data for the intents
+ * should all be in lower case. The utterance is only lower cased for intent matching, not the NER slots, so NER training data can 
+ * maintain its case.
  * 
  * @author rabidgremlin
  *
@@ -71,6 +75,9 @@ public class MLIntentMatcher
   
   /** Debug value key for intent matching scores. */
   public final static String DEBUG_MATCHING_SCORES = "intentMatchingScores";
+  
+  /** If true then lower cases utterance for matching. */
+  private boolean lowerCaseUtteranceForMatching;
 
   /**
    * Constructor. Sets up the matcher to use the specified model.
@@ -95,6 +102,19 @@ public class MLIntentMatcher
   }
   
   /**
+   * Constructor. Sets up the matcher to use the specified model (on the classpath) and specifies the minimum and maybe match scores.
+   * 
+   * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
+   * @param minMatchScore The minimum match score for an intent match to be considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
+   * @param lowerCaseUtteranceForMatching If true, lower case utterance for matching. Note training data should then all be lower cased as well.
+   */
+  public MLIntentMatcher(String intentModel, float minMatchScore, float maybeMatchScore, boolean lowerCaseUtteranceForMatching)
+  {
+    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), minMatchScore, maybeMatchScore, lowerCaseUtteranceForMatching);    
+  }
+  
+  /**
    * Constructor. Sets up the matcher to use the specified model (via a URL) and specifies the minimum and maybe match score.
    * 
    * @param intentModelUrl A URL pointing at the document categoriser model file to load.
@@ -105,6 +125,30 @@ public class MLIntentMatcher
   {
     this.minMatchScore = minMatchScore;
     this.maybeMatchScore = maybeMatchScore;
+    this.lowerCaseUtteranceForMatching = false;
+    try
+    {      
+      model = new DoccatModel(intentModelUrl);
+    }
+    catch (Exception e)
+    {
+      throw new IllegalArgumentException("Unable to load intent model", e);
+    }
+  }
+  
+  /**
+   * Constructor. Sets up the matcher to use the specified model (via a URL) and specifies the minimum and maybe match score.
+   * 
+   * @param intentModelUrl A URL pointing at the document categoriser model file to load.
+   * @param minMatchScore The minimum match score for an intent match to be considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
+   * @param lowerCaseUtteranceForMatching If true, lower case utterance for matching. Note training data should then all be lower cased as well.
+   */
+  public MLIntentMatcher(URL intentModelUrl, float minMatchScore, float maybeMatchScore, boolean lowerCaseUtteranceForMatching)
+  {
+    this.minMatchScore = minMatchScore;
+    this.maybeMatchScore = maybeMatchScore;
+    this.lowerCaseUtteranceForMatching = lowerCaseUtteranceForMatching;
     try
     {      
       model = new DoccatModel(intentModelUrl);
@@ -167,7 +211,7 @@ public class MLIntentMatcher
     
     DocumentCategorizerME intentCategorizer = new DocumentCategorizerME(model);
 
-    SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(utterance);
+    SortedMap<Double, Set<String>> scoredCats = intentCategorizer.sortedScoreMap(lowerCaseUtteranceForMatching?utterance.toLowerCase():utterance);
     log.debug("Sorted scores were: {}", scoredCats);
     
     // if we have a debugValues object then populate it with scores
