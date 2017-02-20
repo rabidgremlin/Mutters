@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.opennlp:opennlp-tools:1.6.0'
+    compile 'org.apache.opennlp:opennlp-tools:1.7.2'
     compile 'joda-time:joda-time:2.9.4' 
     compile 'com.joestelmach:natty:0.12'    
     compile 'commons-codec:commons-codec:1.10'   
