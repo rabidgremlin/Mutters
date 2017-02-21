@@ -175,7 +175,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.2.0'
+        compile 'com.rabidgremlin:mutters:1.3.0'
 }
 ```
 
