@@ -77,7 +77,7 @@ public class SessionUtils
     }
     catch (Exception e)
     {
-      throw new RuntimeException("Unexpected error. Failed to load story state", e);
+      throw new BadInkStoryState("Unexpected error. Failed to load story state", e);
     }
   }
 
