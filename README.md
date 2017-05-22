@@ -58,6 +58,7 @@ public class TaxiInkBot
       {
         try
         {
+          // generate a fake order number based on address for demo
           story.getVariablesState().set("taxiNo",
               Integer
                   .toHexString(SessionUtils
@@ -195,7 +196,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:2.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters:2.0.1-SNAPSHOT'
 }        
 ```
 
