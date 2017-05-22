@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -270,5 +272,25 @@ public class TestTaxiInkBot
     response = taxiBot.respond(session, context, "and roses are red");
     assertThat(response.getResponse(), is("Pardon?"));
     assertThat(response.isAskResponse(), is(true));
+  }
+  
+  @Test
+  public void testQuickReplies()
+    throws BotException
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    BotResponse response = taxiBot.respond(session, context, "Send a taxi to 56 Kilm Steet");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("Taxi 1e1f is on its way"));
+    assertThat(response.isAskResponse(), is(false));    
+    assertThat(response.getQuickReplies(), is(notNullValue()));
+    
+    assertThat(response.getQuickReplies().size(), is(2));
+    List<String> quickReplies = response.getQuickReplies();    
+    assertThat(quickReplies.get(0), is("Where is my taxi?"));
+    assertThat(quickReplies.get(1), is("Cancel my taxi"));    
   }
 }

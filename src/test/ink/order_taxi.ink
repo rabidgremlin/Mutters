@@ -24,4 +24,6 @@ What is the pick up address ?
 ::ORDER_TAXI
 Taxi {taxiNo} is on its way
 ::ADD_ATTACHMENT type::link url::http:\/\/trackcab.example.com/t/{taxiNo} title::Track your taxi here
--> END  
+::ADD_QUICK_REPLY Where is my taxi?
+::ADD_QUICK_REPLY Cancel my taxi
+-> END

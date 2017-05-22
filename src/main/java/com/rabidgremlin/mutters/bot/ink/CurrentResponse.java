@@ -100,7 +100,7 @@ public class CurrentResponse
     responseAttachments.add(attachment);
   }
 
-  public void addQuickReply(String quickReply)
+  public void addResponseQuickReply(String quickReply)
   {
     if (responseQuickReplies == null)
     {

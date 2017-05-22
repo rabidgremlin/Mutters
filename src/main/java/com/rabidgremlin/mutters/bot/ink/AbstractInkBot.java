@@ -17,6 +17,7 @@ import com.rabidgremlin.mutters.bot.Bot;
 import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.bot.ink.functions.AddAttachmentFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.AddQuickReplyFunction;
 import com.rabidgremlin.mutters.bot.ink.functions.SetHintFunction;
 import com.rabidgremlin.mutters.bot.ink.functions.SetRepromptFunction;
 import com.rabidgremlin.mutters.core.Context;
@@ -97,6 +98,7 @@ public abstract class AbstractInkBot
     addFunction(new SetHintFunction());
     addFunction(new SetRepromptFunction());
     addFunction(new AddAttachmentFunction());
+    addFunction(new AddQuickReplyFunction());
 
     // add any other functions for the bot
     setUpFunctions();
