@@ -154,15 +154,17 @@ VAR taxiNo = ""
 
 = request_address
 What is the pick up address ?
-:SET_REPROMPT Where would you like to be picked up ?
-:SET_HINT 123 Someplace Rd
+::SET_REPROMPT Where would you like to be picked up ?
+::SET_HINT 123 Someplace Rd
 + GaveAddress
 - -> order_taxi_loop
   
 = order_the_taxi  
-:ORDER_TAXI
+::ORDER_TAXI
 Taxi {taxiNo} is on its way
-:SET_ACTION OPEN_URL url:http:\/\/trackcab.example.com/t/{taxiNo} 
+::ADD_ATTACHMENT type::link url::http:\/\/trackcab.example.com/t/{taxiNo} title::Track your taxi here
+::ADD_QUICK_REPLY Where is my taxi?
+::ADD_QUICK_REPLY Cancel my taxi
 -> END 
 ```
 
@@ -175,7 +177,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.4.1'
+        compile 'com.rabidgremlin:mutters:2.0.0'
 }
 ```
 
@@ -193,7 +195,7 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:1.4.2-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters:2.0.0-SNAPSHOT'
 }        
 ```
 
