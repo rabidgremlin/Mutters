@@ -1,10 +1,13 @@
 package com.rabidgremlin.mutters.bot;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
  * This class holds a response from a bot.
+ * 
+ * Apart from the response test the bot can also return hints, attachments (for rich responses) and debug values.
  * 
  * @author rabidgremlin
  *
@@ -20,11 +23,11 @@ public class BotResponse
   /** True if this the bot is expecting a further response from the user. */
   private boolean askResponse;
 
-  /** Any action that the client should take. eg opening a URL, displaying a button etc */
-  private String action;
+  /** The attachments for the response. */
+  private List<BotResponseAttachment> attachments;
 
-  /** The parameters for the action. */
-  private Map<String, Object> actionParams;
+  /** List of suggested replies that the user could use. */
+  private List<String> quickReplies;
 
   /** Map of debug values. Added by particular bot implementation. */
   private Map<String, Object> debugValues;
@@ -35,18 +38,18 @@ public class BotResponse
    * @param response The response text.
    * @param hint Any hint text for the client to display.
    * @param askResponse True if this the bot is expecting a further response from the user.
-   * @param action Any action that the client should take. eg opening a URL, displaying a button etc
-   * @param actionParams The parameters for the action.
+   * @param attachments The attachments for the response.
+   * @param quickReplies List of suggested replies that the user could use.
    * @param debugValues Map of debug values. Specific to bot implementation.
    */
-  public BotResponse(String response, String hint, boolean askResponse, String action,
-    Map<String, Object> actionParams, Map<String, Object> debugValues)
+  public BotResponse(String response, String hint, boolean askResponse,
+    List<BotResponseAttachment> attachments, List<String> quickReplies, Map<String, Object> debugValues)
   {
     this.response = response;
     this.hint = hint;
     this.askResponse = askResponse;
-    this.action = action;
-    this.actionParams = actionParams;
+    this.attachments = attachments;
+    this.quickReplies = quickReplies;
     this.debugValues = debugValues;
   }
 
@@ -72,28 +75,18 @@ public class BotResponse
   }
 
   /**
-   * Returns an action for the client to perform. This is any unique string for example OPEN_URL.
+   * Returns the attachments for this response.
    * 
-   * @return The action for the client or null if no action.
+   * @return The attachments or null.
    */
-  public String getAction()
+  public List<BotResponseAttachment> getAttachments()
   {
-    return action;
-  }
-
-  /**
-   * Returns the parameters for the action.
-   * 
-   * @return The action parameters or null.
-   */
-  public Map<String, Object> getActionParams()
-  {
-    if (actionParams == null)
+    if (attachments == null)
     {
       return null;
     }
 
-    return Collections.unmodifiableMap(actionParams);
+    return Collections.unmodifiableList(attachments);
   }
 
   /**
@@ -120,6 +113,21 @@ public class BotResponse
     }
 
     return Collections.unmodifiableMap(debugValues);
+  }
+
+  /**
+   * Returns the quick replies for this response.
+   * 
+   * @return The quick replies or null.
+   */
+  public List<String> getQuickReplies()
+  {
+    if (quickReplies == null)
+    {
+      return null;
+    }
+
+    return Collections.unmodifiableList(quickReplies);
   }
 
 }

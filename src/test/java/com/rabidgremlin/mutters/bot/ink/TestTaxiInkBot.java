@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
+import com.rabidgremlin.mutters.bot.BotResponseAttachment;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.session.Session;
 
@@ -35,7 +36,7 @@ public class TestTaxiInkBot
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Taxi 1e1f is on its way"));
-    assertThat(response.isAskResponse(), is(false));
+    assertThat(response.isAskResponse(), is(false));    
   }
 
   @Test
@@ -49,7 +50,7 @@ public class TestTaxiInkBot
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("What is the pick up address ?"));
-    assertThat(response.isAskResponse(), is(true));
+    assertThat(response.isAskResponse(), is(true));    
 
     response = taxiBot.respond(session, context, "136 River Road");
 
@@ -70,6 +71,7 @@ public class TestTaxiInkBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Your taxi has been cancelled"));
     assertThat(response.isAskResponse(), is(false));
+    assertThat(response.getAttachments(), is(nullValue()));
   }
 
   @Test
@@ -84,6 +86,7 @@ public class TestTaxiInkBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Your taxi is about 7 minutes away"));
     assertThat(response.isAskResponse(), is(false));
+    assertThat(response.getAttachments(), is(nullValue()));
   }
 
   @Test
@@ -125,7 +128,7 @@ public class TestTaxiInkBot
   }
 
   @Test
-  public void testActionUrl()
+  public void testAttachment()
     throws BotException
   {
     Session session = new Session();
@@ -135,9 +138,14 @@ public class TestTaxiInkBot
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Taxi 1e1f is on its way"));
-    assertThat(response.isAskResponse(), is(false));
-    assertThat(response.getAction(), is("OPEN_URL"));
-    assertThat(response.getActionParams().get("url"), is("http://trackcab.example.com/t/1e1f"));
+    assertThat(response.isAskResponse(), is(false));    
+    assertThat(response.getAttachments(), is(notNullValue()));
+    
+    assertThat(response.getAttachments().size(), is(1));
+    BotResponseAttachment attachment = response.getAttachments().get(0);    
+    assertThat(attachment.getType(), is("link"));
+    assertThat(attachment.getParameters().get("url"), is("http://trackcab.example.com/t/1e1f"));
+    assertThat(attachment.getParameters().get("title"), is("Track your taxi here"));
   }
   
   
@@ -159,6 +167,7 @@ public class TestTaxiInkBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Ok"));
     assertThat(response.isAskResponse(), is(false));
+    assertThat(response.getAttachments(), is(nullValue()));
   }
   
   @Test
@@ -173,6 +182,7 @@ public class TestTaxiInkBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), startsWith("I can help you order a taxi or"));
     assertThat(response.isAskResponse(), is(false));
+    assertThat(response.getAttachments(), is(nullValue()));
   }
   
   @Test

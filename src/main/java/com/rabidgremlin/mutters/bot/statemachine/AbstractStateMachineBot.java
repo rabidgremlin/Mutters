@@ -1,6 +1,6 @@
 package com.rabidgremlin.mutters.bot.statemachine;
 
-import java.util.Map;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.rabidgremlin.mutters.bot.Bot;
 import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
+import com.rabidgremlin.mutters.bot.BotResponseAttachment;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -79,9 +80,9 @@ public abstract class AbstractStateMachineBot
 
     try
     {
-      String reprompt = null;
-      String reponseAction = null;
-      Map<String, Object> responseActionParams = null;
+      String reprompt = null; 
+      List<BotResponseAttachment> responseAttachments = null;      
+      List<String> responseQuickReplies = null;
       boolean askResponse = true;
 
       // TODO: Implement intent filtering via expected intents
@@ -94,8 +95,8 @@ public abstract class AbstractStateMachineBot
         responseText = response.getResponse();
         hint = response.getHint();
         reprompt = response.getReprompt();
-        reponseAction = response.getAction();
-        responseActionParams = response.getActionParams();
+        responseAttachments = response.getAttachments();
+        responseQuickReplies = response.getQuickReplies();
 
         if (response.isSessionEnded())
         {
@@ -117,7 +118,7 @@ public abstract class AbstractStateMachineBot
         }
       }
 
-      return new BotResponse(responseText, hint, askResponse, reponseAction, responseActionParams, null);
+      return new BotResponse(responseText, hint, askResponse, responseAttachments, responseQuickReplies, null);
     }
     catch (IllegalStateException e)
     {

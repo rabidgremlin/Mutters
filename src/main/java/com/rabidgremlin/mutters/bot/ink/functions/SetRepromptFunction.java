@@ -1,6 +1,8 @@
-package com.rabidgremlin.mutters.bot.ink;
+package com.rabidgremlin.mutters.bot.ink.functions;
 
 import com.bladecoder.ink.runtime.Story;
+import com.rabidgremlin.mutters.bot.ink.CurrentResponse;
+import com.rabidgremlin.mutters.bot.ink.InkBotFunction;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.session.Session;
 
@@ -14,7 +16,7 @@ import com.rabidgremlin.mutters.session.Session;
  * 
  * ``` 
  * Which date ? 
- * :SET_REPROMPT On which date would you like the delivery to take place? 
+ * ::SET_REPROMPT On which date would you like the delivery to take place? 
  * ```
  * 
  * @author rabidgremlin

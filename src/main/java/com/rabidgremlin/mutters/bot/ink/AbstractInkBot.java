@@ -16,6 +16,9 @@ import com.bladecoder.ink.runtime.StoryException;
 import com.rabidgremlin.mutters.bot.Bot;
 import com.rabidgremlin.mutters.bot.BotException;
 import com.rabidgremlin.mutters.bot.BotResponse;
+import com.rabidgremlin.mutters.bot.ink.functions.AddAttachmentFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.SetHintFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.SetRepromptFunction;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -37,9 +40,9 @@ import com.rabidgremlin.mutters.util.SessionUtils;
  * "https://github.com/rabidgremlin/Mutters/blob/master/src/test/java/com/rabidgremlin/mutters/bot/ink/TaxiInkBot.java"
  * target="_blank">TaxiInkBot</a> for an example of how this type of bot works.
  * 
- * @see com.rabidgremlin.mutters.bot.ink.SetActionFunction
- * @see com.rabidgremlin.mutters.bot.ink.SetHintFunction
- * @see com.rabidgremlin.mutters.bot.ink.SetRepromptFunction
+ * @see com.rabidgremlin.mutters.bot.ink.functions.AddAttachmentFunction
+ * @see com.rabidgremlin.mutters.bot.ink.functions.SetHintFunction
+ * @see com.rabidgremlin.mutters.bot.ink.functions.SetRepromptFunction
  * 
  * @author rabidgremlin
  *
@@ -93,7 +96,7 @@ public abstract class AbstractInkBot
     // Add default functions
     addFunction(new SetHintFunction());
     addFunction(new SetRepromptFunction());
-    addFunction(new SetActionFunction());
+    addFunction(new AddAttachmentFunction());
 
     // add any other functions for the bot
     setUpFunctions();
@@ -296,8 +299,8 @@ public abstract class AbstractInkBot
       }
 
       // build and return response
-      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getReponseAction(),
-          currentResponse.getResponseActionParams(), debugValues);
+      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(), currentResponse.getResponseAttachments(),
+          currentResponse.getResponseQuickReplies(), debugValues);
     }
     catch (Exception e)
     {
@@ -329,10 +332,10 @@ public abstract class AbstractInkBot
 
       String trimmedLine = line.trim();
 
-      if (trimmedLine.startsWith(":"))
+      if (trimmedLine.startsWith("::"))
       {
-        String functionName = trimmedLine.split(" ")[0].substring(1).trim();
-        String param = trimmedLine.substring(functionName.length() + 1).trim();
+        String functionName = trimmedLine.split(" ")[0].substring(2).trim();
+        String param = trimmedLine.substring(functionName.length() + 2).trim();
 
         InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
         if (function != null)

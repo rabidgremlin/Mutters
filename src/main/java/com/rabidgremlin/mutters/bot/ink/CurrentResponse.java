@@ -1,6 +1,9 @@
 package com.rabidgremlin.mutters.bot.ink;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.rabidgremlin.mutters.bot.BotResponseAttachment;
 
 /**
  * Simple class to hold data for current response.
@@ -10,26 +13,22 @@ import java.util.Map;
  */
 public class CurrentResponse
 {
+  /** The text of the response. */
   private String responseText;
 
+  /** The hint for the response. */
   private String hint;
 
+  /** The reprompt for the response. */
   private String reprompt = null;
 
-  private String reponseAction = null;
+  /** The attachments for the response. */
+  private List<BotResponseAttachment> responseAttachments;
 
-  private Map<String, Object> responseActionParams = null;
+  /** List of suggested replies that the user could use. */
+  private List<String> responseQuickReplies;
 
   private boolean askResponse = true;
-
-  @Override
-  public String toString()
-  {
-    return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt="
-        + reprompt + ", reponseAction=" + reponseAction
-        + ", responseActionParams=" + responseActionParams
-        + ", askResponse=" + askResponse + "]";
-  }
 
   public String getResponseText()
   {
@@ -61,26 +60,6 @@ public class CurrentResponse
     this.reprompt = reprompt;
   }
 
-  public String getReponseAction()
-  {
-    return reponseAction;
-  }
-
-  public void setReponseAction(String reponseAction)
-  {
-    this.reponseAction = reponseAction;
-  }
-
-  public Map<String, Object> getResponseActionParams()
-  {
-    return responseActionParams;
-  }
-
-  public void setResponseActionParams(Map<String, Object> responseActionParams)
-  {
-    this.responseActionParams = responseActionParams;
-  }
-
   public boolean isAskResponse()
   {
     return askResponse;
@@ -89,6 +68,53 @@ public class CurrentResponse
   public void setAskResponse(boolean askResponse)
   {
     this.askResponse = askResponse;
+  }
+
+  public List<BotResponseAttachment> getResponseAttachments()
+  {
+    return responseAttachments;
+  }
+
+  public void setResponseAttachments(List<BotResponseAttachment> responseAttachments)
+  {
+    this.responseAttachments = responseAttachments;
+  }
+
+  public List<String> getResponseQuickReplies()
+  {
+    return responseQuickReplies;
+  }
+
+  public void setResponseQuickReplies(List<String> responseQuickReplies)
+  {
+    this.responseQuickReplies = responseQuickReplies;
+  }
+
+  public void addResponseAttachement(BotResponseAttachment attachment)
+  {
+    if (responseAttachments == null)
+    {
+      responseAttachments = new ArrayList<BotResponseAttachment>();
+    }
+
+    responseAttachments.add(attachment);
+  }
+
+  public void addQuickReply(String quickReply)
+  {
+    if (responseQuickReplies == null)
+    {
+      responseQuickReplies = new ArrayList<String>();
+    }
+
+    responseQuickReplies.add(quickReply);
+  }
+
+  @Override
+  public String toString()
+  {
+    return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt=" + reprompt + ", responseAttachments=" + responseAttachments
+        + ", responseQuickReplies=" + responseQuickReplies + ", askResponse=" + askResponse + "]";
   }
 
 }

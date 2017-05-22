@@ -1,7 +1,9 @@
 package com.rabidgremlin.mutters.state;
 
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
+
+import com.rabidgremlin.mutters.bot.BotResponseAttachment;
 
 public class IntentResponse
 {
@@ -14,9 +16,9 @@ public class IntentResponse
 
   private String hint;
 
-  private String action;
+  private List<BotResponseAttachment> attachments;
 
-  private Map<String, Object> actionParams;
+  private List<String> quickReplies;
 
   public static IntentResponse newAskResponse(String response)
   {
@@ -33,16 +35,15 @@ public class IntentResponse
     return new IntentResponse(false, response, reprompt, hint, null, null);
   }
 
-  public static IntentResponse newAskResponse(String response, String action,
-    Map<String, Object> actionParams)
+  public static IntentResponse newAskResponse(String response, List<BotResponseAttachment> attachments)
   {
-    return new IntentResponse(false, response, null, null, action, actionParams);
+    return new IntentResponse(false, response, null, null, attachments, null);
   }
 
   public static IntentResponse newAskResponse(String response, String reprompt, String hint,
-    String action, Map<String, Object> actionParams)
+    List<BotResponseAttachment> attachments)
   {
-    return new IntentResponse(false, response, null, null, action, actionParams);
+    return new IntentResponse(false, response, null, null, attachments, null);
   }
 
   public static IntentResponse newTellResponse(String response)
@@ -50,22 +51,20 @@ public class IntentResponse
     return new IntentResponse(true, response, null, null, null, null);
   }
 
-  public static IntentResponse newTellResponse(String response, String action,
-    Map<String, Object> actionParams)
+  public static IntentResponse newTellResponse(String response, List<BotResponseAttachment> attachments)
   {
-    return new IntentResponse(true, response, null, null, action, actionParams);
+    return new IntentResponse(true, response, null, null, attachments, null);
   }
 
   public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint,
-    String action, Map<String, Object> actionParams)
+    List<BotResponseAttachment> attachments, List<String> quickReplies)
   {
-
     this.sessionEnded = sessionEnded;
     this.response = response;
     this.reprompt = reprompt;
     this.hint = hint;
-    this.action = action;
-    this.actionParams = actionParams;
+    this.attachments = attachments;
+    this.quickReplies = quickReplies;
   }
 
   public boolean isSessionEnded()
@@ -78,19 +77,14 @@ public class IntentResponse
     return response;
   }
 
-  public String getAction()
+  public List<BotResponseAttachment> getAttachments()
   {
-    return action;
-  }
-
-  public Map<String, Object> getActionParams()
-  {
-    if (actionParams == null)
+    if (attachments == null)
     {
       return null;
     }
 
-    return Collections.unmodifiableMap(actionParams);
+    return Collections.unmodifiableList(attachments);
   }
 
   public String getReprompt()
@@ -101,6 +95,16 @@ public class IntentResponse
   public String getHint()
   {
     return hint;
+  }
+
+  public List<String> getQuickReplies()
+  {
+    if (quickReplies == null)
+    {
+      return null;
+    }
+
+    return Collections.unmodifiableList(quickReplies);
   }
 
 }
