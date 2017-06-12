@@ -10,8 +10,7 @@ Implements:
   * Inkle's narrative scripting engine [Ink](http://www.inklestudios.com/ink/)
   
 ## Example
-The following is the code for a simple Taxi ordering bot. It uses machine learning to identify what the user is asking and to extract street 
-addresses:
+The following is the code for a simple Taxi ordering bot. It uses machine learning to identify what the user is asking and to extract street addresses:
 
 ```
 public class TaxiInkBot
@@ -142,8 +141,6 @@ VAR address=""
 VAR taxiNo = ""
 
 == order_taxi ==
-
-
 - (order_taxi_loop)
 {
   - address == "":
@@ -170,7 +167,7 @@ Taxi {taxiNo} is on its way
 ```
 
 ## Usage
-If you are using Gradle you can pull the latest release with:
+If you are using Gradle you can pull (for the example above) the latest release with:
 
 ```
 repositories {
@@ -178,7 +175,9 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:2.0.0'
+        compile 'com.rabidgremlin:mutters-ink-bot:3.0.0'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:3.0.0'        
+        compile 'com.rabidgremlin:mutters-slots:3.0.0'
 }
 ```
 
@@ -196,7 +195,20 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters:2.0.1-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-ink-bot:3.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:3.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-slots:3.0.0-SNAPSHOT'        
 }        
 ```
 
+## Packaging
+Version 3.0.0 of Mutters repackaged the library into multiple jars to reduce dependencies and improve plugability.
+
+| Package                  | Description                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| mutters-core             | Contains core classes, interfaces and utility classes                            |
+| mutters-ink-bot          | Implementation of a Bot that uses Inkle's Ink engine for conversation scripting  |
+| mutters-opennlp-intent   | Intent matcher that uses OpenNLP's document classifier                           |
+| mutters-slots            | Implementation of a number of generic Slots                                      |
+| mutters-statemachine-bot | Implementation of a Bot that uses a state machine for conversation flows         |
+| mutters-templated-intent | Intent matcher that uses templates for matching                                  |

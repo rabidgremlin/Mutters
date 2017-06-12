@@ -1,7 +1,6 @@
 /bin/
 /.gradle/
 /build/
-src/test/resources/models/*.bin
 
 .project
 .classpath
