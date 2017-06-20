@@ -18,7 +18,7 @@ public class SlotMatch
   private Object value;
 
   /**
-   * Constrcutor.
+   * Constructor.
    * 
    * @param slot The slot that was matched.
    * @param orginalValue The original value that was used to match on.

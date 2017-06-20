@@ -8,10 +8,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 /**
- * This class generates a list of templated utterances, given a template string. Can be used to generate lots of options
+ * This class generates a list of utterances, given a template string. Can be used to generate lots of options
  * to match on given only one string.
  * 
  * Groups of options are enclosed in ~'s and separated by |
@@ -22,7 +21,7 @@ import com.rabidgremlin.mutters.templated.TemplatedUtterance;
  * ~what|what's|what is~ ~the|~ time ~in|at~ {Place}
  * ```
  * 
- * The generator will generate 12 different TemplatedUtterances, inlcude:
+ * The generator will generate 12 different utterances, include:
  * 
  * ```
  * what the time in {Place}
@@ -41,9 +40,9 @@ import com.rabidgremlin.mutters.templated.TemplatedUtterance;
  */
 public class UtteranceGenerator
 {
-  private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");
+  private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");  
 
-  public List<TemplatedUtterance> generate(String template)
+  public List<String> generate(String template)
   {
     Matcher match = matchPattern.matcher(template);
 
@@ -78,11 +77,10 @@ public class UtteranceGenerator
 
     // System.out.println(templates);
 
-    List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
+    List<String> utterances = new ArrayList<String>();
     for (List<String> templateParts : templates)
     {
-      utterances.add(new TemplatedUtterance(
-          StringUtils.join(templateParts, " ").trim().replaceAll(" +", " ")));
+      utterances.add(StringUtils.join(templateParts, " ").trim().replaceAll(" +", " "));
     }
 
     return utterances;

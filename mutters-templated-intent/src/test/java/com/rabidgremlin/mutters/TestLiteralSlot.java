@@ -6,24 +6,24 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.LiteralSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestLiteralSlot
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("My name is {name}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("My name is {name}"));
 
-    CleanedInput input = InputCleaner.cleanInput("My Name is Kilroy Jones");
+    String[] input = tokenizer.tokenize("My Name is Kilroy Jones");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -45,9 +45,9 @@ public class TestLiteralSlot
   @Test
   public void testMidUtteranceMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("The {something} is good");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The {something} is good"));
 
-    CleanedInput input = InputCleaner.cleanInput("The pinot noir is good");
+    String[] input = tokenizer.tokenize("The pinot noir is good");
     Slots slots = new Slots();
     Context context = new Context();
 

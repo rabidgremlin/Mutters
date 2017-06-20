@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies { 
+        classpath 'ch.raffael.pegdown-doclet:pegdown-doclet:1.2'
+    }
+}
+apply from: '../buildpublish.gradle'
+
+
+repositories {   
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':mutters-core')    
+    
+    compile 'com.github.vinhkhuc:jfasttext:0.3'
+    compile 'commons-io:commons-io:2.5'
+        
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.slf4j:slf4j-simple:1.7.21'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile "org.mockito:mockito-core:2.+"
+    testCompile project(':mutters-templated-intent')
+    testCompile project(':mutters-fasttext-test-data')
+}

@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compile project(':mutters-core')
-    compile 'org.apache.opennlp:opennlp-tools:1.6.0'    
+    compile 'org.apache.opennlp:opennlp-tools:1.8.0'    
         
     compile 'org.slf4j:slf4j-api:1.7.21'   
     compile 'org.apache.commons:commons-lang3:3.4'
@@ -23,5 +23,5 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.21'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
-    testCompile project(':mutters-opennlp-taxi-data')
+    testCompile project(':mutters-opennlp-test-data')
 }

@@ -4,10 +4,10 @@ import com.bladecoder.ink.runtime.Story;
 import com.rabidgremlin.mutters.bot.ink.CurrentResponse;
 import com.rabidgremlin.mutters.bot.ink.InkBotFunction;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 
 /**
- * This class implements the SET_HINT Ink bot function. It is added by default to the AbstractInkBot. The SET_HINT
+ * This class implements the SET_HINT Ink bot function. It is added by default to the InkBot. The SET_HINT
  * function allows the bot to pass hints to the user's client about how the bot expects them to respond. The user's
  * client can then display the hint as an appropriate visual cue.
  * 

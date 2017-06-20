@@ -8,28 +8,27 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.junit.Before;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.DateSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestDateSlot
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("for the {date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974");
+    String[] input = tokenizer.tokenize("for the 30th May 1974");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -51,9 +50,9 @@ public class TestDateSlot
   @Test
   public void testMatchWithTimeZone()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("for the {date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974");
+    String[] input = tokenizer.tokenize("for the 30th May 1974");
     Slots slots = new Slots();
     Context context = new Context();
     context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
@@ -76,9 +75,9 @@ public class TestDateSlot
   @Test
   public void testDontMatchOnJustTime()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("10pm");
+    String[] input = tokenizer.tokenize("10pm");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -95,9 +94,9 @@ public class TestDateSlot
   @Test
   public void testNZDateFullNumeric()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("20/5/2016");
+    String[] input = tokenizer.tokenize("20/5/2016");
     Slots slots = new Slots();
     Context context = new Context();
     context.setLocale(new Locale("en","NZ"));
@@ -120,9 +119,9 @@ public class TestDateSlot
   @Test
   public void testNZDateShortYear()
   { 
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("20/5/16");
+    String[] input = tokenizer.tokenize("20/5/16");
     Slots slots = new Slots();
     Context context = new Context();
     context.setLocale(new Locale("en","NZ"));
@@ -145,9 +144,9 @@ public class TestDateSlot
   @Test
   public void testNZDateDayMonthOnly()
   { 
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("20/5");
+    String[] input = tokenizer.tokenize("20/5");
     Slots slots = new Slots();
     Context context = new Context();
     context.setLocale(new Locale("en","NZ"));
@@ -170,9 +169,9 @@ public class TestDateSlot
   @Test
   public void testNZDateDayMonthAsTextOnly()
   { 
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("1 dec");
+    String[] input = tokenizer.tokenize("1 dec");
     Slots slots = new Slots();
     Context context = new Context();
     context.setLocale(new Locale("en","NZ"));
@@ -196,9 +195,9 @@ public class TestDateSlot
   @Test
   public void testToday()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("today");
+    String[] input = tokenizer.tokenize("today");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -221,9 +220,9 @@ public class TestDateSlot
   @Test
   public void testTomorrow()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("tomorrow");
+    String[] input = tokenizer.tokenize("tomorrow");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -245,9 +244,9 @@ public class TestDateSlot
   @Test
   public void testMismatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("{date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("book auckland to wellington for friday");
+    String[] input = tokenizer.tokenize("book auckland to wellington for friday");
     Slots slots = new Slots();
     Context context = new Context();
 

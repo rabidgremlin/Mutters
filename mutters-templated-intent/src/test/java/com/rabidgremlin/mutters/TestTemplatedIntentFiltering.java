@@ -11,33 +11,29 @@ import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.core.SlotMatch;
-import com.rabidgremlin.mutters.slots.CustomSlot;
-import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
-import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 
 public class TestTemplatedIntentFiltering
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
   TemplatedIntentMatcher matcher;
   
   @Before
   public void  setUpMatcher()
   {
-    matcher = new TemplatedIntentMatcher();
+    matcher = new TemplatedIntentMatcher(tokenizer);
     
-    TemplatedIntent intent = new TemplatedIntent("HelloIntent");
-    intent.addUtterance(new TemplatedUtterance("hello"));
-    intent.addUtterance(new TemplatedUtterance("hi"));
-    intent.addUtterance(new TemplatedUtterance("hiya"));    
-    matcher.addIntent(intent);
-    
-    intent = new TemplatedIntent("GoodbyeIntent");
-    intent.addUtterance(new TemplatedUtterance("goodbye"));
-    intent.addUtterance(new TemplatedUtterance("bye"));        
-    matcher.addIntent(intent);
+    TemplatedIntent intent = matcher.addIntent("HelloIntent");
+    intent.addUtterance("hello");
+    intent.addUtterance("hi");
+    intent.addUtterance("hiya");    
+     
+    intent = matcher.addIntent("GoodbyeIntent");
+    intent.addUtterance("goodbye");
+    intent.addUtterance("bye");
   }
   
   

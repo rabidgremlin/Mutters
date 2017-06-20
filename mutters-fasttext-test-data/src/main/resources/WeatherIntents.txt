@@ -1,0 +1,72 @@
+__label__CurrentWeatherIntent What's the weather look like
+__label__CurrentWeatherIntent Is it raining
+__label__CurrentWeatherIntent what's the temperature
+__label__CurrentWeatherIntent show me current conditions
+__label__CurrentWeatherIntent how hot is it
+__label__CurrentWeatherIntent how cold is it
+__label__CurrentWeatherIntent is it snowing
+__label__CurrentWeatherIntent is it raining
+__label__CurrentWeatherIntent is it sunny
+__label__CurrentWeatherIntent is it cloudy
+__label__CurrentWeatherIntent is it raining in Detroit
+__label__CurrentWeatherIntent How is Denver today
+__label__CurrentWeatherIntent is Chicago cold
+__label__CurrentWeatherIntent is Miami hot
+__label__CurrentWeatherIntent show me the current conditions
+__label__CurrentWeatherIntent what's the temperature in new york
+__label__CurrentWeatherIntent show me current conditions for san francisco
+__label__CurrentWeatherIntent what's the weather look like in Chicago
+__label__CurrentWeatherIntent is it raining in Seattle
+__label__CurrentWeatherIntent what's the temperature in New York
+__label__CurrentWeatherIntent show me current conditions for Boston
+__label__CurrentWeatherIntent How hot is it in Miami
+__label__CurrentWeatherIntent how cold is it Anchorage
+__label__CurrentWeatherIntent is it snowing in Denver
+__label__CurrentWeatherIntent show me the current conditions for Detroit
+__label__CurrentWeatherIntent show me current conditions for boston
+__label__CurrentWeatherIntent How hot is it in miami
+__label__CurrentWeatherIntent how cold is it anchorage
+__label__CurrentWeatherIntent is it snowing in denver
+__label__CurrentWeatherIntent show me the current conditions for detroit
+__label__FiveDayForecastIntent  will it rain tomorrow
+__label__FiveDayForecastIntent  how dos the weather look for Thursday
+__label__FiveDayForecastIntent  is is going to snow this week
+__label__FiveDayForecastIntent  show me the forecast
+__label__FiveDayForecastIntent  what's the five day forecast
+__label__FiveDayForecastIntent  will it rain this week
+__label__FiveDayForecastIntent  how does this week look in Los Angelos
+__label__FiveDayForecastIntent  wow does it look for Monday
+__label__FiveDayForecastIntent  will it rain on Friday
+__label__FiveDayForecastIntent  is it going to be hot Wednesday
+__label__FiveDayForecastIntent  how does the rest of the week look
+__label__FiveDayForecastIntent  will it rain tomorrow in Munich
+__label__FiveDayForecastIntent  how dos the weather look for this Thursday in Boston
+__label__FiveDayForecastIntent  is is going to snow this week in  Chicago
+__label__FiveDayForecastIntent  show me the forecast for Denver
+__label__FiveDayForecastIntent  Show me the weather for Salt Lake City this Tuesday
+__label__FiveDayForecastIntent  what's the five day forecast for Detroit
+__label__FiveDayForecastIntent  how does it look for this Monday in New York
+__label__FiveDayForecastIntent  will it rain in Denver on Friday
+__label__FiveDayForecastIntent  is it going to be hot in Boston this Wednesday
+__label__FiveDayForecastIntent  how New York look the rest of the week look
+__label__HourlyForecastIntent how does tonight look
+__label__HourlyForecastIntent is it going to rain this afternoon
+__label__HourlyForecastIntent is it going to snow in Detroit
+__label__HourlyForecastIntent does it look like rain
+__label__HourlyForecastIntent Does it look lie snow
+__label__HourlyForecastIntent will it rain tonight
+__label__HourlyForecastIntent how cold will it be this afternoon
+__label__HourlyForecastIntent will it be cloudy
+__label__HourlyForecastIntent is it going to be hot tonight
+__label__HourlyForecastIntent will it rain this morning
+__label__HourlyForecastIntent will it rain
+__label__HourlyForecastIntent will is snow
+__label__HourlyForecastIntent is it going to get warmer today
+__label__HourlyForecastIntent How does tonight look in boston
+__label__HourlyForecastIntent is it going to rain this afternoon in chicago
+__label__HourlyForecastIntent will it rain this morning miami
+__label__HourlyForecastIntent is it going to get warmer today houston
+__label__HourlyForecastIntent how does tonight look in austin
+__label__HourlyForecastIntent Is it going to rain this afternoon in san francisco
+__label__HourlyForecastIntent will it rain this morning Seattle
+__label__HourlyForecastIntent is it going to get warmer today Portland

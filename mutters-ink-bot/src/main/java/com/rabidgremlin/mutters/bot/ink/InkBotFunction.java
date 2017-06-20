@@ -2,13 +2,14 @@ package com.rabidgremlin.mutters.bot.ink;
 
 import com.bladecoder.ink.runtime.Story;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 
 /**
- * Interface to be implemented by any functions added to the bot. Note these are not true ink functions but rather
- * triggered by a line of response text starting with a :
+ * Interface to be implemented by any functions added to the bot. Note these are not true Ink functions but rather
+ * triggered by a line of response text starting with a ::
  * 
- * @see AbstractInkBot#addFunction
+ * @see InkBotConfiguration#getInkFunctions
+ * 
  * @author rabidgremlin
  *
  */

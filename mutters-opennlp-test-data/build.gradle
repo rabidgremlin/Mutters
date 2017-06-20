@@ -1,0 +1,109 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+       classpath 'de.undercouch:gradle-download-task:3.1.1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'de.undercouch.download'
+
+configurations {
+  openNLPCompile
+}
+
+repositories {   
+    mavenCentral()
+}
+
+dependencies {
+    openNLPCompile 'org.apache.opennlp:opennlp-tools:1.6.0'
+}
+
+task createModelsDir {
+  doLast{
+    project.file('src/main/resources/models').mkdirs()  
+  }
+}
+
+createModelsDir.outputs.upToDateWhen { false }
+
+// build model
+task generateIntentModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = configurations.openNLPCompile
+   args = ['DoccatTrainer',
+           '-model',
+           'src/main/resources/models/en-cat-taxi-intents.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/main/resources/TaxiBotIntents.txt',
+           '-encoding', 
+           'UTF-8',
+           '-featureGenerators',
+           'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator',
+           '-params',
+           'src/main/resources/TaxiBotIntentsParams.txt',
+           '-tokenizer',
+           'opennlp.tools.tokenize.WhitespaceTokenizer']
+}
+
+generateIntentModel.dependsOn createModelsDir
+
+task generateAddressModel(type:JavaExec) {
+   main = 'opennlp.tools.cmdline.CLI'
+   classpath = configurations.openNLPCompile
+   args = ['TokenNameFinderTrainer',
+           '-model',
+           'src/main/resources/models/en-ner-address.bin',
+           '-lang',
+           'en',
+           '-data',
+           'src/main/resources/NERAddresses.txt',
+           '-encoding', 
+           'UTF-8',
+           '-params',
+           'src/main/resources/NERAddressesParams.txt']
+}
+generateAddressModel.dependsOn createModelsDir
+
+
+// these snippets from https://github.com/spinscale/elasticsearch-ingest-opennlp
+
+// download the models before the tests are run, also needed for packaging
+// download the models but dont overwrite existing ones
+
+task downloadModels  {  
+  doLast{  
+    downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin',   'en-ner-persons.bin')
+    downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-location.bin', 'en-ner-locations.bin')
+    downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-date.bin',     'en-ner-dates.bin')
+  }
+}
+
+downloadModels.dependsOn createModelsDir
+
+def downloadIfNotExists(String url, String file) {
+  def dir = project.file('src' + File.separator + 'main' + File.separator + 'resources' + File.separator + 'models')
+  
+  if (new File(dir,file).exists() == false) {
+    download {
+      src url
+      dest new File(dir, file)
+    }
+  }
+}
+
+
+clean {
+ delete "src/main/resources/models" 
+}
+
+
+processResources.dependsOn downloadModels
+processResources.dependsOn generateIntentModel
+processResources.dependsOn generateAddressModel
+

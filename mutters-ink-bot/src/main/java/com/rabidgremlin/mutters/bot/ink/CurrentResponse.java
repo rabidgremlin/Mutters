@@ -3,7 +3,7 @@ package com.rabidgremlin.mutters.bot.ink;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rabidgremlin.mutters.bot.BotResponseAttachment;
+import com.rabidgremlin.mutters.core.bot.BotResponseAttachment;
 
 /**
  * Simple class to hold data for current response.

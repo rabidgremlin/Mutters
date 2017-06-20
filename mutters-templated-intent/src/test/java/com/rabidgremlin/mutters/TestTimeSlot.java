@@ -9,24 +9,24 @@ import java.util.TimeZone;
 import org.joda.time.LocalTime;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.TimeSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestTimeSlot
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("at {time}"));
 
-    CleanedInput input = InputCleaner.cleanInput("at 6:45am");
+    String[] input = tokenizer.tokenize("at 6:45am");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -48,9 +48,9 @@ public class TestTimeSlot
   @Test
   public void testMatchWithTimeZone()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("at {time}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("at {time}"));
 
-    CleanedInput input = InputCleaner.cleanInput("at 6:45am");
+    String[] input = tokenizer.tokenize("at 6:45am");
     Slots slots = new Slots();
     Context context = new Context();
     context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));

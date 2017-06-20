@@ -4,11 +4,17 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
-// very rough code
-// TODO clean up
+/**
+ * This slot matches on number. Handles integers, decimals and basic word numbers such as 'one hundred and twenty
+ * three'.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class NumberSlot
     extends Slot
 {
+  // TODO clean up very rough code
 
   private String name;
 
@@ -64,7 +70,7 @@ public class NumberSlot
 
   // based on
   // http://stackoverflow.com/questions/26948858/converting-words-to-numbers-in-java
-//CHECKSTYLE:OFF Yep it's complex and long
+  // CHECKSTYLE:OFF Yep it's complex and long
   public Number wordStringToNumber(String wordString)
   {
     if (wordString == null || wordString.length() < 1)
@@ -233,6 +239,6 @@ public class NumberSlot
     result = 0;
     return finalResult;
   }
-  //CHECKSTYLE:ON
+  // CHECKSTYLE:ON
 
 }

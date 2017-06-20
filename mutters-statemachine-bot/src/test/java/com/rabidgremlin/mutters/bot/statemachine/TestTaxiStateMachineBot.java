@@ -7,10 +7,10 @@ import static org.junit.Assert.assertThat;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.bot.BotException;
-import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.bot.BotException;
+import com.rabidgremlin.mutters.core.bot.BotResponse;
+import com.rabidgremlin.mutters.core.session.Session;
 
 public class TestTaxiStateMachineBot
 {
@@ -19,7 +19,7 @@ public class TestTaxiStateMachineBot
   @BeforeClass
   public static void setUpBot()
   {
-    taxiBot = new TaxiStateMachineBot();
+    taxiBot = new TaxiStateMachineBot(new TaxiStateMachineBotConfiguration());
   }
 
   @Test

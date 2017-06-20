@@ -15,6 +15,12 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
+/**
+ * Slot that matches on dates. Uses natty to handle 'dates' such as 'next Friday'.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class DateSlot
     extends Slot
 {

@@ -1,9 +1,9 @@
 package com.rabidgremlin.mutters.bot.statemachine;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
+import com.rabidgremlin.mutters.core.util.SessionUtils;
 import com.rabidgremlin.mutters.state.Guard;
-import com.rabidgremlin.mutters.util.SessionUtils;
 
 public class HaveAddressGuard
     implements Guard

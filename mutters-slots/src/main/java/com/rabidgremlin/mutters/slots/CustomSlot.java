@@ -6,14 +6,27 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
+/**
+ * This slot maps a number of possible inputs to a list of expected values.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class CustomSlot
     extends Slot
 {
-
+  /** Name of the slot. */
   private String name;
 
+  /** Map of options. */
   private HashMap<String, String> options = new HashMap<String, String>();
 
+  /**
+   * Constructor.
+   * 
+   * @param name The name of the slot.
+   * @param options The list of expected options.
+   */
   public CustomSlot(String name, String[] options)
   {
     this.name = name;
@@ -23,6 +36,12 @@ public class CustomSlot
     }
   }
 
+  /**
+   * Constructor.
+   * 
+   * @param name The name of the slot.
+   * @param optionValueMap A map of possible input values mapped to output values.
+   */
   public CustomSlot(String name, HashMap<String, String> optionValueMap)
   {
     this.name = name;

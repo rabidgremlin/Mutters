@@ -1,4 +1,0 @@
-Algorithm=MAXENT
-Iterations=500
-Cutoff=0
-

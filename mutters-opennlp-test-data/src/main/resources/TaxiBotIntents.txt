@@ -1,0 +1,38 @@
+OrderTaxi Order me a cab
+OrderTaxi Book a cab
+OrderTaxi Order me a taxi
+OrderTaxi Book a taxi
+OrderTaxi Get me a cab
+OrderTaxi Order a cab
+OrderTaxi Get me a taxi
+OrderTaxi Order a taxi
+OrderTaxi Send a cab to 123 Mountain Drive
+OrderTaxi Pick me up at 456 Queen Street
+CancelTaxi Cancel my taxi
+CancelTaxi Cancel my cab
+CancelTaxi Cancel my order
+WhereTaxi Where is my taxi ?
+WhereTaxi Where is my cab ?
+WhereTaxi How far away is my taxi ?
+WhereTaxi How far away is my cab ?
+WhereTaxi How long until my cab is here ?
+WhereTaxi How long until my taxi is here ?
+GaveAddress My address is 173 Essex Drive
+GaveAddress The address is 1407 Graymalkin Lane , Salem Center
+GaveAddress 52 Festive Road
+GaveAddress it's 6151 Richmond Street
+GaveAddress The pick up is at 740 Evergreen Terrace 
+GaveAddress 890 Fifth Avenue
+GaveAddress The address is 13 China Ave
+GaveAddress 136 River Road
+Help Help
+Help help
+Help Help me
+Help How do you work ?
+Stop Stop
+Stop Stop it
+Stop Quit
+FavColor My favorite color is blue
+FavColor I like green 
+FavColor Purple is the best color
+Shouting i am shouting

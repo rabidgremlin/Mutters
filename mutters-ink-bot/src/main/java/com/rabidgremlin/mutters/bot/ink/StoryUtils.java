@@ -1,5 +1,8 @@
 package com.rabidgremlin.mutters.bot.ink;
 
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
@@ -133,6 +136,28 @@ public final class StoryUtils
     catch (java.lang.ClassCastException cce)
     {
       return null;
+    }
+  }
+  
+  /**
+   * Helper method to load a compiled Ink .json file from the classpath.
+   * 
+   * @param inkJsonFileName The name of the JSON file.
+   * @return The ink story as a JSON string.
+   */
+  public static String loadStoryJsonFromClassPath(String inkJsonFileName)
+  {
+    try
+    {
+      InputStream inkJsonStream = Thread.currentThread().getContextClassLoader()
+          .getResourceAsStream(inkJsonFileName);
+
+      // replace seems to be a weird hack. as in example from blade-ink library
+      return IOUtils.toString(inkJsonStream, "UTF-8").replace('\uFEFF', ' ');
+    }
+    catch (Exception e)
+    {
+      throw new IllegalStateException("Failed to load ink json.", e);
     }
   }
 }

@@ -10,36 +10,34 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 
+/**
+ * This class handles the matching of an utterance against an utterance template.
+ * 
+ * It also handles the extraction slot data.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class TemplatedUtterance
 {
-
   private String template;
 
-  private CleanedInput tokens;
-
-  // private HashMap<Integer, String> slotNames = new HashMap<Integer,
-  // String>();
   private HashSet<String> slotNames = new HashSet<String>();
 
   private Pattern matchPattern;
 
-  public TemplatedUtterance(String template)
+  public TemplatedUtterance(String[] tokenizedTemplate)
   {
-    this.template = template;
-    tokens = InputCleaner.cleanInput(template);
-
-    List<String> cleanedTokens = tokens.getCleanedTokens();
+    this.template = StringUtils.join(tokenizedTemplate, ' ');
 
     String regexStr = "^";
 
-    for (String token : cleanedTokens)
+    for (String token : tokenizedTemplate)
     {
       if (token.startsWith("{") && token.endsWith("}"))
       {
@@ -64,10 +62,11 @@ public class TemplatedUtterance
     return template;
   }
 
-  // NOTE input should be cleaned
-  public TemplatedUtteranceMatch matches(CleanedInput input, Slots slots, Context context)
+  public TemplatedUtteranceMatch matches(String[] tokenizedUtterance, Slots slots, Context context)
   {
-    String inputString = StringUtils.join(input.getCleanedTokens(), ' ');
+    List<String> input = Arrays.asList(tokenizedUtterance);
+
+    String inputString = StringUtils.join(input, ' ');
 
     Matcher match = matchPattern.matcher(inputString);
 
@@ -89,10 +88,9 @@ public class TemplatedUtterance
       }
 
       String cleanedMatchString = match.group(slotName);
-      @SuppressWarnings("unchecked")
       List<String> matchedTokens = Arrays.asList(cleanedMatchString.split(" "));
 
-      int matchPos = Collections.indexOfSubList(input.getCleanedTokens(), matchedTokens);
+      int matchPos = Collections.indexOfSubList(input, matchedTokens);
       if (matchPos == -1)
       {
         throw new IllegalStateException(
@@ -102,7 +100,7 @@ public class TemplatedUtterance
       List<String> orginalTokens = new ArrayList<>();
       for (int loop = matchPos; loop < matchedTokens.size() + matchPos; loop++)
       {
-        orginalTokens.add(input.getOriginalTokens().get(loop));
+        orginalTokens.add(input.get(loop));
       }
 
       SlotMatch slotMatch = slot.match(StringUtils.join(orginalTokens, ' '), context);
@@ -123,7 +121,7 @@ public class TemplatedUtterance
   @Override
   public String toString()
   {
-    return "Utterance [template=" + template + ", tokens=" + tokens + "]";
+    return "Utterance [template=" + template + "]";
   }
 
 }

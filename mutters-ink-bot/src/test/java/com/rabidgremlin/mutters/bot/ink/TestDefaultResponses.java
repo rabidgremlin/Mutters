@@ -5,14 +5,19 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatcher;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.bot.BotResponse;
+import com.rabidgremlin.mutters.core.session.Session;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Test class for default response.
@@ -22,33 +27,78 @@ import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
  */
 public class TestDefaultResponses
 {
-  private AbstractInkBot testBot;
+  private InkBot<BotWithDefaultDefaultResponses> testBotWithDefaultDefaultPhrases;
+  private InkBot<BotWithDefaultDefaultResponses> testBotWithTestDefaultPhrases;
+
+  class BotWithDefaultDefaultResponses
+      implements InkBotConfiguration
+  {
+
+    @Override
+    public String getStoryJson()
+    {
+      // use taxi but ink but no intents so all good
+      return StoryUtils.loadStoryJsonFromClassPath("taxibot.ink.json");
+    }
+
+    @Override
+    public IntentMatcher getIntentMatcher()
+    {
+      // return empty matcher
+      return new TemplatedIntentMatcher(new SimpleTokenizer());
+    }
+
+    @Override
+    public List<InkBotFunction> getInkFunctions()
+    {
+      // no functions
+      return null;
+    }
+
+    @Override
+    public List<GlobalIntent> getGlobalIntents()
+    {     
+      return null;
+    }
+
+    @Override
+    public ConfusedKnot getConfusedKnot()
+    {      
+      return null;
+    }
+
+    @Override
+    public List<String> getDefaultResponses()
+    {      
+      return null;
+    }
+  }
+  
+  
+  class BotWithTestDefaultResponses extends BotWithDefaultDefaultResponses
+  {
+    @Override
+    public List<String> getDefaultResponses()
+    { 
+      return Arrays.asList(new String[]{ "Response A", "Response B", "Response C" });
+    }
+  }
+    
+
+  class TestBot
+      extends InkBot<BotWithDefaultDefaultResponses>
+  {
+    public TestBot(BotWithDefaultDefaultResponses configuration)
+    {
+      super(configuration);
+    }
+  }
 
   @Before
   public void setUpBot()
   {
-    testBot = new AbstractInkBot()
-    {
-      @Override
-      public IntentMatcher setUpIntents()
-      {
-        // return empty matcher
-        return new TemplatedIntentMatcher();
-      }
-
-      @Override
-      public void setUpFunctions()
-      {
-        // no functions
-      }
-
-      @Override
-      public String getStoryJson()
-      {
-        // use taxi but ink but no intents so all good
-        return loadStoryJsonFromClassPath("taxibot.ink.json");
-      }
-    };
+    testBotWithDefaultDefaultPhrases = new TestBot(new BotWithDefaultDefaultResponses());
+    testBotWithTestDefaultPhrases = new TestBot(new BotWithTestDefaultResponses());
   }
 
   @Test
@@ -58,7 +108,7 @@ public class TestDefaultResponses
     Session session = new Session();
     Context context = new Context();
 
-    BotResponse response = testBot.respond(session, context, "Why is the sky blue ?");
+    BotResponse response = testBotWithDefaultDefaultPhrases.respond(session, context, "Why is the sky blue ?");
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Pardon?"));
@@ -72,7 +122,6 @@ public class TestDefaultResponses
     Session session = new Session();
     Context context = new Context();
 
-    testBot.setDefaultResponses(new String[]{ "Response A", "Response B", "Response C" });
 
     int responseACount = 0;
     int responseBCount = 0;
@@ -80,7 +129,7 @@ public class TestDefaultResponses
 
     for (int loop = 0; loop < 50; loop++)
     {
-      BotResponse response = testBot.respond(session, context, "Why is the sky blue ?");
+      BotResponse response = testBotWithTestDefaultPhrases.respond(session, context, "Why is the sky blue ?");
 
       assertThat(response, is(notNullValue()));
       assertThat(response.isAskResponse(), is(true));
@@ -105,4 +154,5 @@ public class TestDefaultResponses
     assertTrue("Did not get any Response Bs", responseBCount > 0);
     assertTrue("Did not get any Response Cs", responseCCount > 0);
   }
+
 }

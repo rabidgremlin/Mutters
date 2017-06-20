@@ -5,7 +5,7 @@ import java.util.Set;
 
 /**
  * An IntentMatcher that is a combination of two other intent matchers. Useful for instance for combining a
- * TemplatedIntentMatcher and a MLIntentMatcher. Class will stop on the first match returned by a matcher.
+ * TemplatedIntentMatcher and an implementation of an AbstractMachineLearningIntentMatcher. Class will stop on the first match returned by a matcher.
  * 
  * @author rabidgremlin
  *

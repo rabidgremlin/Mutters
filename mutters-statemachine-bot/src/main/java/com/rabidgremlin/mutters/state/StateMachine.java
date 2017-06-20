@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 
 public class StateMachine
 {

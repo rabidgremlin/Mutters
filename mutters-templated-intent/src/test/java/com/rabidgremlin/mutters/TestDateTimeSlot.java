@@ -11,25 +11,25 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.DateSlot;
 import com.rabidgremlin.mutters.slots.DateTimeSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestDateTimeSlot
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {datetime}"));
 
-    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
+    String[] input = tokenizer.tokenize("for the 30th May 1974 at 10pm");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -51,9 +51,9 @@ public class TestDateTimeSlot
   @Test
   public void testMatchWithTimeZone()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("for the {datetime}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {datetime}"));
 
-    CleanedInput input = InputCleaner.cleanInput("for the 30th May 1974 at 10pm");
+    String[] input = tokenizer.tokenize("for the 30th May 1974 at 10pm");
     Slots slots = new Slots();
     Context context = new Context();
     context.setTimeZone(TimeZone.getTimeZone("Africa/Johannesburg"));
@@ -77,9 +77,9 @@ public class TestDateTimeSlot
   @Test
   public void testLastWeek()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("Give me the report for {date}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("Give me the report for {date}"));
 
-    CleanedInput input = InputCleaner.cleanInput("Give me the report for last week");
+    String[] input = tokenizer.tokenize("Give me the report for last week");
     Slots slots = new Slots();
     Context context = new Context();
 

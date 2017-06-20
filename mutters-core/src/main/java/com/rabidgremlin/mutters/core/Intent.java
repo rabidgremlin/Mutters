@@ -4,12 +4,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * This is the base class for intents.
+ * This class represents an intent. Each intent has a unique name and zero or more Slots that are used to extract
+ * entities out of a user's input.
  * 
  * @author rabidgremlin
  *
  */
-public abstract class Intent
+public class Intent
 {
   /** The name of the intent. */
   protected String name;

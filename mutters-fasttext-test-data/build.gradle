@@ -1,0 +1,67 @@
+
+configurations {
+  fastTextCompile
+  groovyScript
+}
+
+
+apply plugin: 'java'
+
+
+repositories {   
+    mavenCentral()
+}
+
+dependencies {
+    fastTextCompile 'com.github.vinhkhuc:jfasttext:0.3'
+    groovyScript localGroovy()
+    groovyScript project(':mutters-templated-intent')
+}
+
+// clean training data, applying same tokenizer as we are doing for tests that use training data
+task cleanTrainingData(type: JavaExec)  {  
+    main = 'groovy.ui.GroovyMain'
+    classpath = configurations.groovyScript 
+    args = ['-e', 
+    '''
+      def tokenizer = new com.rabidgremlin.mutters.templated.SimpleTokenizer(true)
+      def trainFile = new File('src/main/resources/WeatherIntents.txt')
+      def cleanedTrainingFile = new File('src/main/resources/models/WeatherIntentsCleaned.txt')
+
+      new File('src/main/resources/models').mkdirs()
+
+      cleanedTrainingFile.withWriter { out ->      
+            trainFile.eachLine { String line ->
+
+                def intent = line.split()[0]
+                def msg = tokenizer.tokenize(line.substring(intent.length())).join(' ')
+                out.write intent + ' ' + msg + '\\n'
+            }
+      }
+
+    ''']
+
+}
+
+
+// build model
+task generateFastTextModel(type:JavaExec) {
+   main = 'com.github.jfasttext.JFastText'
+   classpath = configurations.fastTextCompile
+   
+   args = ["supervised",
+           "-input", "src/main/resources/models/WeatherIntentsCleaned.txt",
+           "-output", "src/main/resources/models/fasttext-weather-model",
+           // these params are non-standard but we have a very tiny training data set
+           "-lr", "1.0",  "-wordNgrams", "2", "-epoch","50" ,"-lrUpdateRate","5" , "-bucket", "500"
+           ]  
+}
+
+clean {
+ delete "src/main/resources/models" 
+}
+
+generateFastTextModel.dependsOn cleanTrainingData
+processResources.dependsOn generateFastTextModel
+
+

@@ -8,21 +8,53 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
+import com.rabidgremlin.mutters.core.Tokenizer;
 
+/**
+ * This is an IntentMatcher that matches against utterance templates.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class TemplatedIntentMatcher
     implements IntentMatcher
 {
-
   private List<TemplatedIntent> intents = new ArrayList<TemplatedIntent>();
 
-  public void addIntent(TemplatedIntent intent)
+  private Tokenizer tokenizer;
+
+  /**
+   * Constructor.
+   * 
+   * @param tokenizer The tokenizer to use for parsing users inpout and utterance templates.
+   */
+  public TemplatedIntentMatcher(Tokenizer tokenizer)
   {
+    this.tokenizer = tokenizer;
+
+    // Check that tokenizer preserves slot identifiers
+    String[] tokens = tokenizer.tokenize("{City} {Date}");
+    if (tokens == null || tokens.length != 2 ||
+        !tokens[0].equalsIgnoreCase("{city}") || !tokens[1].equalsIgnoreCase("{date}"))
+    {
+      throw new IllegalArgumentException("Invalid tokenizer. It removes slot identifiers in {}s");
+    }
+  }
+
+  /**
+   * Adds a new intent to the matcher.
+   * 
+   * @param name The name of the intent.
+   * @return The new TemplatedIntent.
+   */
+  public TemplatedIntent addIntent(String name)
+  {
+    TemplatedIntent intent = new TemplatedIntent(name, tokenizer);
     intents.add(intent);
+    return intent;
   }
 
   /*
@@ -39,8 +71,8 @@ public class TemplatedIntentMatcher
     {
       return null;
     }
-    
-    CleanedInput cleanedUtterance = InputCleaner.cleanInput(utterance);
+
+    String[] cleanedUtterance = tokenizer.tokenize(utterance);
 
     for (TemplatedIntent intent : intents)
     {

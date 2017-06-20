@@ -1,7 +1,7 @@
 package com.rabidgremlin.mutters.bot.statemachine;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 

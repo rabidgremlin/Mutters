@@ -8,11 +8,11 @@ import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.bot.BotException;
-import com.rabidgremlin.mutters.bot.BotResponse;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.session.Session;
-import com.rabidgremlin.mutters.util.SessionUtils;
+import com.rabidgremlin.mutters.core.bot.BotException;
+import com.rabidgremlin.mutters.core.bot.BotResponse;
+import com.rabidgremlin.mutters.core.session.Session;
+import com.rabidgremlin.mutters.core.util.SessionUtils;
 
 public class TestBadStoryState
 {
@@ -24,7 +24,7 @@ public class TestBadStoryState
   @BeforeClass
   public static void setUpBot()
   {
-    taxiBot = new TaxiInkBot();
+    taxiBot = new TaxiInkBot(new TaxiInkBotConfiguration());
   }
 
   @Test

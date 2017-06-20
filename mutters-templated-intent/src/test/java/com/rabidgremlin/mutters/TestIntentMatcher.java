@@ -12,31 +12,31 @@ import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.slots.CustomSlot;
 import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 
 public class TestIntentMatcher
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatching()
   {
-    TemplatedIntent additionIntent = new TemplatedIntent("Addition");
+    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher(tokenizer);
+    TemplatedIntent additionIntent = matcher.addIntent("Addition");
 
-    additionIntent.addUtterance(new TemplatedUtterance("What's {number1} + {number2}"));
-    additionIntent.addUtterance(new TemplatedUtterance("What is {number1} + {number2}"));
-    additionIntent.addUtterance(new TemplatedUtterance("Add {number1} and {number2}"));
-    additionIntent.addUtterance(new TemplatedUtterance("{number1} plus {number2}"));
+    additionIntent.addUtterance("What's {number1} + {number2}");
+    additionIntent.addUtterance("What is {number1} + {number2}");
+    additionIntent.addUtterance("Add {number1} and {number2}");
+    additionIntent.addUtterance("{number1} plus {number2}");
 
     NumberSlot number1 = new NumberSlot("number1");
     NumberSlot number2 = new NumberSlot("number2");
 
     additionIntent.addSlot(number1);
     additionIntent.addSlot(number2);
-
-    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
-    matcher.addIntent(additionIntent);
 
     IntentMatch intentMatch = matcher.match("What is 1 + 5", new Context(), null, null);
 
@@ -57,14 +57,12 @@ public class TestIntentMatcher
   @Test
   public void testBrokenMatch()
   {
-    TemplatedIntent intent = new TemplatedIntent("Hello");
+    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher(tokenizer);
+    TemplatedIntent intent = matcher.addIntent("Hello");
 
-    intent.addUtterance(new TemplatedUtterance("hello"));
-    intent.addUtterance(new TemplatedUtterance("hi"));
-    intent.addUtterance(new TemplatedUtterance("hiya"));
-
-    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
-    matcher.addIntent(intent);
+    intent.addUtterance("hello");
+    intent.addUtterance("hi");
+    intent.addUtterance("hiya");
 
     IntentMatch intentMatch = matcher.match("book this flight", new Context(), null, null);
 
@@ -74,14 +72,14 @@ public class TestIntentMatcher
   @Test
   public void testBrokenAirportMatch()
   {
-    TemplatedIntent intent = new TemplatedIntent("GetAirport");
-    intent.addUtterance(new TemplatedUtterance("{Airport}"));
+    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher(tokenizer);        
+    TemplatedIntent intent = matcher.addIntent("GetAirport");
+    
+    intent.addUtterance("{Airport}");
 
     CustomSlot airportSlot = new CustomSlot("Airport", new String[]{ "NEWCASTLE" });
     intent.addSlot(airportSlot);
-
-    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher();
-    matcher.addIntent(intent);
+    
 
     IntentMatch intentMatch = matcher.match("next friday", new Context(), null, null);
 

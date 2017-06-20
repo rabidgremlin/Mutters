@@ -3,38 +3,70 @@ A Java framework for building bot brains. Heavily inspired by Amazon Echo's natu
 
 Implements:
 
-* Templated and/or machine learning based identification of a user's intent based on their utterance
+* Templated and/or machine learning based identification of a user's intent based on their utterance. Support out of the box for OpenNLP or Facebook's fastText.
 * Templated and/or machine learning based (NER) extraction of data from the user's utterance
 * State management to support complex conversations, using either:
   * a state machine
   * Inkle's narrative scripting engine [Ink](http://www.inklestudios.com/ink/)
+* Pluggable intent matching, named entity extraction and conversation state management so you can use our own implementations.  
   
 ## Example
-The following is the code for a simple Taxi ordering bot. It uses machine learning to identify what the user is asking and to extract street addresses:
+The following is the code for a simple Taxi ordering bot. It uses OpenNLP machine learning to identify what the user is asking and to extract street addresses:
 
 ```
 public class TaxiInkBot
-    extends AbstractInkBot
+    extends InkBot<TaxiInkBotConfiguration>
+{
+
+  public TaxiInkBot(TaxiInkBotConfiguration config)
+  {
+    super(config);    
+  }
+
+}
+```
+
+Which uses a configuration class to set up the NLP, Ink Story and functions that are used by the bot:
+
+```
+public class TaxiInkBotConfiguration
+    implements InkBotConfiguration
 {
 
   @Override
-  public IntentMatcher setUpIntents()
+  public IntentMatcher getIntentMatcher()
   {
-    MLIntentMatcher matcher = new MLIntentMatcher("models/en-cat-taxi-intents.bin");
-    matcher.addSlotModel("Address", "models/en-ner-address.bin");
+    // model was built with OpenNLP whitespace tokenizer
+    OpenNLPTokenizer tokenizer = new OpenNLPTokenizer(WhitespaceTokenizer.INSTANCE);
+    
+    // use OpenNLP NER for slot matching
+    OpenNLPSlotMatcher slotMatcher = new OpenNLPSlotMatcher(tokenizer);
+    slotMatcher.addSlotModel("Address", "models/en-ner-address.bin");   
 
-    MLIntent intent = new MLIntent("OrderTaxi");
+    // create intent matcher
+    OpenNLPIntentMatcher matcher = new OpenNLPIntentMatcher("models/en-cat-taxi-intents.bin", tokenizer, slotMatcher);
+
+    Intent intent = new Intent("OrderTaxi");
     intent.addSlot(new LiteralSlot("Address"));
     matcher.addIntent(intent);
 
-    intent = new MLIntent("CancelTaxi");
+    intent = new Intent("CancelTaxi");
     matcher.addIntent(intent);
 
-    intent = new MLIntent("WhereTaxi");
+    intent = new Intent("WhereTaxi");
     matcher.addIntent(intent);
 
-    intent = new MLIntent("GaveAddress");
+    intent = new Intent("GaveAddress");
     intent.addSlot(new LiteralSlot("Address"));
+    matcher.addIntent(intent);
+
+    intent = new Intent("Stop");
+    matcher.addIntent(intent);
+
+    intent = new Intent("Help");
+    matcher.addIntent(intent);
+
+    intent = new Intent("FavColor");
     matcher.addIntent(intent);
 
     return matcher;
@@ -43,13 +75,15 @@ public class TaxiInkBot
   @Override
   public String getStoryJson()
   {
-    return loadStoryJsonFromClassPath("taxibot.ink.json");
+    return StoryUtils.loadStoryJsonFromClassPath("taxibot.ink.json");
   }
 
   @Override
-  public void setUpFunctions()
+  public List<InkBotFunction> getInkFunctions()
   {
-    addFunction(new InkBotFunction()
+    List<InkBotFunction> functions = new ArrayList<>();
+
+    functions.add(new InkBotFunction()
     {
       @Override
       public void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
@@ -76,8 +110,22 @@ public class TaxiInkBot
         return "ORDER_TAXI";
       }
     });
+
+    return functions;
   }
 
+  @Override
+  public List<GlobalIntent> getGlobalIntents()
+  {
+    List<GlobalIntent> globalIntents = new ArrayList<GlobalIntent>();
+
+    globalIntents.add(new GlobalIntent("Stop", "stop"));
+    globalIntents.add(new GlobalIntent("Help", "help"));
+
+    return globalIntents;
+  }
+
+  // ...
 }
 ```
 
@@ -175,9 +223,10 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:3.0.0'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:3.0.0'        
-        compile 'com.rabidgremlin:mutters-slots:3.0.0'
+        compile 'com.rabidgremlin:mutters-ink-bot:4.0.0'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:4.0.0'        
+        compile 'com.rabidgremlin:mutters-opennlp-ner:4.0.0'
+        compile 'com.rabidgremlin:mutters-slots:4.0.0'
 }
 ```
 
@@ -195,20 +244,23 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:3.0.0-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:3.0.0-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-slots:3.0.0-SNAPSHOT'        
+        compile 'com.rabidgremlin:mutters-ink-bot:4.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:4.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-ner:4.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-slots:4.0.0-SNAPSHOT'        
 }        
 ```
 
 ## Packaging
-Version 3.0.0 of Mutters repackaged the library into multiple jars to reduce dependencies and improve plugability.
+Mutters is packaged into multiple jars to reduce dependencies and improve plugability.
 
 | Package                  | Description                                                                      |
 | ------------------------ | -------------------------------------------------------------------------------- |
 | mutters-core             | Contains core classes, interfaces and utility classes                            |
+| mutters-fasttext-intent  | Intent matcher that uses the fastText document classifier                        |
 | mutters-ink-bot          | Implementation of a Bot that uses Inkle's Ink engine for conversation scripting  |
 | mutters-opennlp-intent   | Intent matcher that uses OpenNLP's document classifier                           |
+| mutters-opennlp-ner      | Slot matcher that uses OpenNLP's named entity recognition framework              |
 | mutters-slots            | Implementation of a number of generic Slots                                      |
 | mutters-statemachine-bot | Implementation of a Bot that uses a state machine for conversation flows         |
 | mutters-templated-intent | Intent matcher that uses templates for matching                                  |

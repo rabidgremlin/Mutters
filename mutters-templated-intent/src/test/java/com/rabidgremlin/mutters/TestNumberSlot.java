@@ -7,25 +7,24 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.rabidgremlin.mutters.input.CleanedInput;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.input.InputCleaner;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Slots;
 import com.rabidgremlin.mutters.slots.NumberSlot;
+import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestNumberSlot
 {
+  private SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicWordMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
-    CleanedInput input = InputCleaner
-        .cleanInput("The balance is One hundred two thousand and thirty four");
+    String[] input = tokenizer.tokenize("The balance is One hundred two thousand and thirty four");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -61,9 +60,9 @@ public class TestNumberSlot
   @Test
   public void testBasicNumberMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
-    CleanedInput input = InputCleaner.cleanInput("The balance is 123");
+    String[] input = tokenizer.tokenize("The balance is 123");
     Slots slots = new Slots();
     Context context = new Context();
 
@@ -85,9 +84,9 @@ public class TestNumberSlot
   @Test
   public void testBasicDecimalMatch()
   {
-    TemplatedUtterance utterance = new TemplatedUtterance("The balance is {number}");
+    TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
-    CleanedInput input = InputCleaner.cleanInput("The balance is 546.12");
+    String[] input = tokenizer.tokenize("The balance is 546.12");
     Slots slots = new Slots();
     Context context = new Context();
 

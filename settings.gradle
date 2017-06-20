@@ -1,3 +1,3 @@
 //rootProject.name = 'mutters'
 
-include 'mutters-core', 'mutters-slots', 'mutters-templated-intent','mutters-opennlp-intent', 'mutters-statemachine-bot', 'mutters-opennlp-taxi-data', 'mutters-ink-bot'
+include 'mutters-core', 'mutters-slots', 'mutters-templated-intent','mutters-opennlp-intent', 'mutters-statemachine-bot', 'mutters-opennlp-test-data', 'mutters-ink-bot', 'mutters-opennlp-ner', 'mutters-fasttext-intent', 'mutters-fasttext-test-data'

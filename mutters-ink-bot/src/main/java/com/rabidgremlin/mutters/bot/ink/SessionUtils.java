@@ -1,10 +1,16 @@
 package com.rabidgremlin.mutters.bot.ink;
 
 import com.bladecoder.ink.runtime.StoryState;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 
+/**
+ * Utility class for InkBot's interactions with a Session.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class SessionUtils
-    extends com.rabidgremlin.mutters.util.SessionUtils
+    extends com.rabidgremlin.mutters.core.util.SessionUtils
 {
 
   protected SessionUtils()
@@ -12,11 +18,23 @@ public class SessionUtils
     // utility class
   }
 
+  /**
+   * Stores the failed to understand count for the bot.
+   * 
+   * @param session The session.
+   * @param count The count.
+   */
   public static void setFailedToUnderstandCount(Session session, int count)
   {
     session.setAttribute(SLOT_PREFIX + "0987654321FAILEDCOUNT1234567890", new Integer(count));
   }
 
+  /**
+   * Gets the failed to understand count for the bot.
+   * 
+   * @param session The session.
+   * @return The count.
+   */
   public static int getFailedToUnderstandCount(Session session)
   {
     Integer failedToUnderstandCount = (Integer) session.getAttribute(SLOT_PREFIX + "0987654321FAILEDCOUNT1234567890");
@@ -31,6 +49,12 @@ public class SessionUtils
     }
   }
 
+  /**
+   * Stores the current Ink story state for the user into the session.
+   * 
+   * @param session The session.
+   * @param storyState The story state.
+   */
   public static void saveInkStoryState(Session session, StoryState storyState)
   {
     try
@@ -43,6 +67,12 @@ public class SessionUtils
     }
   }
 
+  /**
+   * Gets the user's current Ink story state from the session.
+   * 
+   * @param session The session.
+   * @param storyState The story state.
+   */
   public static void loadInkStoryState(Session session, StoryState storyState)
   {
     try

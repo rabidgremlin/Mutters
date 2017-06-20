@@ -12,6 +12,12 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
+/**
+ * Slot that matches on times. Uses natty to handle 'times' such as '8pm'.
+ * 
+ * @author rabidgremlin
+ *
+ */
 public class TimeSlot
     extends Slot
 {

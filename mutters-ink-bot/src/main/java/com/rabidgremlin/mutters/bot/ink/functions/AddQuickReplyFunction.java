@@ -1,14 +1,13 @@
 package com.rabidgremlin.mutters.bot.ink.functions;
 
 import com.bladecoder.ink.runtime.Story;
-import com.rabidgremlin.mutters.bot.BotResponseAttachment;
 import com.rabidgremlin.mutters.bot.ink.CurrentResponse;
 import com.rabidgremlin.mutters.bot.ink.InkBotFunction;
 import com.rabidgremlin.mutters.core.IntentMatch;
-import com.rabidgremlin.mutters.session.Session;
+import com.rabidgremlin.mutters.core.session.Session;
 
 /**
- * This class implements the ADD_QUICK_REPLY Ink bot function. It is added by default to the AbstractInkBot. The ADD_QUICK_REPLY
+ * This class implements the ADD_QUICK_REPLY Ink bot function. It is added by default to the InkBot. The ADD_QUICK_REPLY
  * function allows the bot to pass a list of quick reply options back to the client. Depending on the chat interface these
  * options can be displayed as quick menu options so that a user does not have to enter a response manually.
  * 

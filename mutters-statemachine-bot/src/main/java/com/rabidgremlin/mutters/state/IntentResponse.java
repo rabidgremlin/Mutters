@@ -3,7 +3,7 @@ package com.rabidgremlin.mutters.state;
 import java.util.Collections;
 import java.util.List;
 
-import com.rabidgremlin.mutters.bot.BotResponseAttachment;
+import com.rabidgremlin.mutters.core.bot.BotResponseAttachment;
 
 public class IntentResponse
 {

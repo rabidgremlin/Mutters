@@ -6,7 +6,7 @@ import java.util.TimeZone;
 /**
  * This class provides context of user's locale and timezone for slots to use when matching.
  * 
- * If locale and tiemzone are not specified then the JVM defaults are used.
+ * If locale and timezone are not specified then the JVM defaults are used.
  * 
  * @author rabidgremlin
  *
