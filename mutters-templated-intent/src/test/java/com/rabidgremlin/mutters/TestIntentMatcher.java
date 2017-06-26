@@ -11,6 +11,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.slots.LiteralSlot;
 import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
@@ -83,6 +84,37 @@ public class TestIntentMatcher
 
     IntentMatch intentMatch = matcher.match("next friday", new Context(), null, null);
 
+    assertThat(intentMatch, is(nullValue()));
+  }
+
+
+  @Test
+  public void testHandlingOfEmptyOrTokenizedOutInputs()
+  {
+    TemplatedIntentMatcher matcher = new TemplatedIntentMatcher(tokenizer);        
+    TemplatedIntent intent = matcher.addIntent("AcceptAnything");
+    
+    intent.addUtterance("{AnyThing}");
+
+    LiteralSlot slot = new LiteralSlot("AnyThing");
+    intent.addSlot(slot);
+    
+    IntentMatch intentMatch = matcher.match("Bob", new Context(), null, null);
+    assertThat(intentMatch, is(notNullValue()));
+
+    intentMatch = matcher.match("", new Context(), null, null);
+    assertThat(intentMatch, is(nullValue()));
+
+    intentMatch = matcher.match(" ", new Context(), null, null);
+    assertThat(intentMatch, is(nullValue()));
+
+    intentMatch = matcher.match("?", new Context(), null, null);
+    assertThat(intentMatch, is(nullValue()));
+
+    intentMatch = matcher.match("...", new Context(), null, null);
+    assertThat(intentMatch, is(nullValue()));
+
+    intentMatch = matcher.match(" ?", new Context(), null, null);
     assertThat(intentMatch, is(nullValue()));
   }
 

@@ -74,6 +74,12 @@ public class TemplatedIntentMatcher
 
     String[] cleanedUtterance = tokenizer.tokenize(utterance);
 
+    // do we have some tokens after cleaning ?
+    if (cleanedUtterance.length == 0)
+    {
+      return null;
+    }
+
     for (TemplatedIntent intent : intents)
     {
       TemplatedUtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
