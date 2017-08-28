@@ -15,7 +15,7 @@ repositories {
 dependencies {
     compile project(':mutters-core')
         
-    compile 'com.bladecoder.ink:blade-ink:0.4.2'          
+    compile 'com.bladecoder.ink:blade-ink:0.4.3'          
     compile 'commons-io:commons-io:2.5'
     compile 'org.slf4j:slf4j-api:1.7.21'   
     compile 'org.apache.commons:commons-lang3:3.4'

@@ -16,7 +16,10 @@ import com.rabidgremlin.mutters.bot.ink.InkBotConfiguration.ConfusedKnot;
 import com.rabidgremlin.mutters.bot.ink.InkBotConfiguration.GlobalIntent;
 import com.rabidgremlin.mutters.bot.ink.functions.AddAttachmentFunction;
 import com.rabidgremlin.mutters.bot.ink.functions.AddQuickReplyFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.GetLongTermAttributeFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.RemoveLongTermAttributeFunction;
 import com.rabidgremlin.mutters.bot.ink.functions.SetHintFunction;
+import com.rabidgremlin.mutters.bot.ink.functions.SetLongTermAttributeFunction;
 import com.rabidgremlin.mutters.bot.ink.functions.SetRepromptFunction;
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -99,6 +102,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
     addFunction(new SetRepromptFunction());
     addFunction(new AddAttachmentFunction());
     addFunction(new AddQuickReplyFunction());
+    addFunction(new SetLongTermAttributeFunction());
+    addFunction(new GetLongTermAttributeFunction());
+    addFunction(new RemoveLongTermAttributeFunction());
 
     // add any other functions for the bot
     List<InkBotFunction> functions = configuration.getInkFunctions();
