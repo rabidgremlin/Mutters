@@ -69,9 +69,14 @@ public class SimpleTokenizer
         else
         {
           // is it an email address ?
-          if (token.indexOf('@') != -1 && EmailValidator.getInstance().isValid(token))
+          if (token.indexOf('@') != -1)
           {
-            applyStriping = false;
+            if (token.endsWith(".") || token.endsWith(",")) {
+              token = token.substring(0, token.length() - 1);
+            }
+            if (EmailValidator.getInstance().isValid(token)) {
+              applyStriping = false;
+            }
           }
           else
           {

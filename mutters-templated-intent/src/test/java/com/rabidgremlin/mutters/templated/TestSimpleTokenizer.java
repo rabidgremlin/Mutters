@@ -110,6 +110,8 @@ public class TestSimpleTokenizer
   public void testPreserveEmailAddress()
   {
     checkResult("bob@test.com", new String[]{ "bob@test.com" });
+    checkResult("bob@test.com.", new String[]{ "bob@test.com" });
+    checkResult("bob@test.com,", new String[]{ "bob@test.com" });
     checkResult("bob.o'reily@test.com", new String[]{ "bob.o'reily@test.com" });
     checkResult("@home", new String[]{ "home" });
   }
