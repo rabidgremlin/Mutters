@@ -165,11 +165,12 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       currentResponse.setResponseText(defaultResponse);
     }
-
-    currentResponse.setResponseQuickReplies(SessionUtils.getRepromptQuickReplies(session));
-
+   
     // preserve hint if we had reprompt hint
     currentResponse.setHint(SessionUtils.getRepromptHint(session));
+
+    // preserve quick replies if we had them
+    currentResponse.setResponseQuickReplies(SessionUtils.getRepromptQuickReplies(session));
 
     // keep hold of matched intent for logging and debug
     String matchedIntent = null;
@@ -351,9 +352,10 @@ public abstract class InkBot<T extends InkBotConfiguration>
   private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst)
     throws StoryException, Exception
   {
-    // reset reprompt and hint
+    // reset reprompt, hint and quick replies
     currentResponse.setReprompt(null);
     currentResponse.setHint(null);
+    currentResponse.setResponseQuickReplies(null);
 
     StringBuffer response = new StringBuffer();
     boolean first = true;

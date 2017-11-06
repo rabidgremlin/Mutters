@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestRepromptQuickRepliesAndHint
@@ -39,6 +40,46 @@ public class TestRepromptQuickRepliesAndHint
     assertThat(response.getHint(), is("Yes or No"));
     assertThat(response.getQuickReplies(), hasItems("Yes", "No"));
 
+
+    response =  orderBot.respond(session, context, "What?");
+    
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("For order 123456 ? Please answer Yes or No."));
+    assertThat(response.getHint(), is("Yes or No"));
+     assertThat(response.getQuickReplies(), hasItems("Yes", "No"));
+
+  }
+
+
+  @Test
+  public void givenFailedMatchShouldClearRepromptHintQuickReliesAfterSuccessfulMatch() throws Exception
+  {
+    Session session = new Session();
+    Context context = new Context();
+
+    // do the order so value is set
+    BotResponse response = orderBot.respond(session, context, "Order a widget");
+
+    // ask for status which should use long term current order as context
+    response = orderBot.respond(session, context, "What is the status of my order");
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("For order 123456 ?"));
+    assertThat(response.getHint(), is("Yes or No"));
+    assertThat(response.getQuickReplies(), hasItems("Yes", "No"));
+
+    response =  orderBot.respond(session, context, "Hmm...");
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("For order 123456 ? Please answer Yes or No."));
+    assertThat(response.getHint(), is("Yes or No"));
+    assertThat(response.getQuickReplies(), hasItems("Yes", "No"));
+
+    response =  orderBot.respond(session, context, "No");
+    
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getResponse(), is("What is the order number of the order you want to check the status of ?"));
+    assertThat(response.getHint(), is(nullValue()));
+    assertThat(response.getQuickReplies(), is(nullValue()));
   }
 
 }
