@@ -7,6 +7,8 @@ import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.session.Session;
 
+import java.util.List;
+
 /**
  * This utility class provides methods working with a Session object.
  * 
@@ -54,6 +56,27 @@ public class SessionUtils
   public static String getReprompt(Session session)
   {
     return (String) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890");
+  }
+
+  /**
+   * Stores the reprompt quick replies in the session.
+   *
+   * @param session The session.
+   * @param repromptQuickReplies The reprompt quick replies.
+   */
+  public static void setRepromptQuickReplies(Session session, List<String> repromptQuickReplies) {
+    session.setAttribute(SLOT_PREFIX + "0987654321REPROMPTQUICKREPLIES1234567890", repromptQuickReplies);
+  }
+
+  /**
+   * Gets the current reprompt quick replies from the session.
+   *
+   * @param session The session.
+   * @return The reprompt quick replies from the session.
+   */
+  public static List<String> getRepromptQuickReplies(Session session)
+  {
+    return (List<String>) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPTQUICKREPLIES1234567890");
   }
 
   /**

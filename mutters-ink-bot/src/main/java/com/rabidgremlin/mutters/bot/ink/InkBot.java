@@ -166,6 +166,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
       currentResponse.setResponseText(defaultResponse);
     }
 
+    currentResponse.setResponseQuickReplies(SessionUtils.getRepromptQuickReplies(session));
+
     // preserve hint if we had reprompt hint
     currentResponse.setHint(SessionUtils.getRepromptHint(session));
 
@@ -280,13 +282,13 @@ public abstract class InkBot<T extends InkBotConfiguration>
           if (currentResponse.getReprompt() != null)
           {
             SessionUtils.setReprompt(session, currentResponse.getReprompt());
-            SessionUtils.setRepromptHint(session, currentResponse.getHint());
           }
           else
           {
             SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-            SessionUtils.setRepromptHint(session, currentResponse.getHint());
           }
+          SessionUtils.setRepromptHint(session, currentResponse.getHint());
+          SessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
         }
         else
         {

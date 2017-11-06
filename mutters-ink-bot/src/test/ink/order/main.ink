@@ -36,6 +36,10 @@ What is the order number of the order you want to check the status of ?
 
 = check_order_status
 For order {order_number} ?
+::SET_REPROMPT For order {order_number} ? Please answer Yes or No.
+::SET_HINT Yes or No
+::ADD_QUICK_REPLY Yes
+::ADD_QUICK_REPLY No
 + YesIntent
   -> display_order_details
 + NoIntent
