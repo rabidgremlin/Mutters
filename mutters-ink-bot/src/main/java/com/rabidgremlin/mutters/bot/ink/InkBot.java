@@ -194,6 +194,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
       // restore the story state
       SessionUtils.loadInkStoryState(session, story.getState());
 
+      // call hook so additional things can be applied to story after state has been restored 
+      afterStoryStateLoaded(story);
+
       // get to right place in story
       story.continueMaximally();
 
@@ -431,6 +434,17 @@ public abstract class InkBot<T extends InkBotConfiguration>
    * @param story The just created story.
    */
   protected void afterStoryCreated(Story story)
+  {
+    // do nothing
+  }
+
+  /**
+   * This method can be overridden to manipulate the Story object used by the bot just after the story state has been
+   * loaded from the session. This method is useful for setting story variables based on external data.
+   * 
+   * @param story The story whose state has just been loaded.
+   */
+  protected void afterStoryStateLoaded(Story story)
   {
     // do nothing
   }
