@@ -197,8 +197,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
       // call hook so additional things can be applied to story after state has been restored 
       afterStoryStateLoaded(story);
 
-      // get to right place in story
-      story.continueMaximally();
+      // get to right place in story, capture any pretext
+      String preText = processStory(session, currentResponse, story, null, false).toString();
 
       // build expected intents set
       HashSet<String> expectedIntents = new HashSet<String>();
@@ -249,7 +249,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
         if (knotName != null)
         {
           story.choosePathString(knotName);
-          getResponseText(session, currentResponse, story, intentMatch, false);
+          getResponseText(session, currentResponse, story, intentMatch, false, preText);
           foundMatch = true;
         }
         else
@@ -266,7 +266,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
                 log.debug("Choosing: {}", c.getText());
                 story.chooseChoiceIndex(choiceIndex);
 
-                getResponseText(session, currentResponse, story, intentMatch, true);
+                getResponseText(session, currentResponse, story, intentMatch, true, preText);
 
                 foundMatch = true;
                 break;
@@ -316,7 +316,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
         // jump to confused knot
         story.choosePathString(confusedKnotName);
         // continue story
-        getResponseText(session, currentResponse, story, intentMatch, false);
+        getResponseText(session, currentResponse, story, intentMatch, false, preText);
         // reset failed count
         failedToUnderstandCount = 0;
       }
@@ -352,7 +352,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     }
   }
 
-  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst)
+  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst, String preText)
     throws StoryException, Exception
   {
     // reset reprompt, hint and quick replies
@@ -360,12 +360,40 @@ public abstract class InkBot<T extends InkBotConfiguration>
     currentResponse.setHint(null);
     currentResponse.setResponseQuickReplies(null);
 
-    StringBuffer response = new StringBuffer();
+    // get the story output and build the reponse
+    StringBuffer response = processStory(session, currentResponse, story, intentMatch, skipfirst);    
+    
+    // add any pretext if we have it
+    preText = StringUtils.chomp(preText).trim(); // remove any trailing \n and trim to ensure we actually have some content
+    if (StringUtils.isNotBlank(preText))
+    {
+      response.insert(0,"\n");
+      response.insert(0,preText);      
+    }
+
+    currentResponse.setResponseText(response.toString());
+  }
+
+  /** Processes the story until the next set of choices, triggering any InkFunctions along the way.
+   * 
+   * @param session The current session.
+   * @param currentResponse The current response.
+   * @param story The current story.
+   * @param intentMatch The current intent match.
+   * @param skipfirst True if first lien should be skipped. Required as ink always replays choice.
+   * @return String buffer containing output.
+   * @throws StoryException Thrown if there is an error. 
+   * @throws Exception Thrown if there is an error.
+   */
+  private StringBuffer processStory(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst) throws StoryException, Exception 
+  {
+    StringBuffer response = new StringBuffer();   
+        
     boolean first = true;
     while (story.canContinue())
     {
       String line = story.Continue();
-
+      
       // skip first line as ink replays choice first
       if (first && skipfirst)
       {
@@ -373,29 +401,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
         continue;
       }
 
-      log.debug("Line {}", line);
-
-      String trimmedLine = line.trim();
-
-      if (trimmedLine.startsWith("::"))
-      {
-        String functionName = trimmedLine.split(" ")[0].substring(2).trim();
-        String param = trimmedLine.substring(functionName.length() + 2).trim();
-
-        InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
-        if (function != null)
-        {
-          function.execute(currentResponse, session, intentMatch, story, param);
-        }
-        else
-        {
-          log.warn("Did not find function named {}", functionName);
-        }
-      }
-      else
-      {
-        response.append(line);
-      }
+      processStoryLine(line,response,currentResponse, session, intentMatch, story);
     }
 
     // chop off last \n
@@ -403,8 +409,44 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       response.setLength(response.length() - 1);
     }
-
-    currentResponse.setResponseText(response.toString());
+    
+	return response;
+  }
+  
+  /** Processes a story line triggering any InkFunctions that are found.
+   * 
+   * @param line The story line to process.
+   * @param response The response to populate.
+   * @param currentResponse The current response.
+   * @param session The current session.
+   * @param intentMatch The current intent match.
+   * @param story The current story.
+   */
+  private void processStoryLine(String line, StringBuffer response, CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story)
+  {
+    log.debug("Line {}", line);
+	
+	String trimmedLine = line.trim();
+	
+	if (trimmedLine.startsWith("::"))
+	{
+	  String functionName = trimmedLine.split(" ")[0].substring(2).trim();
+	  String param = trimmedLine.substring(functionName.length() + 2).trim();
+	
+	  InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
+	  if (function != null)
+	  {
+	    function.execute(currentResponse, session, intentMatch, story, param);
+	  }
+	  else
+	  {
+	    log.warn("Did not find function named {}", functionName);
+	  }
+	}
+	else
+	{
+	  response.append(line);
+	}
   }
 
   /**
