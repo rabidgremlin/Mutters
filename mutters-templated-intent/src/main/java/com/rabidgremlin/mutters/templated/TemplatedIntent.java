@@ -2,6 +2,7 @@ package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,7 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Intent;
+import com.rabidgremlin.mutters.core.Slot;
+import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.Tokenizer;
+import com.rabidgremlin.mutters.slots.DefaultValueSlot;
 
 /**
  * This is an intent that matches based on an utterance template.
@@ -81,21 +85,35 @@ public class TemplatedIntent
    * @return The templated utterance match.
    */
   public TemplatedUtteranceMatch matches(String[] input, Context context)
-  {
-    log.debug("------------- Intent: {} Input: {}", name, input);
+  {   
     for (TemplatedUtterance utterance : utterances)
-    {
-      log.debug("       Matching to {} ", utterance.getTemplate());
+    {   
       TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
       if (match.isMatched())
-      {
-        log.debug("------------ Matched to {} match: {} -------------", utterance.getTemplate(),
-            match);
+      {     
+        // matched utterance didn't fill in all the slots so check for default values
+        if (match.getSlotMatches().size() != slots.getSlots().size())
+        {       	
+           // grab all the matched slots	
+           HashMap<Slot, SlotMatch> matchedSlots = match.getSlotMatches();
+           
+           // loop through each slot
+           for (Slot slot: slots.getSlots())
+           {        	
+        	   // does slot have default value and no match ?
+        	   if (slot instanceof DefaultValueSlot && !matchedSlots.containsKey(slot))
+        	   {
+        		   // yep create a slot match with default value
+        		   Object defaultValue = ((DefaultValueSlot)slot).getDefaultValue();
+        		   matchedSlots.put(slot, new SlotMatch(slot,defaultValue == null?"":defaultValue.toString(),defaultValue));        	
+        	   }
+           }
+        }
+        
         return match;
       }
     }
-
-    log.debug("------------ No Match to {} -------------", name);
+    
     return new TemplatedUtteranceMatch(false);
   }
 

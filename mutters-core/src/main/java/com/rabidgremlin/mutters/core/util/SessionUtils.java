@@ -2,6 +2,8 @@ package com.rabidgremlin.mutters.core.util;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -17,6 +19,9 @@ import java.util.List;
  */
 public class SessionUtils
 {
+  /** Logger.*/
+  private static final Logger LOG = LoggerFactory.getLogger(SessionUtils.class);
+  
   /** Prefix for slot values stored in session to avoid any name collisions. */
   public static final String SLOT_PREFIX = "SLOT_JLA1974_";
 
@@ -163,8 +168,16 @@ public class SessionUtils
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
-      // TODO better cast handling
-      return (String) match.getSlotMatch(slotName).getValue();
+      try
+      {
+        return (String) match.getSlotMatch(slotName).getValue();
+      }
+      catch(ClassCastException e)
+      {
+    	  // failed to cast so assume invalid string and return default
+    	  LOG.warn("Non String value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+    	  return defaultValue;
+      }
     }
     else
     {
@@ -184,8 +197,16 @@ public class SessionUtils
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
-      // TODO better cast handling
-      return (Number) match.getSlotMatch(slotName).getValue();
+      try
+      {
+        return (Number) match.getSlotMatch(slotName).getValue();
+      }
+      catch(ClassCastException e)
+      {
+    	  // failed to cast so assume invalid number and return default
+    	  LOG.warn("Non Number value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+    	  return defaultValue;
+      }
     }
     else
     {
@@ -206,8 +227,16 @@ public class SessionUtils
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
-      // TODO better cast handling
-      return (LocalDate) match.getSlotMatch(slotName).getValue();
+      try
+      {
+        return (LocalDate) match.getSlotMatch(slotName).getValue();
+      }
+      catch(ClassCastException e)
+      {
+    	  // failed to cast so assume invalid localdate and return default
+    	  LOG.warn("Non LocalDate value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+    	  return defaultValue;
+      }
     }
     else
     {
@@ -228,8 +257,16 @@ public class SessionUtils
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
-      // TODO better cast handling
-      return (LocalTime) match.getSlotMatch(slotName).getValue();
+      try
+      {
+        return (LocalTime) match.getSlotMatch(slotName).getValue();
+      }
+      catch(ClassCastException e)
+      {
+    	  // failed to cast so assume invalid localtime and return default
+    	  LOG.warn("Non LocalTime value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+    	  return defaultValue;
+      }
     }
     else
     {

@@ -11,6 +11,7 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.slots.CustomSlot;
+import com.rabidgremlin.mutters.slots.DefaultValueSlot;
 import com.rabidgremlin.mutters.slots.LiteralSlot;
 import com.rabidgremlin.mutters.slots.NumberSlot;
 import com.rabidgremlin.mutters.templated.SimpleTokenizer;
@@ -116,6 +117,59 @@ public class TestIntentMatcher
 
     intentMatch = matcher.match(" ?", new Context(), null, null);
     assertThat(intentMatch, is(nullValue()));
+  }
+  
+  // slot that matches a colour or defaults to black
+  class ColorsSlot extends CustomSlot implements DefaultValueSlot
+  {
+	  public ColorsSlot()
+	  {
+		  super("Color",new String[] {"Red","Green","Blue","White"});
+	  }
+
+	  @Override
+	  public Object getDefaultValue() 
+	  {
+	    return "Black";
+	  } 
+  }
+  
+  @Test
+  public void testDefaultValueHandling()
+  {
+	  TemplatedIntentMatcher matcher = new TemplatedIntentMatcher(tokenizer);
+	  
+	  TemplatedIntent intent = matcher.addIntent("FavColourIntent");
+	  
+	  ColorsSlot colorSlot = new ColorsSlot();
+	  intent.addSlot(colorSlot);
+	  
+	  intent.addUtterance("My favourite color is {Color}");
+	  intent.addUtterance("{Color} is my favourite");
+	  intent.addUtterance("I have a favourite color"); // utterance without a slot, should default to Black
+	  
+	  IntentMatch intentMatch = matcher.match("My favourite color is green", new Context(), null, null);
+	  assertThat(intentMatch, is(notNullValue()));
+	  assertThat(intentMatch.getSlotMatches().size(), is(1));
+	  SlotMatch colourMatch = intentMatch.getSlotMatches().get(colorSlot);
+	  assertThat(colourMatch, is(notNullValue()));
+	  assertThat(colourMatch.getValue(), is("Green"));
+	  
+	  intentMatch = matcher.match("Red is my favourite", new Context(), null, null);
+	  assertThat(intentMatch, is(notNullValue()));
+	  assertThat(intentMatch.getSlotMatches().size(), is(1));
+	  colourMatch = intentMatch.getSlotMatches().get(colorSlot);
+	  assertThat(colourMatch, is(notNullValue()));
+	  assertThat(colourMatch.getValue(), is("Red"));
+	  
+	  
+	  intentMatch = matcher.match("I have a favourite color", new Context(), null, null);
+	  assertThat(intentMatch, is(notNullValue()));
+	  assertThat(intentMatch.getSlotMatches().size(), is(1));
+	  colourMatch = intentMatch.getSlotMatches().get(colorSlot);
+	  assertThat(colourMatch, is(notNullValue()));
+	  assertThat(colourMatch.getValue(), is("Black"));
+	  
   }
 
 }

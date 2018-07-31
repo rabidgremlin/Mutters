@@ -1,5 +1,7 @@
 package com.rabidgremlin.mutters.core.ml;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedMap;
@@ -85,6 +87,16 @@ public abstract class AbstractMachineLearningIntentMatcher
   public void addIntent(Intent intent)
   {
     intents.put(intent.getName().toUpperCase(), intent);
+  }
+  
+  /** 
+   * Returns the intents for this matcher.
+   * 
+   * @return The intents for this matcher
+   */
+  public Collection<Intent> getIntents()
+  {
+	  return Collections.unmodifiableCollection(intents.values());
   }
 
   /*
