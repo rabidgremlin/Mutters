@@ -23,7 +23,7 @@ import com.rabidgremlin.mutters.core.session.Session;
 public class TestThreadLocal
 {
 
-  private static final int TEST_ROUNDS = 10;
+  private static final int TEST_ROUNDS = 20;
 
   private static TaxiInkBot taxiBot;
 
@@ -41,7 +41,7 @@ public class TestThreadLocal
     addSimpleCases();
     addInteractiveCases();
 
-    ExecutorService executor = Executors.newFixedThreadPool(2);
+    ExecutorService executor = Executors.newFixedThreadPool(5);
     for (int i = 0; i < TEST_ROUNDS; i++)
     {
       for (Runnable testCase : testCases)
