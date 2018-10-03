@@ -3,6 +3,7 @@ package com.rabidgremlin.mutters.bot.ink;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +83,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
 
   /** The name of the ink knot to jump too when the bot is confused. */
   private String confusedKnotName = null;
+
+  /** A thread local map that holds the story instance for each unique story JSON */
+  private static ThreadLocal<Map<String, Story>> threadLocalStoryMap = ThreadLocal.withInitial(HashMap::new);
 
   /**
    * Constructs the bot.
@@ -180,12 +184,20 @@ public abstract class InkBot<T extends InkBotConfiguration>
 
     try
     {
-      Story story = null;
+      Story story = threadLocalStoryMap.get().get(inkStoryJson);
 
-      // wrap create in synchronized block because something in JSON parsing is not threadsafe
-      synchronized (this)
+      if (story == null)
       {
-        story = new Story(inkStoryJson);
+        synchronized (this)
+        {
+          // wrap create in synchronized block because something in JSON parsing is not threadsafe
+          story = new StoryDecorator(inkStoryJson);
+          threadLocalStoryMap.get().put(inkStoryJson, story);
+        }
+      }
+      else
+      {
+        story.resetState();
       }
 
       // call hook so externs and other things can be applied
