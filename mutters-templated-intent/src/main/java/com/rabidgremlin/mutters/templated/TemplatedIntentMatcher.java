@@ -22,9 +22,9 @@ import com.rabidgremlin.mutters.core.Tokenizer;
 public class TemplatedIntentMatcher
     implements IntentMatcher
 {
-  private List<TemplatedIntent> intents = new ArrayList<TemplatedIntent>();
+  private final List<TemplatedIntent> intents = new ArrayList<>();
 
-  private Tokenizer tokenizer;
+  private final Tokenizer tokenizer;
 
   /**
    * Constructor.
@@ -82,10 +82,11 @@ public class TemplatedIntentMatcher
 
     for (TemplatedIntent intent : intents)
     {
-      TemplatedUtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
-      if (utteranceMatch.isMatched())
+      // If given null list of expected intents, expected to try match regardless
+      if (expectedIntents == null || expectedIntents.contains(intent.getName()))
       {
-        if (expectedIntents == null || (expectedIntents.contains(intent.getName())))
+        TemplatedUtteranceMatch utteranceMatch = intent.matches(cleanedUtterance, context);
+        if (utteranceMatch.isMatched())
         {
           return new IntentMatch(intent, utteranceMatch.getSlotMatches(), utterance);
         }
@@ -93,11 +94,6 @@ public class TemplatedIntentMatcher
     }
 
     return null;
-  }
-
-  public List<TemplatedIntent> getIntents()
-  {
-    return Collections.unmodifiableList(intents);
   }
 
 }
