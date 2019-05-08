@@ -123,7 +123,7 @@ public class SessionUtils
    * 
    * @param session The session.
    * @param slotName The name of the slot.
-   * @param value The balue to store.
+   * @param value The value to store.
    */
   public static void setStringSlotIntoSession(Session session, String slotName, String value)
   {

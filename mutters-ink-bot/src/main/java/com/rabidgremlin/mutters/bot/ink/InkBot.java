@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -67,7 +68,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
   protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
 
   /** Map of global intents for the bot. */
-  protected HashMap<String, String> globalIntents = new HashMap<String, String>();
+  protected HashMap<String, String> globalIntents = new HashMap<>();
 
   /** Random for default reponses. */
   private Random rand = new Random();
@@ -141,7 +142,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     List<String> defaultResponses = configuration.getDefaultResponses();
     if (defaultResponses != null)
     {
-      setDefaultResponses(defaultResponses.toArray(new String[defaultResponses.size()]));
+      setDefaultResponses(defaultResponses.toArray(new String[0]));
     }
   }
 
@@ -156,7 +157,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     throws BotException
   {
     log.debug("===> \n session: {} context: {} messageText: {}",
-        new Object[]{ session, context, messageText });
+            new Object[]{ session, context, messageText });
 
     CurrentResponse currentResponse = new CurrentResponse();
 
@@ -206,7 +207,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
       // restore the story state
       SessionUtils.loadInkStoryState(session, story.getState());
 
-      // call hook so additional things can be applied to story after state has been restored 
+      // call hook so additional things can be applied to story after state has been restored
       afterStoryStateLoaded(story);
 
       // get to right place in story, capture any pretext
@@ -237,19 +238,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
         afterIntentMatch(intentMatch, session, story);
 
         // copy any slot values into ink vars
-        for (SlotMatch slotMatch : intentMatch.getSlotMatches().values())
-        {
-          if (slotMatch.getValue() instanceof Number)
-          {
-            story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
-                slotMatch.getValue());
-          }
-          else
-          {
-            story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(),
-                slotMatch.getValue().toString());
-          }
-        }
+        setSlotValuesInInk(intentMatch.getSlotMatches().values(), story);
 
         // did we match something flag. Used so we can set reprompt correctly
         boolean foundMatch = false;
@@ -294,17 +283,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
           // reset failed count
           failedToUnderstandCount = 0;
 
-          // set reprompt into session
-          if (currentResponse.getReprompt() != null)
-          {
-            SessionUtils.setReprompt(session, currentResponse.getReprompt());
-          }
-          else
-          {
-            SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-          }
-          SessionUtils.setRepromptHint(session, currentResponse.getHint());
-          SessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
+          setRepromptInSession(currentResponse, session, defaultResponse);
         }
         else
         {
@@ -331,6 +310,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
         getResponseText(session, currentResponse, story, intentMatch, false, preText);
         // reset failed count
         failedToUnderstandCount = 0;
+
+        setRepromptInSession(currentResponse, session, defaultResponse);
       }
 
       // save failed count
@@ -361,6 +342,35 @@ public abstract class InkBot<T extends InkBotConfiguration>
     catch (Exception e)
     {
       throw new BotException("Unexpected error", e);
+    }
+  }
+
+  private void setRepromptInSession(CurrentResponse currentResponse, Session session, String defaultResponse)
+  {
+    if (currentResponse.getReprompt() != null)
+    {
+      SessionUtils.setReprompt(session, currentResponse.getReprompt());
+    }
+    else
+    {
+      SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
+    }
+    SessionUtils.setRepromptHint(session, currentResponse.getHint());
+    SessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
+  }
+
+  private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
+  {
+    for (SlotMatch slotMatch : slotMatches)
+    {
+      if (slotMatch.getValue() instanceof Number)
+      {
+        story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue());
+      }
+      else
+      {
+        story.getVariablesState().set(slotMatch.getSlot().getName().toLowerCase(), slotMatch.getValue().toString());
+      }
     }
   }
 
