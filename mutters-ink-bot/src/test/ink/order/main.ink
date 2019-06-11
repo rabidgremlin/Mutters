@@ -6,8 +6,8 @@
 VAR order_number = ""
 
 === start ===
-+ CreateOrderIntent -> create_order
-+ CheckStatusIntent -> check_status
++ [CreateOrderIntent] -> create_order
++ [CheckStatusIntent] -> check_status
 -> END
 
 === create_order ===
@@ -40,9 +40,9 @@ For order {order_number} ?
 ::SET_HINT Yes or No
 ::ADD_QUICK_REPLY Yes
 ::ADD_QUICK_REPLY No
-+ YesIntent
++ [YesIntent]
   -> display_order_details
-+ NoIntent
++ [NoIntent]
  // customer wants to talk about another order so unset current order long term attribute
  ::REMOVE_LONG_TERM_ATTR name::currentorder
  -> get_order_number_for_status_check

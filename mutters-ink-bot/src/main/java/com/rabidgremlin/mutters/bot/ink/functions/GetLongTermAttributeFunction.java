@@ -84,7 +84,7 @@ public class GetLongTermAttributeFunction
       }
       else
       {
-        story.getVariablesState().set(var, value);
+        story.getVariablesState().set(var, value);        
       }
     }
     catch(Exception e)

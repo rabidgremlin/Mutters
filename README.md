@@ -181,9 +181,9 @@ Lastly here are some snippets from the Ink file that is used to manage the conve
 
 ```
 == start ==
-+ OrderTaxi -> order_taxi
-+ CancelTaxi -> cancel_taxi
-+ WhereTaxi -> where_taxi
++ [OrderTaxi] -> order_taxi
++ [CancelTaxi] -> cancel_taxi
++ [WhereTaxi] -> where_taxi
 
 VAR address=""
 VAR taxiNo = ""
@@ -191,20 +191,17 @@ VAR taxiNo = ""
 == order_taxi ==
 - (order_taxi_loop)
 {
-  - address == "":
-    -> request_address
-  - else:
-    -> order_the_taxi
+ - address == "": -> request_address 
+ - else: -> order_the_taxi
 }
--> END
 
 = request_address
 What is the pick up address ?
 ::SET_REPROMPT Where would you like to be picked up ?
 ::SET_HINT 123 Someplace Rd
-+ GaveAddress
++ [GaveAddress]
 - -> order_taxi_loop
-  
+
 = order_the_taxi  
 ::ORDER_TAXI
 Taxi {taxiNo} is on its way
@@ -223,10 +220,10 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:4.4.2'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:4.4.2'        
-        compile 'com.rabidgremlin:mutters-opennlp-ner:4.4.2'
-        compile 'com.rabidgremlin:mutters-slots:4.4.2'
+        compile 'com.rabidgremlin:mutters-ink-bot:5.0.0'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:5.0.0'        
+        compile 'com.rabidgremlin:mutters-opennlp-ner:5.0.0'
+        compile 'com.rabidgremlin:mutters-slots:5.0.0'
 }
 ```
 
@@ -244,10 +241,10 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:4.4.2-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:4.4.2-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-opennlp-ner:4.4.2-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-slots:4.4.2-SNAPSHOT'        
+        compile 'com.rabidgremlin:mutters-ink-bot:5.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:5.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-ner:5.0.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-slots:5.0.0-SNAPSHOT'        
 }        
 ```
 

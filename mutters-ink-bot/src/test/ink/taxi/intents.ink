@@ -1,6 +1,6 @@
 == start ==
-+ OrderTaxi -> order_taxi
-+ CancelTaxi -> cancel_taxi
-+ WhereTaxi -> where_taxi
++ [OrderTaxi] -> order_taxi
++ [CancelTaxi] -> cancel_taxi
++ [WhereTaxi] -> where_taxi
 
 

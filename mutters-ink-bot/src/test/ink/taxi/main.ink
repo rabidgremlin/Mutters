@@ -6,6 +6,4 @@ INCLUDE globals.ink
 INCLUDE confused.ink
 
 
-
-
 -> start

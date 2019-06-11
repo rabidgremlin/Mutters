@@ -1,11 +1,11 @@
 package com.rabidgremlin.mutters.bot.ink;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -157,7 +157,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     throws BotException
   {
     log.debug("===> \n session: {} context: {} messageText: {}",
-            new Object[]{ session, context, messageText });
+        new Object[]{ session, context, messageText });
 
     CurrentResponse currentResponse = new CurrentResponse();
 
@@ -207,11 +207,11 @@ public abstract class InkBot<T extends InkBotConfiguration>
       // restore the story state
       SessionUtils.loadInkStoryState(session, story.getState());
 
-      // call hook so additional things can be applied to story after state has been restored
+      // call hook so additional things can be applied to story after state has been restored 
       afterStoryStateLoaded(story);
 
       // get to right place in story, capture any pretext
-      String preText = processStory(session, currentResponse, story, null, false).toString();
+      String preText = processStory(session, currentResponse, story, null).toString();
 
       // build expected intents set
       HashSet<String> expectedIntents = new HashSet<String>();
@@ -250,7 +250,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
         if (knotName != null)
         {
           story.choosePathString(knotName);
-          getResponseText(session, currentResponse, story, intentMatch, false, preText);
+          getResponseText(session, currentResponse, story, intentMatch, preText);
           foundMatch = true;
         }
         else
@@ -267,7 +267,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
                 log.debug("Choosing: {}", c.getText());
                 story.chooseChoiceIndex(choiceIndex);
 
-                getResponseText(session, currentResponse, story, intentMatch, true, preText);
+                getResponseText(session, currentResponse, story, intentMatch, preText);
 
                 foundMatch = true;
                 break;
@@ -307,10 +307,10 @@ public abstract class InkBot<T extends InkBotConfiguration>
         // jump to confused knot
         story.choosePathString(confusedKnotName);
         // continue story
-        getResponseText(session, currentResponse, story, intentMatch, false, preText);
+        getResponseText(session, currentResponse, story, intentMatch, preText);
         // reset failed count
         failedToUnderstandCount = 0;
-
+        
         setRepromptInSession(currentResponse, session, defaultResponse);
       }
 
@@ -344,7 +344,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
       throw new BotException("Unexpected error", e);
     }
   }
-
+  
   private void setRepromptInSession(CurrentResponse currentResponse, Session session, String defaultResponse)
   {
     if (currentResponse.getReprompt() != null)
@@ -359,7 +359,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     SessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
   }
 
-  private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
+   private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
   {
     for (SlotMatch slotMatch : slotMatches)
     {
@@ -374,7 +374,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     }
   }
 
-  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst, String preText)
+  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, String preText)
     throws StoryException, Exception
   {
     // reset reprompt, hint and quick replies
@@ -383,7 +383,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     currentResponse.setResponseQuickReplies(null);
 
     // get the story output and build the reponse
-    StringBuffer response = processStory(session, currentResponse, story, intentMatch, skipfirst);    
+    StringBuffer response = processStory(session, currentResponse, story, intentMatch);    
     
     // add any pretext if we have it
     preText = StringUtils.chomp(preText).trim(); // remove any trailing \n and trim to ensure we actually have some content
@@ -391,6 +391,12 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       response.insert(0,"\n");
       response.insert(0,preText);      
+    }
+    
+    // strip any leading \n deals with some ink inconsistencies such as in switch statements
+    if (response.charAt(0) == '\n')
+    {
+    	response.deleteCharAt(0);
     }
 
     currentResponse.setResponseText(response.toString());
@@ -402,27 +408,18 @@ public abstract class InkBot<T extends InkBotConfiguration>
    * @param currentResponse The current response.
    * @param story The current story.
    * @param intentMatch The current intent match.
-   * @param skipfirst True if first lien should be skipped. Required as ink always replays choice.
    * @return String buffer containing output.
    * @throws StoryException Thrown if there is an error. 
    * @throws Exception Thrown if there is an error.
    */
-  private StringBuffer processStory(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, boolean skipfirst) throws StoryException, Exception 
+  private StringBuffer processStory(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch) throws StoryException, Exception 
   {
     StringBuffer response = new StringBuffer();   
-        
-    boolean first = true;
+       
+    
     while (story.canContinue())
     {
       String line = story.Continue();
-      
-      // skip first line as ink replays choice first
-      if (first && skipfirst)
-      {
-        first = false;
-        continue;
-      }
-
       processStoryLine(line,response,currentResponse, session, intentMatch, story);
     }
 
