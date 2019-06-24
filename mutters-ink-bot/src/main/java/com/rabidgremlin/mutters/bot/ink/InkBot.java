@@ -391,13 +391,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       response.insert(0,"\n");
       response.insert(0,preText);      
-    }
-    
-    // strip any leading \n deals with some ink inconsistencies such as in switch statements
-    if (response.charAt(0) == '\n')
-    {
-    	response.deleteCharAt(0);
-    }
+    }   
 
     currentResponse.setResponseText(response.toString());
   }
@@ -421,6 +415,12 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       String line = story.Continue();
       processStoryLine(line,response,currentResponse, session, intentMatch, story);
+    }
+    
+    // strip any leading \n deals with some ink inconsistencies such as in switch statements
+    if (response.length() > 0 && response.charAt(0) == '\n')
+    {
+    	response.deleteCharAt(0);
     }
 
     // chop off last \n
