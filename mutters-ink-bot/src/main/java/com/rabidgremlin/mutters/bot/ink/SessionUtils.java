@@ -57,6 +57,11 @@ public class SessionUtils
    */
   public static void saveInkStoryState(Session session, StoryState storyState)
   {
+    if (storyState == null)
+    {
+    	throw new BadInkStoryState("storyState should not be null");
+    }
+	  
     try
     {
       session.setAttribute(SLOT_PREFIX + "0987654321STORYSTATE1234567890", storyState.toJson());
