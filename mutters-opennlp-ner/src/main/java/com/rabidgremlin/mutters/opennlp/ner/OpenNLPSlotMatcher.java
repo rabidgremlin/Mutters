@@ -96,6 +96,7 @@ public class OpenNLPSlotMatcher
       NameFinderME nameFinder = new NameFinderME(tnfModel);
       Span[] spans = nameFinder.find(utteranceTokens);
 
+      boolean slotMatched = false;
       if (spans.length > 0)
       {
         String[] matches = Span.spansToStrings(spans, utteranceTokens);
@@ -107,6 +108,7 @@ public class OpenNLPSlotMatcher
         if (match != null)
         {
           matchedSlots.put(slot, match);
+          slotMatched = true;
           log.debug("Match found {}", match);
         }
         else
@@ -114,7 +116,8 @@ public class OpenNLPSlotMatcher
           log.debug("No Match found slot: {} text: {} ", slot.getName(), matches);
         }
       }
-      else if (slot instanceof DefaultValueSlot)
+
+      if (!slotMatched && slot instanceof DefaultValueSlot)
       {
         Object defaultValue = ((DefaultValueSlot) slot).getDefaultValue();
         matchedSlots.put(slot, new SlotMatch(slot, utterance, defaultValue));
@@ -125,8 +128,6 @@ public class OpenNLPSlotMatcher
         log.debug("Did not find slot {} utteranceTokens {} ", slot.getName(), utteranceTokens);
       }
     }
-
     return matchedSlots;
   }
-
 }
