@@ -203,9 +203,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
 
       // call hook so externs and other things can be applied
       afterStoryCreated(story);
-
+      
       // restore the story state
-      SessionUtils.loadInkStoryState(session, story.getState());
+      SessionUtils.loadInkStoryState(session, story, inkStoryJson);
 
       // call hook so additional things can be applied to story after state has been restored 
       afterStoryStateLoaded(story);
@@ -318,7 +318,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
       SessionUtils.setFailedToUnderstandCount(session, failedToUnderstandCount);
 
       // save current story state
-      SessionUtils.saveInkStoryState(session, story.getState());
+      SessionUtils.saveInkStoryState(session, story, inkStoryJson);
 
       // does story have any more choices ?
       if (story.getCurrentChoices().size() == 0)
@@ -414,6 +414,22 @@ public abstract class InkBot<T extends InkBotConfiguration>
     while (story.canContinue())
     {
       String line = story.Continue();
+      
+      // log any warnings
+      // in theory we should be getting a warning if state wasn't restored correctly
+      // so we can handle the issue. this is currently not happening. 
+      // See TestSessionRestore for current hack
+      if (story.hasWarning())
+      {
+    	 log.warn("Ink story has warnings: {}",  story.getCurrentWarnings());
+      }
+      
+      // log any errors
+      if (story.hasError())
+      {
+    	 log.error("Ink story has errors: {}",  story.getCurrentErrors());
+      }
+      
       processStoryLine(line,response,currentResponse, session, intentMatch, story);
     }
     
