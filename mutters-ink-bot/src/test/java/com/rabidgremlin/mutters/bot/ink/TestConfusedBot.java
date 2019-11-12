@@ -1,9 +1,12 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,25 +16,22 @@ import com.rabidgremlin.mutters.core.bot.BotException;
 import com.rabidgremlin.mutters.core.bot.BotResponse;
 import com.rabidgremlin.mutters.core.session.Session;
 
-import java.util.List;
-
 public class TestConfusedBot
 {
   private TaxiInkBot botWithConfusedKnot;
   private TaxiInkBot botWithoutConfusedKnot;
   private TaxiInkBot botWithConfusedKnotWithReprompts;
-  
-  
-  class TaxiBotWithConfusedKnotConfig extends TaxiInkBotConfiguration
+
+  static class TaxiBotWithConfusedKnotConfig extends TaxiInkBotConfiguration
   {
     @Override
     public ConfusedKnot getConfusedKnot()
     {
       return new ConfusedKnot(2, "confused_bot");
-    }    
+    }
   }
 
-  class TaxiBotWithConfusedKnotWithRepromptsConfig extends TaxiInkBotConfiguration
+  static class TaxiBotWithConfusedKnotWithRepromptsConfig extends TaxiInkBotConfiguration
   {
     @Override
     public ConfusedKnot getConfusedKnot()
@@ -39,31 +39,27 @@ public class TestConfusedBot
       return new ConfusedKnot(2, "confused_bot_with_handover");
     }
   }
-  
-  class TaxiBotWithoutConfusedKnotConfig extends TaxiInkBotConfiguration
+
+  static class TaxiBotWithoutConfusedKnotConfig extends TaxiInkBotConfiguration
   {
     @Override
     public ConfusedKnot getConfusedKnot()
     {
       return null;
-    }    
+    }
   }
-  
-  
 
   @Before
   public void setUp()
   {
-    botWithConfusedKnot = new TaxiInkBot(new TaxiBotWithConfusedKnotConfig());   
+    botWithConfusedKnot = new TaxiInkBot(new TaxiBotWithConfusedKnotConfig());
     botWithoutConfusedKnot = new TaxiInkBot(new TaxiBotWithoutConfusedKnotConfig());
     botWithConfusedKnotWithReprompts = new TaxiInkBot(new TaxiBotWithConfusedKnotWithRepromptsConfig());
   }
-  
 
   @Test
-  public void testNoConfusedKnot()
-    throws BotException
-  { 
+  public void testNoConfusedKnot() throws BotException
+  {
     Session session = new Session();
     Context context = new Context();
 
@@ -78,31 +74,29 @@ public class TestConfusedBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
-    
+
     response = botWithoutConfusedKnot.respond(session, context, "eeeetttt");
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
-    
+
     response = botWithoutConfusedKnot.respond(session, context, "Where is my cab ?");
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
-    
+
     response = botWithoutConfusedKnot.respond(session, context, "ewewew");
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
   }
-  
-  
+
   @Test
-  public void testBasicConfusedKnot()
-    throws BotException
-  { 
+  public void testBasicConfusedKnot() throws BotException
+  {
     Session session = new Session();
     Context context = new Context();
 
@@ -117,19 +111,17 @@ public class TestConfusedBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
-    
+
     response = botWithConfusedKnot.respond(session, context, "Where is my cab ?");
 
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), startsWith("I'm sorry I'm not understanding you at all"));
     assertThat(response.isAskResponse(), is(false));
   }
-  
-  
+
   @Test
-  public void testStopConfusion()
-    throws BotException
-  { 
+  public void testStopConfusion() throws BotException
+  {
     Session session = new Session();
     Context context = new Context();
 
@@ -144,7 +136,7 @@ public class TestConfusedBot
     assertThat(response, is(notNullValue()));
     assertThat(response.getResponse(), is("Where would you like to be picked up ?"));
     assertThat(response.isAskResponse(), is(true));
-    
+
     response = botWithConfusedKnot.respond(session, context, "136 River Road");
 
     assertThat(response, is(notNullValue()));
@@ -153,8 +145,7 @@ public class TestConfusedBot
   }
 
   @Test
-  public void testConfusedKnotWithReprompts()
-          throws BotException
+  public void testConfusedKnotWithReprompts() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -174,10 +165,11 @@ public class TestConfusedBot
     response = botWithConfusedKnotWithReprompts.respond(session, context, "Where is my cab ?");
 
     assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), startsWith("I'm struggling with that one. Do you want me to call our service line for you?"));
+    assertThat(response.getResponse(),
+        startsWith("I'm struggling with that one. Do you want me to call our service line for you?"));
     assertThat(response.isAskResponse(), is(true));
 
-    assertThat(SessionUtils.getReprompt(session), is("Would you like me to call our service line?"));
+    assertThat(InkBotSessionUtils.getReprompt(session), is("Would you like me to call our service line?"));
 
     assertThat(response.getHint(), is("Yes or no"));
 

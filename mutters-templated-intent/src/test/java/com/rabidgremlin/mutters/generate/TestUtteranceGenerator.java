@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.generate;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -15,8 +16,7 @@ public class TestUtteranceGenerator
   {
     UtteranceGenerator generator = new UtteranceGenerator();
 
-    List<String> utterances = generator
-        .generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
+    List<String> utterances = generator.generate("~what|what's|what is~ ~the|~ time ~in|at~ {Place}");
 
     System.out.println(utterances);
 

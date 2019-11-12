@@ -1,4 +1,7 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
+
+import java.util.Objects;
 
 /**
  * This class holds the details of a slot match.
@@ -20,15 +23,15 @@ public class SlotMatch
   /**
    * Constructor.
    * 
-   * @param slot The slot that was matched.
+   * @param slot         The slot that was matched.
    * @param orginalValue The original value that was used to match on.
-   * @param value The value that was matched.
+   * @param value        The value that was matched.
    */
   public SlotMatch(Slot slot, String orginalValue, Object value)
   {
-    this.slot = slot;
-    this.orginalValue = orginalValue;
-    this.value = value;
+    this.slot = Objects.requireNonNull(slot);
+    this.orginalValue = Objects.requireNonNull(orginalValue);
+    this.value = Objects.requireNonNull(value);
   }
 
   /**

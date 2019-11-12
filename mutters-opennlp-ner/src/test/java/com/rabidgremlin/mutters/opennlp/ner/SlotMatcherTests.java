@@ -1,14 +1,20 @@
+/* Licensed under Apache-2.0 */
+package com.rabidgremlin.mutters.opennlp.ner;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.HashMap;
+
+import opennlp.tools.tokenize.SimpleTokenizer;
+
+import org.junit.Test;
+
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
-import com.rabidgremlin.mutters.opennlp.ner.OpenNLPSlotMatcher;
 import com.rabidgremlin.mutters.opennlp.intent.OpenNLPTokenizer;
-import org.junit.Test;
-import opennlp.tools.tokenize.SimpleTokenizer;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import java.util.HashMap;
 
 public class SlotMatcherTests
 {

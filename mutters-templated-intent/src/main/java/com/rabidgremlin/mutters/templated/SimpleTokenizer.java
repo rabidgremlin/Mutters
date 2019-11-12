@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
@@ -9,18 +10,18 @@ import org.apache.commons.validator.routines.EmailValidator;
 import com.rabidgremlin.mutters.core.Tokenizer;
 
 /**
- * This class implements a 'simple' tokenizer that splits on whitespace and strips out punctuation.
+ * This class implements a 'simple' tokenizer that splits on whitespace and
+ * strips out punctuation.
  * 
- * It does attempt to preserve anything that looks like a decimal number, date, time, email address or a templated
- * utterance slot tag.
+ * It does attempt to preserve anything that looks like a decimal number, date,
+ * time, email address or a templated utterance slot tag.
  * 
  * It also supports lower casing of tokens which can help with intent matching.
  * 
  * @author rabidgremlin
  *
  */
-public class SimpleTokenizer
-    implements Tokenizer
+public class SimpleTokenizer implements Tokenizer
 {
   /** Are we forcing tokens to lower case ? */
   private boolean forceLowerCase;
@@ -71,10 +72,12 @@ public class SimpleTokenizer
           // is it an email address ?
           if (token.indexOf('@') != -1)
           {
-            if (token.endsWith(".") || token.endsWith(",")) {
+            if (token.endsWith(".") || token.endsWith(","))
+            {
               token = token.substring(0, token.length() - 1);
             }
-            if (EmailValidator.getInstance().isValid(token)) {
+            if (EmailValidator.getInstance().isValid(token))
+            {
               applyStriping = false;
             }
           }

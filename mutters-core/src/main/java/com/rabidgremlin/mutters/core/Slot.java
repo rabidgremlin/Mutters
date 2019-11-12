@@ -1,7 +1,9 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
 /**
- * Base class for all slots. Slots are used to extract data from a user's utterance.
+ * Base class for all slots. Slots are used to extract data from a user's
+ * utterance.
  * 
  * @author rabidgremlin
  *
@@ -11,7 +13,7 @@ public abstract class Slot
   /**
    * This method returns a slot match if the slot matches the given token.
    * 
-   * @param token The token to match against.
+   * @param token   The token to match against.
    * @param context The user's context. Provides data to help with slot matching.
    * @return A SlotMatch if the slot was matched or null if there was no match.
    */
@@ -33,7 +35,8 @@ public abstract class Slot
   @Override
   public int hashCode()
   {
-    // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog
+    // HACK HACK assumes name match means equals. need to do this for SlotMatches
+    // list but is dog dog
     // ugly
     final int prime = 31;
     int result = 1;
@@ -50,7 +53,8 @@ public abstract class Slot
   @Override
   public boolean equals(Object obj)
   {
-    // HACK HACK assumes name match means equals. need to do this for SlotMatches list but is dog dog
+    // HACK HACK assumes name match means equals. need to do this for SlotMatches
+    // list but is dog dog
     // ugly
     if (this == obj)
     {

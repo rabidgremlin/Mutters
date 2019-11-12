@@ -1,17 +1,22 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
- * This class represents an intent. Each intent has a unique name and zero or more Slots that are used to extract
- * entities out of a user's input.
+ * This class represents an intent. Each intent has a unique name and zero or
+ * more Slots that are used to extract entities out of a user's input.
  * 
  * @author rabidgremlin
  *
  */
 public class Intent
 {
+  /** Intent used to indicate no match. */
+  private final static Intent NONE = new Intent("NONE");
+
   /** The name of the intent. */
   protected String name;
 
@@ -25,7 +30,7 @@ public class Intent
    */
   public Intent(String name)
   {
-    this.name = name;
+    this.name = Objects.requireNonNull(name);
   }
 
   /**
@@ -56,6 +61,16 @@ public class Intent
   public Collection<Slot> getSlots()
   {
     return Collections.unmodifiableCollection(slots.getSlots());
+  }
+
+  /**
+   * Returns the 'none' match intent.
+   * 
+   * @return The 'none' match intent.
+   */
+  public static Intent none()
+  {
+    return NONE;
   }
 
 }

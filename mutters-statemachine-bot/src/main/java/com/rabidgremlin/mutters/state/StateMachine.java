@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.state;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -25,7 +27,7 @@ public class StateMachine
 
   private HashMap<String, PreEventAction> preEventActions = new HashMap<String, PreEventAction>();
 
-  class Transition
+  static class Transition
   {
     private State toState;
 
@@ -149,8 +151,7 @@ public class StateMachine
 
     State currentState = startState;
 
-    String currentStateName = (String) session
-        .getAttribute("STATE_MACHINE_JLA1974_currentStateName");
+    String currentStateName = (String) session.getAttribute("STATE_MACHINE_JLA1974_currentStateName");
     if (currentStateName != null)
     {
       currentState = states.get(currentStateName);
@@ -186,8 +187,8 @@ public class StateMachine
 
       if (transitionToStateList == null)
       {
-        throw new IllegalStateException("Could not find state to transition to. Intent: "
-            + intentName + " Current State: " + currentState);
+        throw new IllegalStateException(
+            "Could not find state to transition to. Intent: " + intentName + " Current State: " + currentState);
       }
     }
 
@@ -214,9 +215,8 @@ public class StateMachine
     // didn't find any matching states
     if (transitionToState == null)
     {
-      throw new IllegalStateException(
-          "Could not find state to transition to. Failed all guards. Intent: " + intentName
-              + " Current State: " + currentState);
+      throw new IllegalStateException("Could not find state to transition to. Failed all guards. Intent: " + intentName
+          + " Current State: " + currentState);
     }
 
     IntentResponse response = transitionToState.execute(match, session);
@@ -231,8 +231,7 @@ public class StateMachine
     return request.getIntent() != null && handledIntents.contains(request.getIntent().getName());
   }
 
-  public void dump(Writer writer)
-    throws IOException
+  public void dump(Writer writer) throws IOException
   {
     // dummy state for global transitions
     final State anyState = new State("<<ANY>>")
@@ -259,9 +258,9 @@ public class StateMachine
       out.println(";");
     }
 
-    for (String key : transitionMap.keySet())
+    for (Entry<String, List<Transition>> entry : transitionMap.entrySet())
     {
-      String[] splitKey = key.split("-");
+      String[] splitKey = entry.getKey().split("-");
       String intent = splitKey[0];
       State fromState;
 
@@ -275,7 +274,7 @@ public class StateMachine
         fromState = states.get(splitKey[1]);
       }
 
-      List<Transition> transitionToStateList = transitionMap.get(key);
+      List<Transition> transitionToStateList = entry.getValue();
 
       for (Transition transition : transitionToStateList)
       {

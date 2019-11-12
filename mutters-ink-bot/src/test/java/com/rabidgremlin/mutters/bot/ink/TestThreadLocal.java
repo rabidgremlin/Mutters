@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -5,7 +6,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,8 +76,7 @@ public class TestThreadLocal
   }
 }
 
-class TestCase
-    implements Runnable
+class TestCase implements Runnable
 {
 
   private TaxiInkBot bot;

@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.generate;
 
 import java.util.ArrayList;
@@ -9,18 +10,12 @@ import java.util.List;
  * 
  * For instance given 3 lists:
  * 
- * * "A", "B" 
- * * "1", "2", "3" 
- * * "X"
+ * * "A", "B" * "1", "2", "3" * "X"
  * 
  * The class will generate 6 lists containing:
  * 
- * * "A", "1", "X" 
- * * "A", "2", "X" 
- * * "A", "3", "X" 
- * * "B", "1", "X" 
- * * "B", "2", "X" 
- * * "B", "3", "X"
+ * * "A", "1", "X" * "A", "2", "X" * "A", "3", "X" * "B", "1", "X" * "B", "2",
+ * "X" * "B", "3", "X"
  * 
  * @see com.rabidgremlin.mutters.generate.TestProduct
  * 
@@ -29,8 +24,8 @@ import java.util.List;
  */
 public final class Product
 {
-  /** 
-   * Private constructor for utility class.   * 
+  /**
+   * Private constructor for utility class. *
    */
   private Product()
   {
@@ -38,8 +33,8 @@ public final class Product
   }
 
   /**
-   * Given a number of lists of type <T> this method will generate a list of lists of type <T> containing all the
-   * combinations of the items in the input lists.
+   * Given a number of lists of type <T> this method will generate a list of lists
+   * of type <T> containing all the combinations of the items in the input lists.
    * 
    * @param lists The lists to create combinations of.
    * @return A list of lists containing all the possible combinations.

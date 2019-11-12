@@ -1,13 +1,17 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
@@ -16,74 +20,58 @@ import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
- * Slot that matches on dates. Uses natty to handle 'dates' such as 'next Friday'.
+ * Slot that matches on dates (into a {@link LocalDate}). Uses natty to handle
+ * 'dates' such as 'next Friday'.
  * 
  * @author rabidgremlin
  *
  */
-public class DateSlot
-    extends Slot
+public class DateSlot extends Slot
 {
 
-  private String name;
+  private final String name;
 
   public DateSlot(String name)
   {
     this.name = name;
   }
 
-  private LocalDate tryParse(String token, DateTimeFormatter fmt)
-  {
-    try
-    {
-      return fmt.parseLocalDate(token);
-    }
-    catch (IllegalArgumentException e)
-    {
-      return null;
-    }
-  }
-
-  private DateTimeFormatter fixupFormatter(Context context, int currentYear, DateTimeFormatter fmt)
-  {
-    return fmt.withLocale(context.getLocale()).withDefaultYear(currentYear).withPivotYear(currentYear);
-  }
-
   @Override
   public SlotMatch match(String token, Context context)
   {
-    // grab current year to use as default and pivot year
+    // grab current year to use as default year
     int currentYear = LocalDate.now().getYear();
 
     // try parse in short format for locale
-    LocalDate date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.shortDate()));
+    LocalDate date = tryParse(token, currentYear,
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(context.getLocale()));
     if (date != null)
     {
       return new SlotMatch(this, token, date);
     }
 
     // try parse in medium format for locale
-    date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.mediumDate()));
+    date = tryParse(token, currentYear,
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(context.getLocale()));
     if (date != null)
     {
       return new SlotMatch(this, token, date);
     }
 
     // try parse in long format for locale
-    date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.longDate()));
+    date = tryParse(token, currentYear,
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(context.getLocale()));
     if (date != null)
     {
       return new SlotMatch(this, token, date);
     }
 
-    // HACK: try parse dd/MM format if we are in NZ
-    if (context.getLocale().getCountry().equals("NZ"))
+    // try other formats
+    date = tryParse(token, currentYear,
+        DateTimeFormatter.ofPattern("d[/][-][.][ ]M[/][-][.][ ][yyyy][yy]").withLocale(context.getLocale()));
+    if (date != null)
     {
-      date = tryParse(token, fixupFormatter(context, currentYear, DateTimeFormat.forPattern("dd/MM")));
-      if (date != null)
-      {
-        return new SlotMatch(this, token, date);
-      }
+      return new SlotMatch(this, token, date);
     }
 
     // try parse with natty
@@ -96,21 +84,51 @@ public class DateSlot
       {
         List<Date> dates = group.getDates();
 
-        // natty is very aggressive so will match date on text that is largely not a date, which is
+        // natty is very aggressive so will match date on text that is largely not a
+        // date, which is
         // not what we want
         String matchText = group.getText();
         float percMatch = (float) matchText.length() / (float) token.length();
 
         if (!dates.isEmpty() && percMatch > 0.75)
         {
-          DateTime theDateTime = new DateTime(dates.get(0),
-              DateTimeZone.forTimeZone(context.getTimeZone()));
-          return new SlotMatch(this, token, theDateTime.toLocalDate());
+          ZonedDateTime theDateTime = ZonedDateTime.ofInstant(dates.get(0).toInstant(),
+              context.getTimeZone().toZoneId());
+          LocalDate localDate = theDateTime.toLocalDate();
+          return new SlotMatch(this, token, localDate);
         }
       }
     }
-
     return null;
+  }
+
+  private LocalDate tryParse(String token, int currentYear, DateTimeFormatter fmt)
+  {
+    try
+    {
+      // workaround for migrating jodatime 'withDefault...' see:
+      // https://stackoverflow.com/a/49815584/6122976
+
+      // init the defaults
+      LocalDate defaults = LocalDate.of(currentYear, Month.JANUARY, 1);
+      // parse string
+      TemporalAccessor parsed = fmt.parse(token);
+      // override defaults with parsed values
+      ChronoField[] fieldsToOverride = { ChronoField.YEAR, ChronoField.MONTH_OF_YEAR, ChronoField.DAY_OF_MONTH };
+      for (TemporalField fieldToOverride : fieldsToOverride)
+      {
+        if (parsed.isSupported(fieldToOverride))
+        {
+          defaults = defaults.with(fieldToOverride, parsed.getLong(fieldToOverride));
+        }
+      }
+
+      return defaults;
+    }
+    catch (DateTimeParseException e)
+    {
+      return null;
+    }
   }
 
   @Override
@@ -118,5 +136,4 @@ public class DateSlot
   {
     return name;
   }
-
 }

@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.statemachine;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -5,8 +6,7 @@ import com.rabidgremlin.mutters.core.session.Session;
 import com.rabidgremlin.mutters.state.IntentResponse;
 import com.rabidgremlin.mutters.state.State;
 
-public class CancelTaxiState
-    extends State
+public class CancelTaxiState extends State
 {
 
   public CancelTaxiState()

@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.statemachine;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -23,8 +24,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithAddress()
-    throws BotException
+  public void testOrderTaxiWithAddress() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -37,8 +37,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testOrderTaxiWithOutAddress()
-    throws BotException
+  public void testOrderTaxiWithOutAddress() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -57,8 +56,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testCancelTaxi()
-    throws BotException
+  public void testCancelTaxi() throws BotException
   {
     Session session = new Session();
     Context context = new Context();
@@ -71,8 +69,7 @@ public class TestTaxiStateMachineBot
   }
 
   @Test
-  public void testTaxiStatus()
-    throws BotException
+  public void testTaxiStatus() throws BotException
   {
     Session session = new Session();
     Context context = new Context();

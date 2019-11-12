@@ -1,9 +1,11 @@
 buildscript {
     repositories {
-        jcenter()
+        //jcenter()
+        mavenCentral()
     }
     dependencies { 
-        classpath 'ch.raffael.pegdown-doclet:pegdown-doclet:1.2'
+        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$rootProject.ext.pegdownDocletVersion"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:$rootProject.ext.spotlessVersion"        
     }
 }
 
@@ -11,10 +13,17 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'ch.raffael.pegdown-doclet' // to allow markdown in the javadoc
+apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: 'findbugs'
+
+// java version
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 
 // Maven publication
 group = 'com.rabidgremlin'
-//archivesBaseName = 'mutters'
+
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -80,4 +89,21 @@ uploadArchives {
       }
     }
   }
+}
+
+
+spotless {
+    java {
+      licenseHeader '/* Licensed under Apache-2.0 */'
+      importOrder 'java', 'javax', 'org', 'com'
+      removeUnusedImports() // removes any unused imports
+      eclipse().configFile "$rootProject.projectDir/spotless.eclipseformat.xml"
+    }
+}    
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }

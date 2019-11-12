@@ -1,6 +1,8 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Slot;
@@ -12,8 +14,7 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class CustomSlot
-    extends Slot
+public class CustomSlot extends Slot
 {
   /** Name of the slot. */
   private String name;
@@ -24,7 +25,7 @@ public class CustomSlot
   /**
    * Constructor.
    * 
-   * @param name The name of the slot.
+   * @param name    The name of the slot.
    * @param options The list of expected options.
    */
   public CustomSlot(String name, String[] options)
@@ -39,15 +40,16 @@ public class CustomSlot
   /**
    * Constructor.
    * 
-   * @param name The name of the slot.
+   * @param name           The name of the slot.
    * @param optionValueMap A map of possible input values mapped to output values.
    */
   public CustomSlot(String name, HashMap<String, String> optionValueMap)
   {
     this.name = name;
-    for (String key : optionValueMap.keySet())
+
+    for (Entry<String, String> entry : optionValueMap.entrySet())
     {
-      this.options.put(key.toLowerCase(), optionValueMap.get(key));
+      this.options.put(entry.getKey().toLowerCase(), entry.getValue());
     }
   }
 

@@ -8,6 +8,7 @@ VAR order_number = ""
 === start ===
 + [CreateOrderIntent] -> create_order
 + [CheckStatusIntent] -> check_status
++ [GetPriceIntent] -> get_price
 -> END
 
 === create_order ===
@@ -54,3 +55,13 @@ Order {order_number} is currently being packed.
 // store current order for next conversation in session
 ::SET_LONG_TERM_ATTR name::currentorder value::{order_number}
 -> END
+
+
+=== get_price ===
+Do you want the price for blue widgets ?
+// no reprompt so we can use this conversation path for default reprompt testing
++ [YesIntent]
+  Blue Widgets cost $23
++ [NoIntent]
+  All non-blue widgets cost $12
+- -> END

@@ -1,13 +1,14 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 /**
- * This run time exception is thrown if there is an issue loading an Ink story state from a Session.
+ * This run time exception is thrown if there is an issue loading an Ink story
+ * state from a Session.
  * 
  * @author rabidgremlin
  * 
  */
-public class BadInkStoryState
-    extends RuntimeException
+public class BadInkStoryState extends RuntimeException
 {
 
   public BadInkStoryState()

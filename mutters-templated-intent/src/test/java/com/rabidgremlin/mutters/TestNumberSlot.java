@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -47,8 +48,7 @@ public class TestNumberSlot
   public void testWordStringToNumber()
   {
     NumberSlot slot = new NumberSlot("test");
-    Number result = slot
-        .wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
+    Number result = slot.wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
 
     assertThat(result, is(notNullValue()));
     assertThat(result, is(352261L));

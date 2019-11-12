@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import java.util.ArrayList;
@@ -113,8 +114,9 @@ public class CurrentResponse
   @Override
   public String toString()
   {
-    return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt=" + reprompt + ", responseAttachments=" + responseAttachments
-        + ", responseQuickReplies=" + responseQuickReplies + ", askResponse=" + askResponse + "]";
+    return "CurrentResponse [responseText=" + responseText + ", hint=" + hint + ", reprompt=" + reprompt
+        + ", responseAttachments=" + responseAttachments + ", responseQuickReplies=" + responseQuickReplies
+        + ", askResponse=" + askResponse + "]";
   }
 
 }

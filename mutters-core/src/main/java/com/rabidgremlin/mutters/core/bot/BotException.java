@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core.bot;
 
 /**
@@ -6,8 +7,7 @@ package com.rabidgremlin.mutters.core.bot;
  * @author rabidgremlin
  *
  */
-public class BotException
-    extends Exception
+public class BotException extends Exception
 {
   /** Serialization id. */
   private static final long serialVersionUID = -7838088498844800195L;
@@ -17,8 +17,7 @@ public class BotException
     super();
   }
 
-  public BotException(String message, Throwable cause, boolean enableSuppression,
-    boolean writableStackTrace)
+  public BotException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
   {
     super(message, cause, enableSuppression, writableStackTrace);
   }

@@ -1,7 +1,12 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.opennlp.ner;
 
 import java.net.URL;
 import java.util.HashMap;
+
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.util.Span;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,18 +19,13 @@ import com.rabidgremlin.mutters.core.SlotMatcher;
 import com.rabidgremlin.mutters.core.Tokenizer;
 import com.rabidgremlin.mutters.slots.DefaultValueSlot;
 
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.util.Span;
-
 /**
  * Implements a SlotMatcher that uses OpenNLP's NER framework.
  *
  * @author rabidgremlin
  *
  */
-public class OpenNLPSlotMatcher
-        implements SlotMatcher
+public class OpenNLPSlotMatcher implements SlotMatcher
 {
   /** Logger. */
   private Logger log = LoggerFactory.getLogger(OpenNLPSlotMatcher.class);
@@ -40,8 +40,8 @@ public class OpenNLPSlotMatcher
   private Tokenizer tokenizer;
 
   /**
-   * Constructor. Allows tokenizer to be supplied because NER can use case etc as cues, so may require different
-   * tokenizer than used for intent matching.
+   * Constructor. Allows tokenizer to be supplied because NER can use case etc as
+   * cues, so may require different tokenizer than used for intent matching.
    *
    * @param tokenizer The tokenizer to use on an utterance for NER.
    */
@@ -53,8 +53,10 @@ public class OpenNLPSlotMatcher
   /**
    * This set the NER model to use for a slot.
    *
-   * @param slotName The name of the slot. Should match the name of slots on intents added to the matcher.
-   * @param nerModel The file name of the NER model. This file must be on the classpath.
+   * @param slotName The name of the slot. Should match the name of slots on
+   *                 intents added to the matcher.
+   * @param nerModel The file name of the NER model. This file must be on the
+   *                 classpath.
    */
   public void addSlotModel(String slotName, String nerModel)
   {

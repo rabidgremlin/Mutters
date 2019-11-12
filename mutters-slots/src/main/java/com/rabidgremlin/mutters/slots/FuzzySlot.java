@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
 import java.util.ArrayList;
@@ -18,8 +19,7 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class FuzzySlot
-    extends Slot
+public class FuzzySlot extends Slot
 {
   private String name;
 
@@ -30,8 +30,8 @@ public class FuzzySlot
   /**
    * Constructor.
    * 
-   * @param name The name of the slot.
-   * @param options The list of options to match on.
+   * @param name      The name of the slot.
+   * @param options   The list of options to match on.
    * @param tolerance The fuzzy matching tolerance (0.1 to 1.0).
    */
   public FuzzySlot(String name, String[] options, double tolerance)
@@ -44,7 +44,7 @@ public class FuzzySlot
   /**
    * Constructor. Defaults to a fuzzy matching tolerance of 0.98.
    * 
-   * @param name The name of the slot.
+   * @param name    The name of the slot.
    * @param options The list of options to match on.
    */
   public FuzzySlot(String name, String[] options)

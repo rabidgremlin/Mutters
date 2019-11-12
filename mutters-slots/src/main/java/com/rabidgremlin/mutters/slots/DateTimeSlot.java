@@ -1,10 +1,10 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import java.util.TimeZone;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
@@ -13,16 +13,16 @@ import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
- * Slot that matches on date times. Uses natty to handle 'dates' such as 'next Friday at 8pm'.
+ * Slot that matches on {@link ZonedDateTime}. Uses natty to handle 'dates' such
+ * as 'next Friday at 8pm'.
  * 
  * @author rabidgremlin
  *
  */
-public class DateTimeSlot
-    extends Slot
+public class DateTimeSlot extends Slot
 {
 
-  private String name;
+  private final String name;
 
   public DateTimeSlot(String name)
   {
@@ -42,15 +42,17 @@ public class DateTimeSlot
       {
         List<Date> dates = group.getDates();
 
-        // natty is very aggressive so will match date on text that is largely not a date, which is
+        // natty is very aggressive so will match date on text that is largely not a
+        // date, which is
         // not what we want
         String matchText = group.getText();
         float percMatch = (float) matchText.length() / (float) token.length();
 
         if (!dates.isEmpty() && percMatch > 0.75)
         {
-          return new SlotMatch(this, token,
-              new DateTime(dates.get(0), DateTimeZone.forTimeZone(context.getTimeZone())));
+          Date date = dates.get(0);
+          TimeZone timeZone = context.getTimeZone();
+          return new SlotMatch(this, token, ZonedDateTime.ofInstant(date.toInstant(), timeZone.toZoneId()));
         }
       }
     }

@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;

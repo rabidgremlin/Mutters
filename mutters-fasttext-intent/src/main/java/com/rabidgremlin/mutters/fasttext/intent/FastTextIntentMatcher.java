@@ -1,14 +1,15 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.fasttext.intent;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,14 +24,13 @@ import com.rabidgremlin.mutters.core.ml.AbstractMachineLearningIntentMatcher;
 /**
  * Intent matcher that uses Facebook's fastText document classifier.
  * 
- * It expects the training data to have the default __label__ prefix but strips this prefix off when returning the
- * matched intent name.
+ * It expects the training data to have the default __label__ prefix but strips
+ * this prefix off when returning the matched intent name.
  * 
  * @author rabidgremlin
  *
  */
-public class FastTextIntentMatcher
-    extends AbstractMachineLearningIntentMatcher
+public class FastTextIntentMatcher extends AbstractMachineLearningIntentMatcher
 {
   /** Logger. */
   private Logger log = LoggerFactory.getLogger(FastTextIntentMatcher.class);
@@ -41,44 +41,59 @@ public class FastTextIntentMatcher
   private static final float MIN_MATCH_SCORE = 0.85f;
 
   /**
-   * Constructor. Sets up the matcher to use the specified model (on the classpath) and specified tokenizer. Defaults to
-   * min score match of MIN_MATCH_SCORE and no maybe intent matching.
+   * Constructor. Sets up the matcher to use the specified model (on the
+   * classpath) and specified tokenizer. Defaults to min score match of
+   * MIN_MATCH_SCORE and no maybe intent matching.
    * 
-   * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
-   * @param tokenizer The tokenizer to use when tokenizing an utterance.
-   * @param slotMatcher The slot matcher to use to extract slots from the utterance.
+   * @param intentModel The name of the document categoriser model file to use.
+   *                    This file must be on the classpath.
+   * @param tokenizer   The tokenizer to use when tokenizing an utterance.
+   * @param slotMatcher The slot matcher to use to extract slots from the
+   *                    utterance.
    */
   public FastTextIntentMatcher(String intentModel, Tokenizer tokenizer, SlotMatcher slotMatcher)
   {
-    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), tokenizer, slotMatcher, MIN_MATCH_SCORE, -1);
+    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), tokenizer, slotMatcher,
+        MIN_MATCH_SCORE, -1);
   }
 
   /**
-   * Constructor. Sets up the matcher to use the specified model (on the classpath) and specifies the minimum and maybe
-   * match scores.
+   * Constructor. Sets up the matcher to use the specified model (on the
+   * classpath) and specifies the minimum and maybe match scores.
    * 
-   * @param intentModel The name of the document categoriser model file to use. This file must be on the classpath.
-   * @param minMatchScore The minimum match score for an intent match to be considered good.
-   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
-   * @param tokenizer The tokenizer to use when tokenizing an utterance.
-   * @param slotMatcher The slot matcher to use to extract slots from the utterance.
+   * @param intentModel     The name of the document categoriser model file to
+   *                        use. This file must be on the classpath.
+   * @param minMatchScore   The minimum match score for an intent match to be
+   *                        considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe
+   *                        matching.
+   * @param tokenizer       The tokenizer to use when tokenizing an utterance.
+   * @param slotMatcher     The slot matcher to use to extract slots from the
+   *                        utterance.
    */
-  public FastTextIntentMatcher(String intentModel, Tokenizer tokenizer, SlotMatcher slotMatcher, float minMatchScore, float maybeMatchScore)
+  public FastTextIntentMatcher(String intentModel, Tokenizer tokenizer, SlotMatcher slotMatcher, float minMatchScore,
+      float maybeMatchScore)
   {
-    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), tokenizer, slotMatcher, minMatchScore, maybeMatchScore);
+    this(Thread.currentThread().getContextClassLoader().getResource(intentModel), tokenizer, slotMatcher, minMatchScore,
+        maybeMatchScore);
   }
 
   /**
-   * Constructor. Sets up the matcher to use the specified model (via a URL) and specifies the minimum and maybe match
-   * score.
+   * Constructor. Sets up the matcher to use the specified model (via a URL) and
+   * specifies the minimum and maybe match score.
    * 
-   * @param intentModelUrl A URL pointing at the document categoriser model file to load.
-   * @param minMatchScore The minimum match score for an intent match to be considered good.
-   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe matching.
-   * @param tokenizer The tokenizer to use when tokenizing an utterance.
-   * @param slotMatcher The slot matcher to use to extract slots from the utterance.
+   * @param intentModelUrl  A URL pointing at the document categoriser model file
+   *                        to load.
+   * @param minMatchScore   The minimum match score for an intent match to be
+   *                        considered good.
+   * @param maybeMatchScore The maybe match score. Use -1 to disable maybe
+   *                        matching.
+   * @param tokenizer       The tokenizer to use when tokenizing an utterance.
+   * @param slotMatcher     The slot matcher to use to extract slots from the
+   *                        utterance.
    */
-  public FastTextIntentMatcher(URL intentModelUrl, Tokenizer tokenizer, SlotMatcher slotMatcher, float minMatchScore, float maybeMatchScore)
+  public FastTextIntentMatcher(URL intentModelUrl, Tokenizer tokenizer, SlotMatcher slotMatcher, float minMatchScore,
+      float maybeMatchScore)
   {
     super(tokenizer, slotMatcher, minMatchScore, maybeMatchScore);
 
@@ -104,12 +119,12 @@ public class FastTextIntentMatcher
   }
 
   @Override
-  protected SortedMap<Double, Set<String>> generateSortedScoreMap(String[] utteranceTokens)
+  protected SortedMap<Double, SortedSet<String>> generateSortedScoreMap(String[] utteranceTokens)
   {
     // get the first 10 labels
     List<JFastText.ProbLabel> probLabels = jft.predictProba(StringUtils.join(utteranceTokens, " "), 10);
 
-    SortedMap<Double, Set<String>> scoreMap = new TreeMap<Double, Set<String>>();
+    SortedMap<Double, SortedSet<String>> scoreMap = new TreeMap<Double, SortedSet<String>>();
 
     // populate the scor map
     for (JFastText.ProbLabel probLabel : probLabels)
@@ -119,7 +134,7 @@ public class FastTextIntentMatcher
       // strip off the __label__
       String label = probLabel.label.substring("__label__".length());
 
-      Set<String> labels = new HashSet<>();
+      SortedSet<String> labels = new TreeSet<>();
       labels.add(label);
       scoreMap.put(score, labels);
     }

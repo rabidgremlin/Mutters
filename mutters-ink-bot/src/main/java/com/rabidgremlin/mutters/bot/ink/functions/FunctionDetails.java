@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink.functions;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class FunctionDetails
   private Map<String, String> functionParams;
 
   public FunctionDetails(String functionData)
-  {  
+  {
     this.functionData = functionData;
   }
 

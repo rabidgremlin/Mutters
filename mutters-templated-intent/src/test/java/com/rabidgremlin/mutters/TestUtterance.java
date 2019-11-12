@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -58,7 +59,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
     slots.add(color);
 
     // System.out.println(color);
@@ -83,7 +84,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
     slots.add(color);
 
     assertNotMatch(utterance.matches(tokenizer.tokenize("I Like pink"), slots, context));
@@ -108,10 +109,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[]{ "grapes", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -139,10 +140,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[]{ "grapes", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
     slots.add(food);
 
     assertNotMatch(utterance.matches(tokenizer.tokenize("I like red and burgers"), slots, context));
@@ -162,8 +163,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("City",
-        new String[]{ "Wellington", "San Francisco", "Auckland" });
+    CustomSlot color = new CustomSlot("City", new String[] { "Wellington", "San Francisco", "Auckland" });
     slots.add(color);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -182,7 +182,7 @@ public class TestUtterance
   @Test
   public void testSingleWordMatch()
   {
-    TemplatedIntent intent = new TemplatedIntent("YesIntent",tokenizer);
+    TemplatedIntent intent = new TemplatedIntent("YesIntent", tokenizer);
 
     // intent.addUtterance(new Utterance("yes"));
     // intent.addUtterance(new Utterance("yes please"));
@@ -201,7 +201,6 @@ public class TestUtterance
     assertThat(match.isMatched(), is(false));
   }
 
-
   @Test
   public void testMultiSlotGreedyMatch()
   {
@@ -211,10 +210,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red", "Red and Grapes" });
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red", "Red and Grapes" });
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[]{ "bananas", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", new String[] { "bananas", "biscuits", "lollipops" });
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -242,13 +241,13 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot city = new CustomSlot("City", new String[]{ "Wellington", "San Francisco", "Auckland" });
+    CustomSlot city = new CustomSlot("City", new String[] { "Wellington", "San Francisco", "Auckland" });
     slots.add(city);
-    
-    CustomSlot color = new CustomSlot("Color", new String[]{ "Green", "blue", "Red"});
+
+    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[]{ "bananas", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", new String[] { "bananas", "biscuits", "lollipops" });
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(tokenizer.tokenize("san francisco red bananas "), slots, context);
@@ -272,8 +271,5 @@ public class TestUtterance
     assertThat(foodMatch.getOrginalValue(), is("bananas"));
     assertThat(foodMatch.getValue(), is("bananas"));
   }
-
-
-
 
 }

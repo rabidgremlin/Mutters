@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.generate;
 
 import java.util.ArrayList;
@@ -8,29 +9,20 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
- * This class generates a list of utterances, given a template string. Can be used to generate lots of options
- * to match on given only one string.
+ * This class generates a list of utterances, given a template string. Can be
+ * used to generate lots of options to match on given only one string.
  * 
  * Groups of options are enclosed in ~'s and separated by |
  * 
  * For example, given a template string of:
  * 
- * ```
- * ~what|what's|what is~ ~the|~ time ~in|at~ {Place}
- * ```
+ * ``` ~what|what's|what is~ ~the|~ time ~in|at~ {Place} ```
  * 
  * The generator will generate 12 different utterances, include:
  * 
- * ```
- * what the time in {Place}
- * what's the time in {Place}
- * what is the time in {Place}
- * what is the time at {Place}
- * what is time at {Place}
- * etc
- * ```
+ * ``` what the time in {Place} what's the time in {Place} what is the time in
+ * {Place} what is the time at {Place} what is time at {Place} etc ```
  * 
  * 
  * @see com.rabidgremlin.mutters.generate.TestUtteranceGenerator
@@ -40,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class UtteranceGenerator
 {
-  private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");  
+  private Pattern matchPattern = Pattern.compile("~(.*?)~|(\\S+)");
 
   public List<String> generate(String template)
   {
@@ -65,7 +57,8 @@ public class UtteranceGenerator
 
     }
 
-    // arrgggh need this crap because Java generics suck and you cannot create arrays of generics
+    // arrgggh need this crap because Java generics suck and you cannot create
+    // arrays of generics
     // also type erasure...
     List[] listArray = new ArrayList[lists.size()];
     for (int loop = 0; loop < lists.size(); loop++)

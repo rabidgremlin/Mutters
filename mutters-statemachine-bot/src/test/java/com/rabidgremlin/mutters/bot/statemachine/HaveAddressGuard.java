@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.statemachine;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -5,8 +6,7 @@ import com.rabidgremlin.mutters.core.session.Session;
 import com.rabidgremlin.mutters.core.util.SessionUtils;
 import com.rabidgremlin.mutters.state.Guard;
 
-public class HaveAddressGuard
-    implements Guard
+public class HaveAddressGuard implements Guard
 {
 
   @Override

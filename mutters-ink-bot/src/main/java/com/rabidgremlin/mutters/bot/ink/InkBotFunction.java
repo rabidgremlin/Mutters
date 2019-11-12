@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import com.bladecoder.ink.runtime.Story;
@@ -5,8 +6,9 @@ import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.session.Session;
 
 /**
- * Interface to be implemented by any functions added to the bot. Note these are not true Ink functions but rather
- * triggered by a line of response text starting with a ::
+ * Interface to be implemented by any functions added to the bot. Note these are
+ * not true Ink functions but rather triggered by a line of response text
+ * starting with a ::
  * 
  * @see InkBotConfiguration#getInkFunctions
  * 
@@ -16,7 +18,8 @@ import com.rabidgremlin.mutters.core.session.Session;
 public interface InkBotFunction
 {
   /**
-   * Returns the name of the function. Should be uppercase and NOT include the leading :
+   * Returns the name of the function. Should be uppercase and NOT include the
+   * leading :
    * 
    * @return The name of the function.
    */
@@ -26,12 +29,12 @@ public interface InkBotFunction
    * Called when a function is found in the ink story response.
    * 
    * @param currentResponse The current state of the response.
-   * @param session The current user's session.
-   * @param intentMatch The intent that was matched.
-   * @param story The current ink story.
-   * @param param The param that was passed to the function. This is all the text after the function identifier.
+   * @param session         The current user's session.
+   * @param intentMatch     The intent that was matched.
+   * @param story           The current ink story.
+   * @param param           The param that was passed to the function. This is all
+   *                        the text after the function identifier.
    */
-  void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch,
-    Story story, String param);
+  void execute(CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story, String param);
 
 }

@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink.functions;
 
 import java.util.ArrayList;
@@ -16,8 +17,7 @@ public final class FunctionHelper
     // private constructor for utility class
   }
 
-  public static FunctionDetails parseFunctionString(String paramString)
-    throws IllegalArgumentException
+  public static FunctionDetails parseFunctionString(String paramString) throws IllegalArgumentException
   {
     // trim any whitespace
     String trimmedLine = paramString.trim();

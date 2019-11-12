@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.state;
 
 import java.util.Collections;
@@ -41,7 +42,7 @@ public class IntentResponse
   }
 
   public static IntentResponse newAskResponse(String response, String reprompt, String hint,
-    List<BotResponseAttachment> attachments)
+      List<BotResponseAttachment> attachments)
   {
     return new IntentResponse(false, response, null, null, attachments, null);
   }
@@ -57,7 +58,7 @@ public class IntentResponse
   }
 
   public IntentResponse(boolean sessionEnded, String response, String reprompt, String hint,
-    List<BotResponseAttachment> attachments, List<String> quickReplies)
+      List<BotResponseAttachment> attachments, List<String> quickReplies)
   {
     this.sessionEnded = sessionEnded;
     this.response = response;

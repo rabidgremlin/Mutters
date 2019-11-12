@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        //jcenter()
+        mavenCentral()
+    }
+}    
+
+project.ext{
+    // plugin versions
+    pegdownDocletVersion = '1.3'
+    gradleDownloadTaskVersion = '4.0.0'
+    spotlessVersion = '3.25.0' 
+
+    //dependencies versions
+    commonsLang3Version = '3.9'
+    slf4jVersion = '1.7.28'
+    junitVersion = '4.12' 
+    hamcrestAllVersion = '1.3'
+    commonsValidator = '1.6'
+    jFastTextVersion = '0.4'
+    commonsIoVersion = '2.6'
+    mockitoVersion = '3.1.0'
+    bladeInkVersion = '0.6.0'
+    openNlpVersion = '1.9.1'
+    nattyVersion = '0.13'
+    
+}

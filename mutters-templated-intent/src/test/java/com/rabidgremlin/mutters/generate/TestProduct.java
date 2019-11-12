@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.generate;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,6 +19,7 @@ public class TestProduct
     List<String> list2 = Arrays.asList("1", "2", "3");
     List<String> list3 = Arrays.asList("X");
 
+    @SuppressWarnings("unchecked")
     List<List<String>> product = Product.generate(list1, list2, list3);
 
     assertThat(product, is(notNullValue()));

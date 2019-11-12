@@ -1,15 +1,16 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core.util;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.SlotMatch;
 import com.rabidgremlin.mutters.core.session.Session;
-
-import java.util.List;
 
 /**
  * This utility class provides methods working with a Session object.
@@ -19,11 +20,19 @@ import java.util.List;
  */
 public class SessionUtils
 {
-  /** Logger.*/
-  private static final Logger LOG = LoggerFactory.getLogger(SessionUtils.class);
-  
   /** Prefix for slot values stored in session to avoid any name collisions. */
   public static final String SLOT_PREFIX = "SLOT_JLA1974_";
+
+  private static final String LAST_PROMPT_SUFFIX = "0987654321LASTPROMPT1234567890";
+
+  private static final String REPROMPT_HINT_SUFFIX = "0987654321REPROMPTHINT1234567890";
+
+  private static final String REPROMPT_QUICK_REPLIES_SUFFIX = "0987654321REPROMPTQUICKREPLIES1234567890";
+
+  private static final String REPROMPT_SUFFIX = "0987654321REPROMPT1234567890";
+
+  /** Logger. */
+  private static final Logger LOG = LoggerFactory.getLogger(SessionUtils.class);
 
   protected SessionUtils()
   {
@@ -33,7 +42,7 @@ public class SessionUtils
   /**
    * Removes a stored slot value from a session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param slotName The name of the slot.
    */
   public static void removeSlotfromSession(Session session, String slotName)
@@ -44,12 +53,12 @@ public class SessionUtils
   /**
    * Stores a reprompt string in a session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param reprompt The reprompt string.
    */
   public static void setReprompt(Session session, String reprompt)
   {
-    session.setAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890", reprompt);
+    session.setAttribute(SLOT_PREFIX + REPROMPT_SUFFIX, reprompt);
   }
 
   /**
@@ -60,17 +69,18 @@ public class SessionUtils
    */
   public static String getReprompt(Session session)
   {
-    return (String) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPT1234567890");
+    return (String) session.getAttribute(SLOT_PREFIX + REPROMPT_SUFFIX);
   }
 
   /**
    * Stores the reprompt quick replies in the session.
    *
-   * @param session The session.
+   * @param session              The session.
    * @param repromptQuickReplies The reprompt quick replies.
    */
-  public static void setRepromptQuickReplies(Session session, List<String> repromptQuickReplies) {
-    session.setAttribute(SLOT_PREFIX + "0987654321REPROMPTQUICKREPLIES1234567890", repromptQuickReplies);
+  public static void setRepromptQuickReplies(Session session, List<String> repromptQuickReplies)
+  {
+    session.setAttribute(SLOT_PREFIX + REPROMPT_QUICK_REPLIES_SUFFIX, repromptQuickReplies);
   }
 
   /**
@@ -79,20 +89,21 @@ public class SessionUtils
    * @param session The session.
    * @return The reprompt quick replies from the session.
    */
+  @SuppressWarnings("unchecked")
   public static List<String> getRepromptQuickReplies(Session session)
   {
-    return (List<String>) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPTQUICKREPLIES1234567890");
+    return (List<String>) session.getAttribute(SLOT_PREFIX + REPROMPT_QUICK_REPLIES_SUFFIX);
   }
 
   /**
    * Stores a reprompt hint string in a session.
    * 
-   * @param session The session.
+   * @param session      The session.
    * @param repromptHint The reprompt hint.
    */
   public static void setRepromptHint(Session session, String repromptHint)
   {
-    session.setAttribute(SLOT_PREFIX + "0987654321REPROMPTHINT1234567890", repromptHint);
+    session.setAttribute(SLOT_PREFIX + REPROMPT_HINT_SUFFIX, repromptHint);
   }
 
   /**
@@ -103,15 +114,15 @@ public class SessionUtils
    */
   public static String getRepromptHint(Session session)
   {
-    return (String) session.getAttribute(SLOT_PREFIX + "0987654321REPROMPTHINT1234567890");
+    return (String) session.getAttribute(SLOT_PREFIX + REPROMPT_HINT_SUFFIX);
   }
 
   /**
    * Stores a Number slot value in the session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param slotName The name of the slot.
-   * @param value The value to store.
+   * @param value    The value to store.
    */
   public static void setNumberSlotIntoSession(Session session, String slotName, Number value)
   {
@@ -121,9 +132,9 @@ public class SessionUtils
   /**
    * Stores a String slot value in the session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param slotName The name of the slot.
-   * @param value The value to store.
+   * @param value    The value to store.
    */
   public static void setStringSlotIntoSession(Session session, String slotName, String value)
   {
@@ -131,27 +142,25 @@ public class SessionUtils
   }
 
   /**
-   * Stores a jodaTime LocalDate slot value in the session.
+   * Stores a {@link LocalDate} slot value in the session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param slotName The name of the slot.
-   * @param value The value to store.
+   * @param value    The value to store.
    */
-  public static void setLocalDateSlotIntoSession(Session session, String slotName,
-    LocalDate value)
+  public static void setLocalDateSlotIntoSession(Session session, String slotName, LocalDate value)
   {
     session.setAttribute(SLOT_PREFIX + slotName, value);
   }
 
   /**
-   * Stores a jodaTime LocalTime slot value in the session.
+   * Stores a {@link LocalTime} slot value in the session.
    * 
-   * @param session The session.
+   * @param session  The session.
    * @param slotName The name of the slot.
-   * @param value The value to store.
+   * @param value    The value to store.
    */
-  public static void setLocalTimeSlotIntoSession(Session session, String slotName,
-    LocalTime value)
+  public static void setLocalTimeSlotIntoSession(Session session, String slotName, LocalTime value)
   {
     session.setAttribute(SLOT_PREFIX + slotName, value);
   }
@@ -159,8 +168,8 @@ public class SessionUtils
   /**
    * Gets a String based slot value from an intent match.
    * 
-   * @param match The intent match to get the slot value from.
-   * @param slotName The name of the slot.
+   * @param match        The intent match to get the slot value from.
+   * @param slotName     The name of the slot.
    * @param defaultValue The default value to use if no slot found.
    * @return The string value.
    */
@@ -172,11 +181,11 @@ public class SessionUtils
       {
         return (String) match.getSlotMatch(slotName).getValue();
       }
-      catch(ClassCastException e)
+      catch (ClassCastException e)
       {
-    	  // failed to cast so assume invalid string and return default
-    	  LOG.warn("Non String value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
-    	  return defaultValue;
+        // failed to cast so assume invalid string and return default
+        LOG.warn("Non String value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+        return defaultValue;
       }
     }
     else
@@ -188,8 +197,8 @@ public class SessionUtils
   /**
    * Gets a Number based slot value from an intent match.
    * 
-   * @param match The intent match to get the slot value from.
-   * @param slotName The name of the slot.
+   * @param match        The intent match to get the slot value from.
+   * @param slotName     The name of the slot.
    * @param defaultValue The default value to use if no slot found.
    * @return The string value.
    */
@@ -201,11 +210,11 @@ public class SessionUtils
       {
         return (Number) match.getSlotMatch(slotName).getValue();
       }
-      catch(ClassCastException e)
+      catch (ClassCastException e)
       {
-    	  // failed to cast so assume invalid number and return default
-    	  LOG.warn("Non Number value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
-    	  return defaultValue;
+        // failed to cast so assume invalid number and return default
+        LOG.warn("Non Number value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+        return defaultValue;
       }
     }
     else
@@ -215,15 +224,14 @@ public class SessionUtils
   }
 
   /**
-   * Gets a jodaTime LocalDate based slot value from an intent match.
+   * Gets a {@link LocalDate} based slot value from an intent match.
    * 
-   * @param match The intent match to get the slot value from.
-   * @param slotName The name of the slot.
+   * @param match        The intent match to get the slot value from.
+   * @param slotName     The name of the slot.
    * @param defaultValue The default value to use if no slot found.
    * @return The local date value.
    */
-  public static LocalDate getLocalDateSlot(IntentMatch match, String slotName,
-    LocalDate defaultValue)
+  public static LocalDate getLocalDateSlot(IntentMatch match, String slotName, LocalDate defaultValue)
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
@@ -231,11 +239,11 @@ public class SessionUtils
       {
         return (LocalDate) match.getSlotMatch(slotName).getValue();
       }
-      catch(ClassCastException e)
+      catch (ClassCastException e)
       {
-    	  // failed to cast so assume invalid localdate and return default
-    	  LOG.warn("Non LocalDate value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
-    	  return defaultValue;
+        // failed to cast so assume invalid localdate and return default
+        LOG.warn("Non LocalDate value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+        return defaultValue;
       }
     }
     else
@@ -245,15 +253,14 @@ public class SessionUtils
   }
 
   /**
-   * Gets a jodaTime LocalTime based slot value from an intent match.
+   * Gets a {@link LocalTime} based slot value from an intent match.
    * 
-   * @param match The intent match to get the slot value from.
-   * @param slotName The name of the slot.
+   * @param match        The intent match to get the slot value from.
+   * @param slotName     The name of the slot.
    * @param defaultValue The default value to use if no slot found.
    * @return The local time value.
    */
-  public static LocalTime getLocalTimeSlot(IntentMatch match, String slotName,
-    LocalTime defaultValue)
+  public static LocalTime getLocalTimeSlot(IntentMatch match, String slotName, LocalTime defaultValue)
   {
     if (match.getSlotMatch(slotName) != null && match.getSlotMatch(slotName).getValue() != null)
     {
@@ -261,11 +268,11 @@ public class SessionUtils
       {
         return (LocalTime) match.getSlotMatch(slotName).getValue();
       }
-      catch(ClassCastException e)
+      catch (ClassCastException e)
       {
-    	  // failed to cast so assume invalid localtime and return default
-    	  LOG.warn("Non LocalTime value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
-    	  return defaultValue;
+        // failed to cast so assume invalid localtime and return default
+        LOG.warn("Non LocalTime value: {} found in slot {}", match.getSlotMatch(slotName).getValue(), slotName);
+        return defaultValue;
       }
     }
     else
@@ -277,7 +284,7 @@ public class SessionUtils
   /**
    * Saves all the matched slots for an IntentMatch into the session.
    * 
-   * @param match The intent match.
+   * @param match   The intent match.
    * @param session The session.
    */
   public static void saveSlotsToSession(IntentMatch match, Session session)
@@ -289,16 +296,18 @@ public class SessionUtils
   }
 
   /**
-   * Gets a String value from the session (if it exists) or the slot (if a match exists).
+   * Gets a String value from the session (if it exists) or the slot (if a match
+   * exists).
    * 
-   * @param match The intent match.
-   * @param session The session.
-   * @param slotName The name of the slot.
-   * @param defaultValue The default value if not value found in the session or slot.
+   * @param match        The intent match.
+   * @param session      The session.
+   * @param slotName     The name of the slot.
+   * @param defaultValue The default value if not value found in the session or
+   *                     slot.
    * @return The string value.
    */
-  public static String getStringFromSlotOrSession(IntentMatch match, Session session,
-    String slotName, String defaultValue)
+  public static String getStringFromSlotOrSession(IntentMatch match, Session session, String slotName,
+      String defaultValue)
   {
     String sessionValue = (String) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -310,16 +319,18 @@ public class SessionUtils
   }
 
   /**
-   * Gets a Number value from the session (if it exists) or the slot (if a match exists).
+   * Gets a Number value from the session (if it exists) or the slot (if a match
+   * exists).
    * 
-   * @param match The intent match.
-   * @param session The session.
-   * @param slotName The name of the slot.
-   * @param defaultValue The default value if not value found in the session or slot.
+   * @param match        The intent match.
+   * @param session      The session.
+   * @param slotName     The name of the slot.
+   * @param defaultValue The default value if not value found in the session or
+   *                     slot.
    * @return The number value.
    */
-  public static Number getNumberFromSlotOrSession(IntentMatch match, Session session,
-    String slotName, Number defaultValue)
+  public static Number getNumberFromSlotOrSession(IntentMatch match, Session session, String slotName,
+      Number defaultValue)
   {
     Number sessionValue = (Number) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -331,16 +342,18 @@ public class SessionUtils
   }
 
   /**
-   * Gets a jodaTime LocalDate value from the session (if it exists) or the slot (if a match exists).
+   * Gets a {@link LocalDate} value from the session (if it exists) or the slot
+   * (if a match exists).
    * 
-   * @param match The intent match.
-   * @param session The session.
-   * @param slotName The name of the slot.
-   * @param defaultValue The default value if not value found in the session or slot.
+   * @param match        The intent match.
+   * @param session      The session.
+   * @param slotName     The name of the slot.
+   * @param defaultValue The default value if not value found in the session or
+   *                     slot.
    * @return The local date value.
    */
-  public static LocalDate getLocalDateFromSlotOrSession(IntentMatch match, Session session,
-    String slotName, LocalDate defaultValue)
+  public static LocalDate getLocalDateFromSlotOrSession(IntentMatch match, Session session, String slotName,
+      LocalDate defaultValue)
   {
     LocalDate sessionValue = (LocalDate) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -352,16 +365,18 @@ public class SessionUtils
   }
 
   /**
-   * Gets a jodaTime LocalTime value from the session (if it exists) or the slot (if a match exists).
+   * Gets a {@link LocalTime} value from the session (if it exists) or the slot
+   * (if a match exists).
    * 
-   * @param match The intent match.
-   * @param session The session.
-   * @param slotName The name of the slot.
-   * @param defaultValue The default value if not value found in the session or slot.
+   * @param match        The intent match.
+   * @param session      The session.
+   * @param slotName     The name of the slot.
+   * @param defaultValue The default value if not value found in the session or
+   *                     slot.
    * @return The local time value.
    */
-  public static LocalTime getLocalTimeFromSlotOrSession(IntentMatch match, Session session,
-    String slotName, LocalTime defaultValue)
+  public static LocalTime getLocalTimeFromSlotOrSession(IntentMatch match, Session session, String slotName,
+      LocalTime defaultValue)
   {
     LocalTime sessionValue = (LocalTime) session.getAttribute(SLOT_PREFIX + slotName);
     if (sessionValue != null)
@@ -372,4 +387,25 @@ public class SessionUtils
     return getLocalTimeSlot(match, slotName, defaultValue);
   }
 
+  /**
+   * Stores the text of the last prompt that was sent to the user.
+   * 
+   * @param session    The session.
+   * @param lastPrompt The last prompt text.
+   */
+  public static void setLastPrompt(Session session, String lastPrompt)
+  {
+    session.setAttribute(SLOT_PREFIX + LAST_PROMPT_SUFFIX, lastPrompt);
+  }
+
+  /**
+   * Gets the text of the last prompt that was sent to the user.
+   * 
+   * @param session The session.
+   * @return The last prompt text or null if there is no last prompt text.
+   */
+  public static String getLastPrompt(Session session)
+  {
+    return (String) session.getAttribute(SLOT_PREFIX + LAST_PROMPT_SUFFIX);
+  }
 }

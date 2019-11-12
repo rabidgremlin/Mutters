@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,8 +18,6 @@ import com.rabidgremlin.mutters.core.session.Session;
 import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 /**
  * Test class for default response.
  * 
@@ -30,8 +29,7 @@ public class TestDefaultResponses
   private InkBot<BotWithDefaultDefaultResponses> testBotWithDefaultDefaultPhrases;
   private InkBot<BotWithDefaultDefaultResponses> testBotWithTestDefaultPhrases;
 
-  class BotWithDefaultDefaultResponses
-      implements InkBotConfiguration
+  static class BotWithDefaultDefaultResponses implements InkBotConfiguration
   {
 
     @Override
@@ -57,36 +55,33 @@ public class TestDefaultResponses
 
     @Override
     public List<GlobalIntent> getGlobalIntents()
-    {     
+    {
       return null;
     }
 
     @Override
     public ConfusedKnot getConfusedKnot()
-    {      
+    {
       return null;
     }
 
     @Override
-    public List<String> getDefaultResponses()
-    {      
-      return null;
+    public RepromptGenerator getRepromptGenerator()
+    {
+      return new DefaultResponseRepromptGenerator();
     }
   }
-  
-  
-  class BotWithTestDefaultResponses extends BotWithDefaultDefaultResponses
+
+  static class BotWithTestDefaultResponses extends BotWithDefaultDefaultResponses
   {
     @Override
-    public List<String> getDefaultResponses()
-    { 
-      return Arrays.asList(new String[]{ "Response A", "Response B", "Response C" });
+    public RepromptGenerator getRepromptGenerator()
+    {
+      return new DefaultResponseRepromptGenerator(new String[] { "Response A", "Response B", "Response C" });
     }
   }
-    
 
-  class TestBot
-      extends InkBot<BotWithDefaultDefaultResponses>
+  static class TestBot extends InkBot<BotWithDefaultDefaultResponses>
   {
     public TestBot(BotWithDefaultDefaultResponses configuration)
     {
@@ -102,8 +97,7 @@ public class TestDefaultResponses
   }
 
   @Test
-  public void testDefaultDefaultResponse()
-    throws Exception
+  public void testDefaultDefaultResponse() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
@@ -116,12 +110,10 @@ public class TestDefaultResponses
   }
 
   @Test
-  public void testCustomDefaultResponse()
-    throws Exception
+  public void testCustomDefaultResponse() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
-
 
     int responseACount = 0;
     int responseBCount = 0;

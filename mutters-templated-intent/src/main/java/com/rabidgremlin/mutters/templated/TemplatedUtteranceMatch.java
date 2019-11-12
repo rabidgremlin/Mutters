@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.templated;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class TemplatedUtteranceMatch
   /**
    * Constructor.
    * 
-   * @param matched Indicates if template was matched or not.
+   * @param matched     Indicates if template was matched or not.
    * @param slotMatches Map of slot matches.
    */
   public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)

@@ -1,10 +1,7 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
 import java.util.HashMap;
-
-import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
-import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
  * A CustomSlot that supports default values.
@@ -12,9 +9,7 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
- public class CustomSlotWithDefaultValue
-    extends CustomSlot
-    implements DefaultValueSlot
+public class CustomSlotWithDefaultValue extends CustomSlot implements DefaultValueSlot
 {
   /** The default value to return */
   private Object defaultValue;
@@ -22,9 +17,9 @@ import com.rabidgremlin.mutters.core.SlotMatch;
   /**
    * Constructor.
    * 
-   * @param name The name of the slot.
-   * @param optionValueMap A map of possible input values mapped to output values.   
-   * @param defaultValue The default value.
+   * @param name           The name of the slot.
+   * @param optionValueMap A map of possible input values mapped to output values.
+   * @param defaultValue   The default value.
    */
   public CustomSlotWithDefaultValue(String name, HashMap<String, String> optionValueMap, Object defaultValue)
   {
@@ -35,8 +30,8 @@ import com.rabidgremlin.mutters.core.SlotMatch;
   /**
    * Constructor.
    * 
-   * @param name The name of the slot.   
-   * @param options The list of expected options.
+   * @param name         The name of the slot.
+   * @param options      The list of expected options.
    * @param defaultValue The default value.
    */
   public CustomSlotWithDefaultValue(String name, String[] options, Object defaultValue)
@@ -47,7 +42,7 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 
   @Override
   public Object getDefaultValue()
-  {    
+  {
     return defaultValue;
   }
 

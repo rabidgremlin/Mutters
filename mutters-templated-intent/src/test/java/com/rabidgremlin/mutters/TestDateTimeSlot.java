@@ -1,14 +1,15 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.Context;
@@ -22,7 +23,7 @@ import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestDateTimeSlot
 {
-  private SimpleTokenizer tokenizer = new SimpleTokenizer();
+  private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatch()
@@ -45,7 +46,7 @@ public class TestDateTimeSlot
     SlotMatch slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-    assertThat(slotMatch.getValue(), is(new DateTime(1974, 5, 30, 22, 0, 0)));
+    assertThat(slotMatch.getValue(), is(ZonedDateTime.of(1974, 5, 30, 22, 0, 0, 0, ZoneId.systemDefault())));
   }
 
   @Test
@@ -70,8 +71,7 @@ public class TestDateTimeSlot
     SlotMatch slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
-    assertThat(slotMatch.getValue(),
-        is(new DateTime(1974, 5, 30, 22, 0, 0, DateTimeZone.forTimeZone(context.getTimeZone()))));
+    assertThat(slotMatch.getValue(), is(ZonedDateTime.of(1974, 5, 30, 22, 0, 0, 0, context.getTimeZone().toZoneId())));
   }
 
   @Test
@@ -96,7 +96,7 @@ public class TestDateTimeSlot
     assertThat(slotMatch, is(notNullValue()));
     assertThat(slotMatch.getOrginalValue(), is("last week"));
 
-    LocalDate sevenDaysAgo = new LocalDate().minusDays(7);
+    LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
 
     assertThat(slotMatch.getValue(), is(sevenDaysAgo));
   }

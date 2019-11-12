@@ -12,8 +12,8 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    fastTextCompile 'com.github.vinhkhuc:jfasttext:0.3'
+dependencies { 
+    fastTextCompile "com.github.vinhkhuc:jfasttext:$rootProject.ext.jFastTextVersion"
     groovyScript localGroovy()
     groovyScript project(':mutters-templated-intent')
 }

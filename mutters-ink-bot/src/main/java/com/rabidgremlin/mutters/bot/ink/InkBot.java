@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
 import java.util.Collection;
@@ -5,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,19 +27,21 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
 import com.rabidgremlin.mutters.core.IntentMatcher;
 import com.rabidgremlin.mutters.core.SlotMatch;
-import com.rabidgremlin.mutters.core.bot.Bot;
 import com.rabidgremlin.mutters.core.bot.BotException;
-import com.rabidgremlin.mutters.core.bot.BotResponse;
+import com.rabidgremlin.mutters.core.bot.IntentBot;
+import com.rabidgremlin.mutters.core.bot.IntentBotResponse;
 import com.rabidgremlin.mutters.core.session.Session;
 
 /**
- * This is the base bot class for bots using the Ink narrative scripting language from Inkle. The bot requires a
- * compiled ink file in .json format. The choices in the ink file should match the names of intents returned by the
+ * This is the base bot class for bots using the Ink narrative scripting
+ * language from Inkle. The bot requires a compiled ink file in .json format.
+ * The choices in the ink file should match the names of intents returned by the
  * IntentMatcher.
  * 
  * See http://www.inklestudios.com/ink/ for more info on Ink
  * 
- * This class also adds the ADD_ATTACHMENT, ADD_QUICK_REPLY, SET_HINT, SET_REPROMPT functions to the bot.
+ * This class also adds the ADD_ATTACHMENT, ADD_QUICK_REPLY, SET_HINT,
+ * SET_REPROMPT functions to the bot.
  * 
  * @see com.rabidgremlin.mutters.bot.ink.functions.AddAttachmentFunction
  * @see com.rabidgremlin.mutters.bot.ink.functions.AddQuickReplyFunction
@@ -49,8 +51,7 @@ import com.rabidgremlin.mutters.core.session.Session;
  * @author rabidgremlin
  *
  */
-public abstract class InkBot<T extends InkBotConfiguration>
-    implements Bot
+public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
 {
   /** Logger for the bot. */
   private Logger log = LoggerFactory.getLogger(InkBot.class);
@@ -61,23 +62,11 @@ public abstract class InkBot<T extends InkBotConfiguration>
   /** The ink JSON for the bot. */
   protected String inkStoryJson;
 
-  /** Default responses for when the bot cannot figure out what was said to it. */
-  protected String[] defaultResponses = { "Pardon?" };
-
   /** Map of InkBotFunctions the bot knows. */
   protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
 
   /** Map of global intents for the bot. */
   protected HashMap<String, String> globalIntents = new HashMap<>();
-
-  /** Random for default reponses. */
-  private Random rand = new Random();
-
-  /** Debug value key for matched intent. */
-  public final static String DK_MATCHED_INTENT = "matchedIntent";
-
-  /** Debug value key for intent matching scores. */
-  public final static String DK_INTENT_MATCHING_SCORES = "intentMatchingScores";
 
   /** The number of failed to understand attempts before bot is confused. */
   private int maxAttemptsBeforeConfused = -1;
@@ -85,8 +74,12 @@ public abstract class InkBot<T extends InkBotConfiguration>
   /** The name of the ink knot to jump too when the bot is confused. */
   private String confusedKnotName = null;
 
-  /** A thread local map that holds the story instance for each unique story JSON */
+  /**
+   * A thread local map that holds the story instance for each unique story JSON
+   */
   private static ThreadLocal<Map<String, Story>> threadLocalStoryMap = ThreadLocal.withInitial(HashMap::new);
+
+  private RepromptGenerator repromptGenerator = null;
 
   /**
    * Constructs the bot.
@@ -101,6 +94,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
 
     // get the story json
     inkStoryJson = configuration.getStoryJson();
+
+    // get reprompt generator
+    repromptGenerator = configuration.getRepromptGenerator();
 
     // Add default functions
     addFunction(new SetHintFunction());
@@ -138,49 +134,32 @@ public abstract class InkBot<T extends InkBotConfiguration>
       setConfusedKnot(confusedKnot.getMaxAttemptsBeforeConfused(), confusedKnot.getConfusedKnotName());
     }
 
-    // set up default phrases if supplied
-    List<String> defaultResponses = configuration.getDefaultResponses();
-    if (defaultResponses != null)
-    {
-      setDefaultResponses(defaultResponses.toArray(new String[0]));
-    }
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.Session,
-   * com.rabidgremlin.mutters.core.Context, java.lang.String)
+   * @see
+   * com.rabidgremlin.mutters.bot.Bot#respond(com.rabidgremlin.mutters.session.
+   * Session, com.rabidgremlin.mutters.core.Context, java.lang.String)
    */
   @Override
-  public BotResponse respond(Session session, Context context, String messageText)
-    throws BotException
+  public IntentBotResponse respond(Session session, Context context, String messageText) throws BotException
   {
-    log.debug("===> \n session: {} context: {} messageText: {}",
-        new Object[]{ session, context, messageText });
+    log.debug("===> \n session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
 
     CurrentResponse currentResponse = new CurrentResponse();
 
-    // choose a default response
-    String defaultResponse = defaultResponses[rand.nextInt(defaultResponses.length)];
-
-    // set up default response in case bot has issue processing input
-    currentResponse.setResponseText(SessionUtils.getReprompt(session));
-    if (currentResponse.getResponseText() == null)
-    {
-      currentResponse.setResponseText(defaultResponse);
-    }
-   
     // preserve hint if we had reprompt hint
-    currentResponse.setHint(SessionUtils.getRepromptHint(session));
+    currentResponse.setHint(InkBotSessionUtils.getRepromptHint(session));
 
     // preserve quick replies if we had them
-    currentResponse.setResponseQuickReplies(SessionUtils.getRepromptQuickReplies(session));
+    currentResponse.setResponseQuickReplies(InkBotSessionUtils.getRepromptQuickReplies(session));
 
     // keep hold of matched intent for logging and debug
     String matchedIntent = null;
 
-    int failedToUnderstandCount = SessionUtils.getFailedToUnderstandCount(session);
+    int failedToUnderstandCount = InkBotSessionUtils.getFailedToUnderstandCount(session);
     log.debug("current failed count is {}", failedToUnderstandCount);
 
     try
@@ -191,7 +170,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
       {
         synchronized (this)
         {
-          // wrap create in synchronized block because something in JSON parsing is not threadsafe
+          // wrap create in synchronized block because something in JSON parsing is not
+          // threadsafe
           story = new StoryDecorator(inkStoryJson);
           threadLocalStoryMap.get().put(inkStoryJson, story);
         }
@@ -203,11 +183,12 @@ public abstract class InkBot<T extends InkBotConfiguration>
 
       // call hook so externs and other things can be applied
       afterStoryCreated(story);
-      
-      // restore the story state
-      SessionUtils.loadInkStoryState(session, story, inkStoryJson);
 
-      // call hook so additional things can be applied to story after state has been restored 
+      // restore the story state
+      InkBotSessionUtils.loadInkStoryState(session, story, inkStoryJson);
+
+      // call hook so additional things can be applied to story after state has been
+      // restored
       afterStoryStateLoaded(story);
 
       // get to right place in story, capture any pretext
@@ -223,13 +204,10 @@ public abstract class InkBot<T extends InkBotConfiguration>
         expectedIntents.add(choice.getText());
       }
 
-      // create debug values map
-      HashMap<String, Object> debugValues = new HashMap<String, Object>();
-
       // match the intents
-      IntentMatch intentMatch = matcher.match(messageText, context, expectedIntents, debugValues);
+      IntentMatch intentMatch = matcher.match(messageText, context, expectedIntents);
 
-      if (intentMatch != null)
+      if (intentMatch.matched())
       {
         // record name of intent we matched on
         matchedIntent = intentMatch.getIntent().getName();
@@ -283,7 +261,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
           // reset failed count
           failedToUnderstandCount = 0;
 
-          setRepromptInSession(currentResponse, session, defaultResponse);
+          setRepromptInSession(currentResponse, session);
         }
         else
         {
@@ -302,7 +280,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
       // do we have confused knot and failed attempt > max failed attempts ?
       if (confusedKnotName != null && failedToUnderstandCount >= maxAttemptsBeforeConfused)
       {
-        log.debug("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})", failedToUnderstandCount, maxAttemptsBeforeConfused);
+        log.debug("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})",
+            failedToUnderstandCount, maxAttemptsBeforeConfused);
         log.debug("jumping to {} ", confusedKnotName);
         // jump to confused knot
         story.choosePathString(confusedKnotName);
@@ -310,56 +289,72 @@ public abstract class InkBot<T extends InkBotConfiguration>
         getResponseText(session, currentResponse, story, intentMatch, preText);
         // reset failed count
         failedToUnderstandCount = 0;
-        
-        setRepromptInSession(currentResponse, session, defaultResponse);
+
+        setRepromptInSession(currentResponse, session);
       }
 
       // save failed count
-      SessionUtils.setFailedToUnderstandCount(session, failedToUnderstandCount);
+      InkBotSessionUtils.setFailedToUnderstandCount(session, failedToUnderstandCount);
 
       // save current story state
-      SessionUtils.saveInkStoryState(session, story, inkStoryJson);
+      InkBotSessionUtils.saveInkStoryState(session, story, inkStoryJson);
 
       // does story have any more choices ?
       if (story.getCurrentChoices().size() == 0)
       {
-        // no, conversation is done, wipe session and we are not returning an ask response
+        // no, conversation is done, wipe session and we are not returning an ask
+        // response
         session.reset();
         currentResponse.setAskResponse(false);
       }
 
-      // populate debug values map with matched intent
-      if (matchedIntent != null)
+      // check if we have response text, if not generate reprompt
+      if (currentResponse.getResponseText() == null)
       {
-        debugValues.put(DK_MATCHED_INTENT, matchedIntent);
+        // set response as saved reprompt
+        currentResponse.setResponseText(InkBotSessionUtils.getReprompt(session));
+
+        // still no response ?
+        if (currentResponse.getResponseText() == null)
+        {
+          currentResponse = repromptGenerator.generateReprompt(session, context, messageText, intentMatch,
+              currentResponse);
+        }
+      }
+      else
+      {
+        // is this the response a question?
+        if (currentResponse.isAskResponse())
+        {
+          // save the text of the last prompt in the session in case we need it for future
+          // processing such as during reprompt generation
+          InkBotSessionUtils.setLastPrompt(session, currentResponse.getResponseText());
+        }
       }
 
       // build and return response
-      return new BotResponse(currentResponse.getResponseText(), currentResponse.getHint(), currentResponse.isAskResponse(),
-          currentResponse.getResponseAttachments(),
-          currentResponse.getResponseQuickReplies(), debugValues);
+      return new IntentBotResponse(currentResponse.getResponseText(), currentResponse.getHint(),
+          currentResponse.isAskResponse(), currentResponse.getResponseAttachments(),
+          currentResponse.getResponseQuickReplies(), intentMatch.getIntent(), intentMatch.getMatcherScores());
     }
     catch (Exception e)
     {
       throw new BotException("Unexpected error", e);
     }
   }
-  
-  private void setRepromptInSession(CurrentResponse currentResponse, Session session, String defaultResponse)
+
+  private void setRepromptInSession(CurrentResponse currentResponse, Session session)
   {
     if (currentResponse.getReprompt() != null)
     {
-      SessionUtils.setReprompt(session, currentResponse.getReprompt());
+      InkBotSessionUtils.setReprompt(session, currentResponse.getReprompt());
     }
-    else
-    {
-      SessionUtils.setReprompt(session, defaultResponse + " " + currentResponse.getResponseText());
-    }
-    SessionUtils.setRepromptHint(session, currentResponse.getHint());
-    SessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
+
+    InkBotSessionUtils.setRepromptHint(session, currentResponse.getHint());
+    InkBotSessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
   }
 
-   private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
+  private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
   {
     for (SlotMatch slotMatch : slotMatches)
     {
@@ -374,8 +369,8 @@ public abstract class InkBot<T extends InkBotConfiguration>
     }
   }
 
-  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch, String preText)
-    throws StoryException, Exception
+  private void getResponseText(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch,
+      String preText) throws StoryException, Exception
   {
     // reset reprompt, hint and quick replies
     currentResponse.setReprompt(null);
@@ -383,60 +378,64 @@ public abstract class InkBot<T extends InkBotConfiguration>
     currentResponse.setResponseQuickReplies(null);
 
     // get the story output and build the reponse
-    StringBuffer response = processStory(session, currentResponse, story, intentMatch);    
-    
+    StringBuffer response = processStory(session, currentResponse, story, intentMatch);
+
     // add any pretext if we have it
-    preText = StringUtils.chomp(preText).trim(); // remove any trailing \n and trim to ensure we actually have some content
+    preText = StringUtils.chomp(preText).trim(); // remove any trailing \n and trim to ensure we actually have some
+                                                 // content
     if (StringUtils.isNotBlank(preText))
     {
-      response.insert(0,"\n");
-      response.insert(0,preText);      
-    }   
+      response.insert(0, "\n");
+      response.insert(0, preText);
+    }
 
     currentResponse.setResponseText(response.toString());
   }
 
-  /** Processes the story until the next set of choices, triggering any InkFunctions along the way.
+  /**
+   * Processes the story until the next set of choices, triggering any
+   * InkFunctions along the way.
    * 
-   * @param session The current session.
+   * @param session         The current session.
    * @param currentResponse The current response.
-   * @param story The current story.
-   * @param intentMatch The current intent match.
+   * @param story           The current story.
+   * @param intentMatch     The current intent match.
    * @return String buffer containing output.
-   * @throws StoryException Thrown if there is an error. 
-   * @throws Exception Thrown if there is an error.
+   * @throws StoryException Thrown if there is an error.
+   * @throws Exception      Thrown if there is an error.
    */
-  private StringBuffer processStory(Session session, CurrentResponse currentResponse, Story story, IntentMatch intentMatch) throws StoryException, Exception 
+  private StringBuffer processStory(Session session, CurrentResponse currentResponse, Story story,
+      IntentMatch intentMatch) throws StoryException, Exception
   {
-    StringBuffer response = new StringBuffer();   
-       
-    
+    StringBuffer response = new StringBuffer();
+
     while (story.canContinue())
     {
       String line = story.Continue();
-      
+
       // log any warnings
       // in theory we should be getting a warning if state wasn't restored correctly
-      // so we can handle the issue. this is currently not happening. 
+      // so we can handle the issue. this is currently not happening.
       // See TestSessionRestore for current hack
       if (story.hasWarning())
       {
-    	 log.warn("Ink story has warnings: {}",  story.getCurrentWarnings());
+        log.warn("Ink story has warnings: {}", story.getCurrentWarnings());
       }
-      
+
       // log any errors
       if (story.hasError())
       {
-    	 log.error("Ink story has errors: {}",  story.getCurrentErrors());
+        log.error("Ink story has errors: {}", story.getCurrentErrors());
       }
-      
-      processStoryLine(line,response,currentResponse, session, intentMatch, story);
+
+      processStoryLine(line, response, currentResponse, session, intentMatch, story);
     }
-    
-    // strip any leading \n deals with some ink inconsistencies such as in switch statements
+
+    // strip any leading \n deals with some ink inconsistencies such as in switch
+    // statements
     if (response.length() > 0 && response.charAt(0) == '\n')
     {
-    	response.deleteCharAt(0);
+      response.deleteCharAt(0);
     }
 
     // chop off last \n
@@ -444,54 +443,46 @@ public abstract class InkBot<T extends InkBotConfiguration>
     {
       response.setLength(response.length() - 1);
     }
-    
-	return response;
-  }
-  
-  /** Processes a story line triggering any InkFunctions that are found.
-   * 
-   * @param line The story line to process.
-   * @param response The response to populate.
-   * @param currentResponse The current response.
-   * @param session The current session.
-   * @param intentMatch The current intent match.
-   * @param story The current story.
-   */
-  private void processStoryLine(String line, StringBuffer response, CurrentResponse currentResponse, Session session, IntentMatch intentMatch, Story story)
-  {
-    log.debug("Line {}", line);
-	
-	String trimmedLine = line.trim();
-	
-	if (trimmedLine.startsWith("::"))
-	{
-	  String functionName = trimmedLine.split(" ")[0].substring(2).trim();
-	  String param = trimmedLine.substring(functionName.length() + 2).trim();
-	
-	  InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
-	  if (function != null)
-	  {
-	    function.execute(currentResponse, session, intentMatch, story, param);
-	  }
-	  else
-	  {
-	    log.warn("Did not find function named {}", functionName);
-	  }
-	}
-	else
-	{
-	  response.append(line);
-	}
+
+    return response;
   }
 
   /**
-   * Sets the default response for the bot. This is the bot's response if it doesn't understand what was said.
+   * Processes a story line triggering any InkFunctions that are found.
    * 
-   * @param defaultResponses The new default bot responses.
+   * @param line            The story line to process.
+   * @param response        The response to populate.
+   * @param currentResponse The current response.
+   * @param session         The current session.
+   * @param intentMatch     The current intent match.
+   * @param story           The current story.
    */
-  private void setDefaultResponses(String[] defaultResponses)
+  private void processStoryLine(String line, StringBuffer response, CurrentResponse currentResponse, Session session,
+      IntentMatch intentMatch, Story story)
   {
-    this.defaultResponses = defaultResponses;
+    log.debug("Line {}", line);
+
+    String trimmedLine = line.trim();
+
+    if (trimmedLine.startsWith("::"))
+    {
+      String functionName = trimmedLine.split(" ")[0].substring(2).trim();
+      String param = trimmedLine.substring(functionName.length() + 2).trim();
+
+      InkBotFunction function = inkBotFunctions.get(functionName.toLowerCase());
+      if (function != null)
+      {
+        function.execute(currentResponse, session, intentMatch, story, param);
+      }
+      else
+      {
+        log.warn("Did not find function named {}", functionName);
+      }
+    }
+    else
+    {
+      response.append(line);
+    }
   }
 
   /**
@@ -505,8 +496,10 @@ public abstract class InkBot<T extends InkBotConfiguration>
   }
 
   /**
-   * This method can be overridden to manipulate the Story object used by the bot just after it is created. Note the bot
-   * may create the story multiple times. This method is useful for registering external functions with the Ink runtime.
+   * This method can be overridden to manipulate the Story object used by the bot
+   * just after it is created. Note the bot may create the story multiple times.
+   * This method is useful for registering external functions with the Ink
+   * runtime.
    * 
    * @param story The just created story.
    */
@@ -516,8 +509,9 @@ public abstract class InkBot<T extends InkBotConfiguration>
   }
 
   /**
-   * This method can be overridden to manipulate the Story object used by the bot just after the story state has been
-   * loaded from the session. This method is useful for setting story variables based on external data.
+   * This method can be overridden to manipulate the Story object used by the bot
+   * just after the story state has been loaded from the session. This method is
+   * useful for setting story variables based on external data.
    * 
    * @param story The story whose state has just been loaded.
    */
@@ -527,12 +521,13 @@ public abstract class InkBot<T extends InkBotConfiguration>
   }
 
   /**
-   * This method can be overridden to manipulate the results of an intent match. It allows the match to be manipulated
-   * before the class uses it to progress the ink story.
+   * This method can be overridden to manipulate the results of an intent match.
+   * It allows the match to be manipulated before the class uses it to progress
+   * the ink story.
    * 
    * @param intentMatch The intent match.
-   * @param session The current user's session.
-   * @param story The current story.
+   * @param session     The current user's session.
+   * @param story       The current story.
    */
   protected void afterIntentMatch(IntentMatch intentMatch, Session session, Story story)
   {
@@ -543,7 +538,7 @@ public abstract class InkBot<T extends InkBotConfiguration>
    * Adds a global intent to the list of global intents for the bot.
    * 
    * @param intentName The name of the intent.
-   * @param knotName The name of the knot to jump to when intent is triggered.
+   * @param knotName   The name of the knot to jump to when intent is triggered.
    */
   private void addGlobalIntent(String intentName, String knotName)
   {
@@ -553,8 +548,10 @@ public abstract class InkBot<T extends InkBotConfiguration>
   /**
    * Sets the confused knot for the bot.
    * 
-   * @param maxAttemptsBeforeConfused The number of failed attempts before the but is confused.
-   * @param confusedKnotName The name of the knot to jump too when the bot is confused.
+   * @param maxAttemptsBeforeConfused The number of failed attempts before the but
+   *                                  is confused.
+   * @param confusedKnotName          The name of the knot to jump too when the
+   *                                  bot is confused.
    */
   private void setConfusedKnot(int maxAttemptsBeforeConfused, String confusedKnotName)
   {

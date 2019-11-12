@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import com.rabidgremlin.mutters.slots.DefaultValueSlot;
 /**
  * This is an intent that matches based on an utterance template.
  * 
- * One or more utterance templates can be added to the intent. An utterance template can include slot identifiers (in
- * curly braces) which are used to extract the slots added to the intent.
+ * One or more utterance templates can be added to the intent. An utterance
+ * template can include slot identifiers (in curly braces) which are used to
+ * extract the slots added to the intent.
  * 
  * @author rabidgremlin
  *
  */
-public class TemplatedIntent
-    extends Intent
+public class TemplatedIntent extends Intent
 {
   private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);
 
@@ -36,9 +37,10 @@ public class TemplatedIntent
   /**
    * Constructor.
    * 
-   * @param name The name of the intent.
-   * @param tokenizer The tokenizer to use when parsing the utterance templates. Should be the same one used to parse
-   *          the input passed to the matches method.
+   * @param name      The name of the intent.
+   * @param tokenizer The tokenizer to use when parsing the utterance templates.
+   *                  Should be the same one used to parse the input passed to the
+   *                  matches method.
    */
   public TemplatedIntent(String name, Tokenizer tokenizer)
   {
@@ -78,42 +80,44 @@ public class TemplatedIntent
   }
 
   /**
-   * Processes the supplied input and attempts to match against the utterance templates for the intent.
+   * Processes the supplied input and attempts to match against the utterance
+   * templates for the intent.
    * 
-   * @param input The user's input.
+   * @param input   The user's input.
    * @param context The user's context.
    * @return The templated utterance match.
    */
   public TemplatedUtteranceMatch matches(String[] input, Context context)
-  {   
+  {
     for (TemplatedUtterance utterance : utterances)
-    {   
+    {
       TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
       if (match.isMatched())
-      {     
+      {
         // matched utterance didn't fill in all the slots so check for default values
         if (match.getSlotMatches().size() != slots.getSlots().size())
-        {       	
-           // grab all the matched slots	
-           HashMap<Slot, SlotMatch> matchedSlots = match.getSlotMatches();
-           
-           // loop through each slot
-           for (Slot slot: slots.getSlots())
-           {        	
-        	   // does slot have default value and no match ?
-        	   if (slot instanceof DefaultValueSlot && !matchedSlots.containsKey(slot))
-        	   {
-        		   // yep create a slot match with default value
-        		   Object defaultValue = ((DefaultValueSlot)slot).getDefaultValue();
-        		   matchedSlots.put(slot, new SlotMatch(slot,defaultValue == null?"":defaultValue.toString(),defaultValue));        	
-        	   }
-           }
+        {
+          // grab all the matched slots
+          HashMap<Slot, SlotMatch> matchedSlots = match.getSlotMatches();
+
+          // loop through each slot
+          for (Slot slot : slots.getSlots())
+          {
+            // does slot have default value and no match ?
+            if (!matchedSlots.containsKey(slot) && slot instanceof DefaultValueSlot)
+            {
+              // yep create a slot match with default value
+              Object defaultValue = ((DefaultValueSlot) slot).getDefaultValue();
+              matchedSlots.put(slot,
+                  new SlotMatch(slot, defaultValue == null ? "" : defaultValue.toString(), defaultValue));
+            }
+          }
         }
-        
+
         return match;
       }
     }
-    
+
     return new TemplatedUtteranceMatch(false);
   }
 

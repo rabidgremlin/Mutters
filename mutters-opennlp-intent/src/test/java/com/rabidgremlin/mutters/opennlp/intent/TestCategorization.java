@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.opennlp.intent;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -6,23 +7,19 @@ import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
-import org.junit.Test;
-
-import com.rabidgremlin.mutters.opennlp.intent.OpenNLPTokenizer;
-
 import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
+
+import org.junit.Test;
 
 public class TestCategorization
 {
 
   @Test
-  public void testModelLoad()
-    throws Exception
+  public void testModelLoad() throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader()
-        .getResource("models/en-cat-taxi-intents.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-cat-taxi-intents.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     DoccatModel model = new DoccatModel(modelUrl);
@@ -30,11 +27,9 @@ public class TestCategorization
   }
 
   @Test
-  public void testCategorization()
-    throws Exception
+  public void testCategorization() throws Exception
   {
-    URL modelUrl = Thread.currentThread().getContextClassLoader()
-        .getResource("models/en-cat-taxi-intents.bin");
+    URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/en-cat-taxi-intents.bin");
     assertThat(modelUrl, is(notNullValue()));
 
     DoccatModel model = new DoccatModel(modelUrl);

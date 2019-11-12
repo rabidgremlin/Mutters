@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
 import com.rabidgremlin.mutters.core.Context;
@@ -5,14 +6,13 @@ import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
- * This slot matches on number. Handles integers, decimals and basic word numbers such as 'one hundred and twenty
- * three'.
+ * This slot matches on number. Handles integers, decimals and basic word
+ * numbers such as 'one hundred and twenty three'.
  * 
  * @author rabidgremlin
  *
  */
-public class NumberSlot
-    extends Slot
+public class NumberSlot extends Slot
 {
   // TODO clean up very rough code
 

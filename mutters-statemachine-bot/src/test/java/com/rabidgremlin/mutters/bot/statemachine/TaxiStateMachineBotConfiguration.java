@@ -1,4 +1,7 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.statemachine;
+
+import opennlp.tools.tokenize.WhitespaceTokenizer;
 
 import com.rabidgremlin.mutters.core.Intent;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -10,21 +13,18 @@ import com.rabidgremlin.mutters.state.Guard;
 import com.rabidgremlin.mutters.state.State;
 import com.rabidgremlin.mutters.state.StateMachine;
 
-import opennlp.tools.tokenize.WhitespaceTokenizer;
-
-public class TaxiStateMachineBotConfiguration
-    implements StateMachineBotConfiguration
+public class TaxiStateMachineBotConfiguration implements StateMachineBotConfiguration
 {
 
   @Override
   public IntentMatcher getIntentMatcher()
   {
- // model was built with OpenNLP whitespace tokenizer
+    // model was built with OpenNLP whitespace tokenizer
     OpenNLPTokenizer tokenizer = new OpenNLPTokenizer(WhitespaceTokenizer.INSTANCE);
-    
+
     // use Open NLP NER for slot matching
     OpenNLPSlotMatcher slotMatcher = new OpenNLPSlotMatcher(tokenizer);
-    slotMatcher.addSlotModel("Address", "models/en-ner-address.bin");    
+    slotMatcher.addSlotModel("Address", "models/en-ner-address.bin");
 
     // create intent matcher
     OpenNLPIntentMatcher matcher = new OpenNLPIntentMatcher("models/en-cat-taxi-intents.bin", tokenizer, slotMatcher);

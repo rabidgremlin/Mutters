@@ -1,3 +1,4 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
 import com.rabidgremlin.mutters.core.Context;
@@ -5,11 +6,11 @@ import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
- * Slot that handles a string literal. Included for completeness. Always matches.
+ * Slot that handles a string literal. Included for completeness. Always
+ * matches.
  *
  */
-public class LiteralSlot
-    extends Slot
+public class LiteralSlot extends Slot
 {
 
   private String name;

@@ -1,10 +1,12 @@
+/* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * This class provides context of user's locale and timezone for slots to use when matching.
+ * This class provides context of user's locale and timezone for slots to use
+ * when matching.
  * 
  * If locale and timezone are not specified then the JVM defaults are used.
  * 

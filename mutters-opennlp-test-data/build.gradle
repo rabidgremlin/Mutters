@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
-       classpath 'de.undercouch:gradle-download-task:3.1.1'
+       classpath "de.undercouch:gradle-download-task:$rootProject.ext.gradleDownloadTaskVersion"
     }
 }
 
@@ -19,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    openNLPCompile 'org.apache.opennlp:opennlp-tools:1.6.0'
+    openNLPCompile "org.apache.opennlp:opennlp-tools:$rootProject.ext.openNlpVersion"
 }
 
 task createModelsDir {
@@ -46,9 +47,8 @@ task generateIntentModel(type:JavaExec) {
            '-featureGenerators',
            'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator',
            '-params',
-           'src/main/resources/TaxiBotIntentsParams.txt',
-           '-tokenizer',
-           'opennlp.tools.tokenize.WhitespaceTokenizer']
+           'src/main/resources/TaxiBotIntentsParams.txt'
+           ]
 }
 
 generateIntentModel.dependsOn createModelsDir
