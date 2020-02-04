@@ -3,6 +3,8 @@ package com.rabidgremlin.mutters.opennlp.ner;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -28,16 +30,16 @@ import com.rabidgremlin.mutters.slots.DefaultValueSlot;
 public class OpenNLPSlotMatcher implements SlotMatcher
 {
   /** Logger. */
-  private Logger log = LoggerFactory.getLogger(OpenNLPSlotMatcher.class);
+  private final Logger log = LoggerFactory.getLogger(OpenNLPSlotMatcher.class);
 
   /** Map of NER models. */
-  private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<String, TokenNameFinderModel>();
+  private final HashMap<String, TokenNameFinderModel> nerModels = new HashMap<>();
 
   /** Map of slot models. These share the NER models. */
-  private HashMap<String, TokenNameFinderModel> slotModels = new HashMap<String, TokenNameFinderModel>();
+  private final HashMap<String, TokenNameFinderModel> slotModels = new HashMap<>();
 
   /** The tokenizer to use. */
-  private Tokenizer tokenizer;
+  private final Tokenizer tokenizer;
 
   /**
    * Constructor. Allows tokenizer to be supplied because NER can use case etc as
@@ -78,13 +80,13 @@ public class OpenNLPSlotMatcher implements SlotMatcher
   }
 
   @Override
-  public HashMap<Slot, SlotMatch> match(Context context, Intent intent, String utterance)
+  public Map<Slot<?>, SlotMatch<?>> match(Context context, Intent intent, String utterance)
   {
     String[] utteranceTokens = tokenizer.tokenize(utterance);
 
-    HashMap<Slot, SlotMatch> matchedSlots = new HashMap<Slot, SlotMatch>();
+    HashMap<Slot<?>, SlotMatch<?>> matchedSlots = new HashMap<>();
 
-    for (Slot slot : intent.getSlots())
+    for (Slot<?> slot : intent.getSlots())
     {
       log.debug("Looking for Slot {}", slot.getName());
 
@@ -106,10 +108,10 @@ public class OpenNLPSlotMatcher implements SlotMatcher
         log.debug("Matching for {} against {}", slot.getName(), matches);
 
         // TODO what to do with multi matches?
-        SlotMatch match = slot.match(matches[0], context);
-        if (match != null)
+        Optional<? extends SlotMatch<?>> match = slot.match(matches[0], context);
+        if (match.isPresent())
         {
-          matchedSlots.put(slot, match);
+          matchedSlots.put(slot, match.get());
           slotMatched = true;
           log.debug("Match found {}", match);
         }
@@ -121,8 +123,10 @@ public class OpenNLPSlotMatcher implements SlotMatcher
 
       if (!slotMatched && slot instanceof DefaultValueSlot)
       {
-        Object defaultValue = ((DefaultValueSlot) slot).getDefaultValue();
-        matchedSlots.put(slot, new SlotMatch(slot, utterance, defaultValue));
+        DefaultValueSlot<?> defaultValueSlot = (DefaultValueSlot<?>) slot;
+        Object defaultValue = defaultValueSlot.getDefaultValue();
+        // capture wildcard with helper method
+        matchedSlots.put(slot, newSlotMatch(defaultValueSlot, utterance));
         log.debug("No Match found slot: {} Using default value: {} ", slot.getName(), defaultValue);
       }
       else
@@ -131,5 +135,11 @@ public class OpenNLPSlotMatcher implements SlotMatcher
       }
     }
     return matchedSlots;
+  }
+
+  private static <T> SlotMatch<T> newSlotMatch(DefaultValueSlot<T> defaultValueSlot, String utterance)
+  {
+    T defaultValue = defaultValueSlot.getDefaultValue();
+    return new SlotMatch<>(defaultValueSlot, utterance, defaultValue);
   }
 }

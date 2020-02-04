@@ -54,7 +54,7 @@ import com.rabidgremlin.mutters.core.session.Session;
 public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
 {
   /** Logger for the bot. */
-  private Logger log = LoggerFactory.getLogger(InkBot.class);
+  private final Logger log = LoggerFactory.getLogger(InkBot.class);
 
   /** The intent matcher for the bot. */
   protected IntentMatcher matcher;
@@ -63,7 +63,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
   protected String inkStoryJson;
 
   /** Map of InkBotFunctions the bot knows. */
-  protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<String, InkBotFunction>();
+  protected HashMap<String, InkBotFunction> inkBotFunctions = new HashMap<>();
 
   /** Map of global intents for the bot. */
   protected HashMap<String, String> globalIntents = new HashMap<>();
@@ -77,7 +77,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
   /**
    * A thread local map that holds the story instance for each unique story JSON
    */
-  private static ThreadLocal<Map<String, Story>> threadLocalStoryMap = ThreadLocal.withInitial(HashMap::new);
+  private static final ThreadLocal<Map<String, Story>> threadLocalStoryMap = ThreadLocal.withInitial(HashMap::new);
 
   private RepromptGenerator repromptGenerator = null;
 
@@ -146,7 +146,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
   @Override
   public IntentBotResponse respond(Session session, Context context, String messageText) throws BotException
   {
-    log.debug("===> \n session: {} context: {} messageText: {}", new Object[] { session, context, messageText });
+    log.debug("===> \n session: {} context: {} messageText: {}", session, context, messageText);
 
     CurrentResponse currentResponse = new CurrentResponse();
 
@@ -160,7 +160,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
     String matchedIntent = null;
 
     int failedToUnderstandCount = InkBotSessionUtils.getFailedToUnderstandCount(session);
-    log.debug("current failed count is {}", failedToUnderstandCount);
+    log.debug("current failed count is: {}", failedToUnderstandCount);
 
     try
     {
@@ -195,7 +195,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
       String preText = processStory(session, currentResponse, story, null).toString();
 
       // build expected intents set
-      HashSet<String> expectedIntents = new HashSet<String>();
+      HashSet<String> expectedIntents = new HashSet<>();
       // add all the names of the global intents
       expectedIntents.addAll(globalIntents.keySet());
       // add all the choices
@@ -275,14 +275,14 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
         failedToUnderstandCount += 1;
       }
 
-      log.debug("failed count is now {}", failedToUnderstandCount);
+      log.debug("failed count is now: {}", failedToUnderstandCount);
 
       // do we have confused knot and failed attempt > max failed attempts ?
       if (confusedKnotName != null && failedToUnderstandCount >= maxAttemptsBeforeConfused)
       {
         log.debug("Bot is confused. failedToUnderstandCount({}) >= maxAttemptsBeforeConfused ({})",
             failedToUnderstandCount, maxAttemptsBeforeConfused);
-        log.debug("jumping to {} ", confusedKnotName);
+        log.debug("jumping to: {} ", confusedKnotName);
         // jump to confused knot
         story.choosePathString(confusedKnotName);
         // continue story
@@ -354,9 +354,9 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
     InkBotSessionUtils.setRepromptQuickReplies(session, currentResponse.getResponseQuickReplies());
   }
 
-  private void setSlotValuesInInk(Collection<SlotMatch> slotMatches, Story story) throws Exception
+  private void setSlotValuesInInk(Collection<SlotMatch<?>> slotMatches, Story story) throws Exception
   {
-    for (SlotMatch slotMatch : slotMatches)
+    for (SlotMatch<?> slotMatch : slotMatches)
     {
       if (slotMatch.getValue() instanceof Number)
       {
@@ -460,7 +460,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
   private void processStoryLine(String line, StringBuffer response, CurrentResponse currentResponse, Session session,
       IntentMatch intentMatch, Story story)
   {
-    log.debug("Line {}", line);
+    log.debug("Line: {}", line);
 
     String trimmedLine = line.trim();
 
@@ -476,7 +476,7 @@ public abstract class InkBot<T extends InkBotConfiguration> implements IntentBot
       }
       else
       {
-        log.warn("Did not find function named {}", functionName);
+        log.warn("Did not find function named: {}", functionName);
       }
     }
     else

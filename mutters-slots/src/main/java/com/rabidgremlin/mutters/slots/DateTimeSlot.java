@@ -4,12 +4,13 @@ package com.rabidgremlin.mutters.slots;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -19,18 +20,16 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class DateTimeSlot extends Slot
+public class DateTimeSlot extends AbstractSlot<ZonedDateTime>
 {
-
-  private final String name;
 
   public DateTimeSlot(String name)
   {
-    this.name = name;
+    super(name);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<ZonedDateTime>> match(String token, Context context)
   {
 
     Parser parser = new Parser(context.getTimeZone());
@@ -52,18 +51,12 @@ public class DateTimeSlot extends Slot
         {
           Date date = dates.get(0);
           TimeZone timeZone = context.getTimeZone();
-          return new SlotMatch(this, token, ZonedDateTime.ofInstant(date.toInstant(), timeZone.toZoneId()));
+          return Optional
+              .of(new SlotMatch<>(this, token, ZonedDateTime.ofInstant(date.toInstant(), timeZone.toZoneId())));
         }
       }
     }
 
-    return null;
+    return Optional.empty();
   }
-
-  @Override
-  public String getName()
-  {
-    return name;
-  }
-
 }

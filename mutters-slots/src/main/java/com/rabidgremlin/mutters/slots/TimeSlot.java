@@ -5,11 +5,12 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -19,18 +20,16 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class TimeSlot extends Slot
+public class TimeSlot extends AbstractSlot<LocalTime>
 {
-
-  private final String name;
 
   public TimeSlot(String name)
   {
-    this.name = name;
+    super(name);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<LocalTime>> match(String token, Context context)
   {
 
     Parser parser = new Parser(context.getTimeZone());
@@ -53,18 +52,11 @@ public class TimeSlot extends Slot
           ZonedDateTime theDateTime = ZonedDateTime.ofInstant(dates.get(0).toInstant(),
               context.getTimeZone().toZoneId());
           LocalTime localTime = theDateTime.toLocalTime();
-          return new SlotMatch(this, token, localTime);
+          return Optional.of(new SlotMatch<>(this, token, localTime));
         }
       }
     }
 
-    return null;
+    return Optional.empty();
   }
-
-  @Override
-  public String getName()
-  {
-    return name;
-  }
-
 }

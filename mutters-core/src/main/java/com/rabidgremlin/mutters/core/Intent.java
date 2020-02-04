@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Intent
 {
   /** Intent used to indicate no match. */
-  private final static Intent NONE = new Intent("NONE");
+  private static final Intent NONE = new Intent("NONE");
 
   /** The name of the intent. */
   protected String name;
@@ -48,7 +48,7 @@ public class Intent
    * 
    * @param slot The slot to add.
    */
-  public void addSlot(Slot slot)
+  public void addSlot(Slot<?> slot)
   {
     slots.add(slot);
   }
@@ -58,7 +58,7 @@ public class Intent
    * 
    * @return The slots for the intent.
    */
-  public Collection<Slot> getSlots()
+  public Collection<Slot<?>> getSlots()
   {
     return Collections.unmodifiableCollection(slots.getSlots());
   }

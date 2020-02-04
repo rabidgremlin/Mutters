@@ -24,7 +24,7 @@ import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 
 public class TestIntentMatcher
 {
-  private SimpleTokenizer tokenizer = new SimpleTokenizer();
+  private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testBasicMatching()
@@ -49,11 +49,11 @@ public class TestIntentMatcher
     assertThat(intentMatch.getIntent(), is(additionIntent));
     assertThat(intentMatch.getSlotMatches().size(), is(2));
 
-    SlotMatch number1Match = intentMatch.getSlotMatches().get(number1);
+    SlotMatch<?> number1Match = intentMatch.getSlotMatches().get(number1);
     assertThat(number1Match, is(notNullValue()));
     assertThat(number1Match.getValue(), is(1L));
 
-    SlotMatch number2Match = intentMatch.getSlotMatches().get(number2);
+    SlotMatch<?> number2Match = intentMatch.getSlotMatches().get(number2);
     assertThat(number2Match, is(notNullValue()));
     assertThat(number2Match.getValue(), is(5L));
 
@@ -128,15 +128,15 @@ public class TestIntentMatcher
   }
 
   // slot that matches a colour or defaults to black
-  static class ColorsSlot extends CustomSlot implements DefaultValueSlot
+  static class ColorsSlot extends CustomSlot implements DefaultValueSlot<String>
   {
     public ColorsSlot()
     {
-      super("Color", new String[] { "Red", "Green", "Blue", "White" });
+      super("Color", "Red", "Green", "Blue", "White");
     }
 
     @Override
-    public Object getDefaultValue()
+    public String getDefaultValue()
     {
       return "Black";
     }
@@ -161,7 +161,7 @@ public class TestIntentMatcher
     IntentMatch intentMatch = matcher.match("My favourite color is green", new Context(), null);
     assertThat(intentMatch, is(notNullValue()));
     assertThat(intentMatch.getSlotMatches().size(), is(1));
-    SlotMatch colourMatch = intentMatch.getSlotMatches().get(colorSlot);
+    SlotMatch<?> colourMatch = intentMatch.getSlotMatches().get(colorSlot);
     assertThat(colourMatch, is(notNullValue()));
     assertThat(colourMatch.getValue(), is("Green"));
 

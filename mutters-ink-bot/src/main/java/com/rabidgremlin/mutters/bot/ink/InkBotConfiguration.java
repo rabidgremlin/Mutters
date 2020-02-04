@@ -67,9 +67,9 @@ public interface InkBotConfiguration
    */
   public class GlobalIntent
   {
-    private String intentName;
+    private final String intentName;
 
-    private String knotName;
+    private final String knotName;
 
     public GlobalIntent(String intentName, String knotName)
     {
@@ -97,9 +97,9 @@ public interface InkBotConfiguration
    */
   public class ConfusedKnot
   {
-    private int maxAttemptsBeforeConfused;
+    private final int maxAttemptsBeforeConfused;
 
-    private String confusedKnotName;
+    private final String confusedKnotName;
 
     public ConfusedKnot(int maxAttemptsBeforeConfused, String confusedKnotName)
     {

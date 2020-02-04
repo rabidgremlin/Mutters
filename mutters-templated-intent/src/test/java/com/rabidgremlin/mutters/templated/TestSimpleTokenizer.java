@@ -9,9 +9,9 @@ import org.junit.Test;
 
 public class TestSimpleTokenizer
 {
-  private SimpleTokenizer tokenizer = new SimpleTokenizer();
+  private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
-  private SimpleTokenizer tokenizerLower = new SimpleTokenizer(true);
+  private final SimpleTokenizer tokenizerLower = new SimpleTokenizer(true);
 
   private void checkResult(String inputText, String[] expectedTokens)
   {

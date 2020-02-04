@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/rabidgremlin/mutters.svg?branch=master)](https://travis-ci.com/rabidgremlin/mutters)
+[![codecov](https://codecov.io/gh/rabidgremlin/mutters/branch/master/graph/badge.svg)](https://codecov.io/gh/rabidgremlin/mutters)
+[![GitHub license](https://img.shields.io/github/license/rabidgremlin/mutters.svg)](https://github.com/rabidgremlin/mutters/blob/master/LICENSE)
+
 # Mutters
 A Java framework for building bot brains. Heavily inspired by Amazon Echo's natural language understanding model.  
 

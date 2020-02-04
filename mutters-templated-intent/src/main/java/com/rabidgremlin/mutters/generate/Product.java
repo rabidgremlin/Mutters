@@ -43,7 +43,7 @@ public final class Product
   {
     // TODO check for empty lists etc
     // TODO optimise and reduce memory usage
-    List<List<T>> result = new ArrayList<List<T>>();
+    List<List<T>> result = new ArrayList<>();
 
     // copy first list as result
     for (T item : lists[0])
@@ -61,13 +61,13 @@ public final class Product
 
   private static <T> List<List<T>> multiply(List<List<T>> result, List<T> list)
   {
-    List<List<T>> temp = new ArrayList<List<T>>();
+    List<List<T>> temp = new ArrayList<>();
 
     for (List<T> row : result)
     {
       for (T item : list)
       {
-        List<T> tempRow = new ArrayList<T>(row);
+        List<T> tempRow = new ArrayList<>(row);
         tempRow.add(item);
         temp.add(tempRow);
       }

@@ -25,7 +25,7 @@ import com.rabidgremlin.mutters.core.ml.AbstractMachineLearningIntentMatcher;
 public class OpenNLPIntentMatcher extends AbstractMachineLearningIntentMatcher
 {
   /** The document categoriser for the intent matcher. */
-  private DoccatModel model;
+  private final DoccatModel model;
 
   /** Default minimum match score. */
   private static final float MIN_MATCH_SCORE = 0.75f;
@@ -104,7 +104,7 @@ public class OpenNLPIntentMatcher extends AbstractMachineLearningIntentMatcher
     SortedMap<Double, Set<String>> scores = intentCategorizer.sortedScoreMap(utteranceTokens);
 
     // convert to sorted set of intents
-    SortedMap<Double, SortedSet<String>> sortedScores = new TreeMap<Double, SortedSet<String>>();
+    SortedMap<Double, SortedSet<String>> sortedScores = new TreeMap<>();
     scores.forEach((score, intents) -> sortedScores.put(score, new TreeSet<>(intents)));
 
     return sortedScores;

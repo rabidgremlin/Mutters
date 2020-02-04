@@ -289,7 +289,7 @@ public class SessionUtils
    */
   public static void saveSlotsToSession(IntentMatch match, Session session)
   {
-    for (SlotMatch slotMatch : match.getSlotMatches().values())
+    for (SlotMatch<?> slotMatch : match.getSlotMatches().values())
     {
       session.setAttribute(SLOT_PREFIX + slotMatch.getSlot().getName(), slotMatch.getValue());
     }

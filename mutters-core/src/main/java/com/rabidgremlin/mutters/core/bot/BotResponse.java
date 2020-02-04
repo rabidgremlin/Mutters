@@ -17,19 +17,19 @@ import java.util.Objects;
 public class BotResponse
 {
   /** The response text. */
-  private String response;
+  private final String response;
 
   /** Any hint text for the client to display. */
-  private String hint;
+  private final String hint;
 
   /** True if this the bot is expecting a further response from the user. */
-  private boolean askResponse;
+  private final boolean askResponse;
 
   /** The attachments for the response. */
-  private List<BotResponseAttachment> attachments;
+  private final List<BotResponseAttachment> attachments;
 
   /** List of suggested replies that the user could use. */
-  private List<String> quickReplies;
+  private final List<String> quickReplies;
 
   /**
    * Constructor.

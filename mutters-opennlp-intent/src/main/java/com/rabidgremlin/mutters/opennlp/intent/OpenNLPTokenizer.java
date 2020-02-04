@@ -11,7 +11,7 @@ import com.rabidgremlin.mutters.core.Tokenizer;
  */
 public class OpenNLPTokenizer implements Tokenizer
 {
-  private opennlp.tools.tokenize.Tokenizer tokenizer;
+  private final opennlp.tools.tokenize.Tokenizer tokenizer;
 
   /**
    * Constructor.

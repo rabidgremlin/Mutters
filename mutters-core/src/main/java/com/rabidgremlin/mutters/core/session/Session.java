@@ -20,9 +20,9 @@ import java.util.HashMap;
 public class Session implements Serializable
 {
   /** Map of attributes for the session. */
-  private HashMap<String, Object> attributes = new HashMap<String, Object>();
+  private HashMap<String, Object> attributes = new HashMap<>();
 
-  private HashMap<String, Object> longTermAttributes = new HashMap<String, Object>();
+  private HashMap<String, Object> longTermAttributes = new HashMap<>();
 
   /**
    * Get the specified attribute.
@@ -63,7 +63,7 @@ public class Session implements Serializable
    */
   public void reset()
   {
-    attributes = new HashMap<String, Object>();
+    attributes = new HashMap<>();
   }
 
   /**
@@ -104,8 +104,8 @@ public class Session implements Serializable
    */
   public void resetAll()
   {
-    attributes = new HashMap<String, Object>();
-    longTermAttributes = new HashMap<String, Object>();
+    attributes = new HashMap<>();
+    longTermAttributes = new HashMap<>();
   }
 
   /*

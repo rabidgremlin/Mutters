@@ -5,6 +5,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.rabidgremlin.mutters.core.Context;
@@ -18,7 +20,7 @@ import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
 public class TestUtterance
 {
-  private SimpleTokenizer tokenizer = new SimpleTokenizer();
+  private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
   public void testSimpleMatch()
@@ -59,7 +61,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red");
     slots.add(color);
 
     // System.out.println(color);
@@ -70,9 +72,9 @@ public class TestUtterance
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch colorMatch = match.getSlotMatches().get(color);
+    SlotMatch<?> colorMatch = match.getSlotMatches().get(color);
     assertThat(colorMatch, is(notNullValue()));
-    assertThat(colorMatch.getOrginalValue(), is("red"));
+    assertThat(colorMatch.getOriginalValue(), is("red"));
     assertThat(colorMatch.getValue(), is("Red"));
   }
 
@@ -84,7 +86,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red");
     slots.add(color);
 
     assertNotMatch(utterance.matches(tokenizer.tokenize("I Like pink"), slots, context));
@@ -109,10 +111,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red");
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", "grapes", "biscuits", "lollipops");
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -121,14 +123,14 @@ public class TestUtterance
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(2));
 
-    SlotMatch colorMatch = match.getSlotMatches().get(color);
+    SlotMatch<?> colorMatch = match.getSlotMatches().get(color);
     assertThat(colorMatch, is(notNullValue()));
-    assertThat(colorMatch.getOrginalValue(), is("red"));
+    assertThat(colorMatch.getOriginalValue(), is("red"));
     assertThat(colorMatch.getValue(), is("Red"));
 
-    SlotMatch foodMatch = match.getSlotMatches().get(food);
+    SlotMatch<?> foodMatch = match.getSlotMatches().get(food);
     assertThat(foodMatch, is(notNullValue()));
-    assertThat(foodMatch.getOrginalValue(), is("grapes"));
+    assertThat(foodMatch.getOriginalValue(), is("grapes"));
     assertThat(foodMatch.getValue(), is("grapes"));
   }
 
@@ -140,10 +142,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red");
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[] { "grapes", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", "grapes", "biscuits", "lollipops");
     slots.add(food);
 
     assertNotMatch(utterance.matches(tokenizer.tokenize("I like red and burgers"), slots, context));
@@ -163,7 +165,7 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("City", new String[] { "Wellington", "San Francisco", "Auckland" });
+    CustomSlot color = new CustomSlot("City", "Wellington", "San Francisco", "Auckland");
     slots.add(color);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -172,9 +174,9 @@ public class TestUtterance
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch colorMatch = match.getSlotMatches().get(color);
+    SlotMatch<?> colorMatch = match.getSlotMatches().get(color);
     assertThat(colorMatch, is(notNullValue()));
-    assertThat(colorMatch.getOrginalValue(), is("San francisco"));
+    assertThat(colorMatch.getOriginalValue(), is("San francisco"));
     assertThat(colorMatch.getValue(), is("San Francisco"));
   }
 
@@ -210,10 +212,10 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red", "Red and Grapes" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red", "Red and Grapes");
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[] { "bananas", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", "bananas", "biscuits", "lollipops");
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
@@ -222,14 +224,14 @@ public class TestUtterance
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(2));
 
-    SlotMatch colorMatch = match.getSlotMatches().get(color);
+    SlotMatch<?> colorMatch = match.getSlotMatches().get(color);
     assertThat(colorMatch, is(notNullValue()));
-    assertThat(colorMatch.getOrginalValue(), is("red and grapes"));
+    assertThat(colorMatch.getOriginalValue(), is("red and grapes"));
     assertThat(colorMatch.getValue(), is("Red and Grapes"));
 
-    SlotMatch foodMatch = match.getSlotMatches().get(food);
+    SlotMatch<?> foodMatch = match.getSlotMatches().get(food);
     assertThat(foodMatch, is(notNullValue()));
-    assertThat(foodMatch.getOrginalValue(), is("bananas"));
+    assertThat(foodMatch.getOriginalValue(), is("bananas"));
     assertThat(foodMatch.getValue(), is("bananas"));
   }
 
@@ -241,13 +243,13 @@ public class TestUtterance
     Slots slots = new Slots();
     Context context = new Context();
 
-    CustomSlot city = new CustomSlot("City", new String[] { "Wellington", "San Francisco", "Auckland" });
+    CustomSlot city = new CustomSlot("City", "Wellington", "San Francisco", "Auckland");
     slots.add(city);
 
-    CustomSlot color = new CustomSlot("Color", new String[] { "Green", "blue", "Red" });
+    CustomSlot color = new CustomSlot("Color", "Green", "blue", "Red");
     slots.add(color);
 
-    CustomSlot food = new CustomSlot("Food", new String[] { "bananas", "biscuits", "lollipops" });
+    CustomSlot food = new CustomSlot("Food", "bananas", "biscuits", "lollipops");
     slots.add(food);
 
     TemplatedUtteranceMatch match = utterance.matches(tokenizer.tokenize("san francisco red bananas "), slots, context);
@@ -256,20 +258,32 @@ public class TestUtterance
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(3));
 
-    SlotMatch cityMatch = match.getSlotMatches().get(city);
+    SlotMatch<?> cityMatch = match.getSlotMatches().get(city);
     assertThat(cityMatch, is(notNullValue()));
-    assertThat(cityMatch.getOrginalValue(), is("san francisco"));
+    assertThat(cityMatch.getOriginalValue(), is("san francisco"));
     assertThat(cityMatch.getValue(), is("San Francisco"));
 
-    SlotMatch colorMatch = match.getSlotMatches().get(color);
+    SlotMatch<?> colorMatch = match.getSlotMatches().get(color);
     assertThat(colorMatch, is(notNullValue()));
-    assertThat(colorMatch.getOrginalValue(), is("red"));
+    assertThat(colorMatch.getOriginalValue(), is("red"));
     assertThat(colorMatch.getValue(), is("Red"));
 
-    SlotMatch foodMatch = match.getSlotMatches().get(food);
+    SlotMatch<?> foodMatch = match.getSlotMatches().get(food);
     assertThat(foodMatch, is(notNullValue()));
-    assertThat(foodMatch.getOrginalValue(), is("bananas"));
+    assertThat(foodMatch.getOriginalValue(), is("bananas"));
     assertThat(foodMatch.getValue(), is("bananas"));
   }
 
+  @Test
+  public void shouldReturnCompleteListOfExpectedSlots()
+  {
+    TemplatedUtterance teplatedUtterance = new TemplatedUtterance(
+        tokenizer.tokenize("I like {Color} and {Food} and {color} food"));
+
+    List<String> expectedSlotNames = teplatedUtterance.getExpectedSlotNames();
+    assertThat(expectedSlotNames, is(notNullValue()));
+    assertThat(expectedSlotNames.size(), is(2));
+    assertThat(expectedSlotNames.contains("color"), is(true));
+    assertThat(expectedSlotNames.contains("food"), is(true));
+  }
 }

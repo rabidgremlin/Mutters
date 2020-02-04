@@ -14,14 +14,14 @@ import java.util.HashMap;
 public class Slots
 {
   /** The map of slots. */
-  private HashMap<String, Slot> slots = new HashMap<String, Slot>();
+  private final HashMap<String, Slot<?>> slots = new HashMap<>();
 
   /**
    * Adds a slot to the map.
    * 
    * @param slot The slot to add.
    */
-  public void add(Slot slot)
+  public void add(Slot<?> slot)
   {
     slots.put(slot.getName().toLowerCase(), slot);
   }
@@ -32,7 +32,7 @@ public class Slots
    * @param name The name of the slot.
    * @return The name of the slot or null if the slot does not exist in the map.
    */
-  public Slot getSlot(String name)
+  public Slot<?> getSlot(String name)
   {
     return slots.get(name.toLowerCase());
   }
@@ -42,7 +42,7 @@ public class Slots
    * 
    * @return The slots in the map.
    */
-  public Collection<Slot> getSlots()
+  public Collection<Slot<?>> getSlots()
   {
     return Collections.unmodifiableCollection(slots.values());
   }

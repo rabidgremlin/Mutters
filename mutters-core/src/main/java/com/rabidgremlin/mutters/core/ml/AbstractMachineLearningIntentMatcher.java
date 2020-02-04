@@ -4,6 +4,7 @@ package com.rabidgremlin.mutters.core.ml;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
@@ -45,10 +46,10 @@ import com.rabidgremlin.mutters.core.Tokenizer;
 public abstract class AbstractMachineLearningIntentMatcher implements IntentMatcher
 {
   /** Logger. */
-  private Logger log = LoggerFactory.getLogger(AbstractMachineLearningIntentMatcher.class);
+  private final Logger log = LoggerFactory.getLogger(AbstractMachineLearningIntentMatcher.class);
 
   /** Map of intents to match on. */
-  private HashMap<String, Intent> intents = new HashMap<String, Intent>();
+  private final HashMap<String, Intent> intents = new HashMap<>();
 
   /** Default minimum match score. */
   public static final float MIN_MATCH_SCORE = 0.75f;
@@ -57,7 +58,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
    * The minimum match score. The match must have at least this probability to be
    * considered good.
    */
-  private float minMatchScore;
+  private final float minMatchScore;
 
   /** Maybe match score. */
   private float maybeMatchScore = -1;
@@ -65,13 +66,13 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
   public static final String MAYBE_INTENT_PREFIX = "Maybe";
 
   /** Debug value key for intent matching scores. */
-  public final static String DEBUG_MATCHING_SCORES = "intentMatchingScores";
+  public static final String DEBUG_MATCHING_SCORES = "intentMatchingScores";
 
   /** The tokenizer to use for the intent matching. */
-  private Tokenizer tokenizer;
+  private final Tokenizer tokenizer;
 
   /** The slot matcher to use for NER. */
-  private SlotMatcher slotMatcher;
+  private final SlotMatcher slotMatcher;
 
   /**
    * Constructor.
@@ -235,7 +236,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
             maybeIntent = new Intent(MAYBE_INTENT_PREFIX + bestCategory);
 
             // copy slots from best intent
-            for (Slot slot : bestIntent.getSlots())
+            for (Slot<?> slot : bestIntent.getSlots())
             {
               maybeIntent.addSlot(slot);
             }
@@ -261,7 +262,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
     }
 
     // do NER
-    HashMap<Slot, SlotMatch> matchedSlots = slotMatcher.match(context, bestIntent, utterance);
+    Map<Slot<?>, SlotMatch<?>> matchedSlots = slotMatcher.match(context, bestIntent, utterance);
 
     // return best match
     return new IntentMatch(bestIntent, matchedSlots, utterance, new MatcherScores(scoredCats));
@@ -278,7 +279,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
     Double score1 = scoredCats.lastKey();
     Double score2 = scoredCats.headMap(score1).lastKey();
 
-    return new Double(score1 - score2);
+    return score1 - score2;
   }
 
   protected abstract SortedMap<Double, SortedSet<String>> generateSortedScoreMap(String[] utteranceTokens);

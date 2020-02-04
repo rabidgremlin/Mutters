@@ -1,11 +1,10 @@
 buildscript {
     repositories {
-        //jcenter()
         mavenCentral()
     }
     dependencies { 
-        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$rootProject.ext.pegdownDocletVersion"
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:$rootProject.ext.spotlessVersion"
+        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$pegdownDocletVersion"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotlessVersion"
     }
 }
 
@@ -20,11 +19,11 @@ dependencies {
     compile project(':mutters-core')
     compile project(':mutters-slots') 
     
-    compile "org.slf4j:slf4j-api:$rootProject.ext.slf4jVersion"  
-    compile "org.apache.commons:commons-lang3:$rootProject.ext.commonsLang3Version"   
-    compile "commons-validator:commons-validator:$rootProject.ext.commonsValidator"    
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.apache.commons:commons-lang3:$commonsLang3Version"
+    compile "commons-validator:commons-validator:$commonsValidator"
         
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.slf4j:slf4j-simple:$rootProject.ext.slf4jVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestAllVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestAllVersion"
 }

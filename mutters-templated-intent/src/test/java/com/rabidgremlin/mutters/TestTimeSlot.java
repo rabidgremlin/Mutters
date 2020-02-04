@@ -40,9 +40,9 @@ public class TestTimeSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("6:45am"));
+    assertThat(slotMatch.getOriginalValue(), is("6:45am"));
     assertThat(slotMatch.getValue(), is(LocalTime.of(6, 45)));
   }
 
@@ -65,9 +65,9 @@ public class TestTimeSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("6:45am"));
+    assertThat(slotMatch.getOriginalValue(), is("6:45am"));
     assertThat(slotMatch.getValue(), is(LocalTime.of(6, 45)));
   }
 

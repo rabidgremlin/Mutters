@@ -18,7 +18,7 @@ import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 
 public class TestTemplatedIntentFiltering
 {
-  private SimpleTokenizer tokenizer = new SimpleTokenizer();
+  private final SimpleTokenizer tokenizer = new SimpleTokenizer();
   TemplatedIntentMatcher matcher;
 
   @Before
@@ -57,7 +57,7 @@ public class TestTemplatedIntentFiltering
   @Test
   public void testFiltering()
   {
-    HashSet<String> expectedIntents = new HashSet<String>();
+    HashSet<String> expectedIntents = new HashSet<>();
     expectedIntents.add("HelloIntent");
 
     // should match on hello intent

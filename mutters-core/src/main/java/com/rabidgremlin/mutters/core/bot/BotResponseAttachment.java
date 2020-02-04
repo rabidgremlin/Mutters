@@ -59,7 +59,7 @@ public class BotResponseAttachment
   {
     if (parameters == null)
     {
-      parameters = new HashMap<String, Object>();
+      parameters = new HashMap<>();
     }
 
     parameters.put(name, value);

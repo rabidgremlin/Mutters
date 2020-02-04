@@ -41,9 +41,9 @@ public class TestDateSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
+    assertThat(slotMatch.getOriginalValue(), is("30th May 1974"));
     assertThat(slotMatch.getValue(), is(LocalDate.of(1974, 5, 30)));
   }
 
@@ -66,9 +66,9 @@ public class TestDateSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("30th May 1974"));
+    assertThat(slotMatch.getOriginalValue(), is("30th May 1974"));
     assertThat(slotMatch.getValue(), is(LocalDate.of(1974, 5, 30)));
   }
 
@@ -108,7 +108,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
     assertThat(dateMatch.getDayOfMonth(), is(20));
     assertThat(dateMatch.getMonth().getValue(), is(5));
@@ -133,7 +133,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
     assertThat(dateMatch.getDayOfMonth(), is(20));
     assertThat(dateMatch.getMonth().getValue(), is(5));
@@ -158,7 +158,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
     assertThat(dateMatch.getDayOfMonth(), is(20));
     assertThat(dateMatch.getMonth().getValue(), is(5));
@@ -183,7 +183,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
     assertThat(dateMatch.getDayOfMonth(), is(1));
     assertThat(dateMatch.getMonth().getValue(), is(12));
@@ -208,7 +208,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
 
     LocalDate today = LocalDate.now();
@@ -233,7 +233,7 @@ public class TestDateSlot
     assertThat(match, is(notNullValue()));
     assertThat(match.isMatched(), is(true));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
 
     LocalDate tommorrow = LocalDate.now().plusDays(1);

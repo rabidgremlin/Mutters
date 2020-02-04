@@ -43,9 +43,9 @@ public class TestDateTimeSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
+    assertThat(slotMatch.getOriginalValue(), is("30th May 1974 at 10pm"));
     assertThat(slotMatch.getValue(), is(ZonedDateTime.of(1974, 5, 30, 22, 0, 0, 0, ZoneId.systemDefault())));
   }
 
@@ -68,9 +68,9 @@ public class TestDateTimeSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("30th May 1974 at 10pm"));
+    assertThat(slotMatch.getOriginalValue(), is("30th May 1974 at 10pm"));
     assertThat(slotMatch.getValue(), is(ZonedDateTime.of(1974, 5, 30, 22, 0, 0, 0, context.getTimeZone().toZoneId())));
   }
 
@@ -92,9 +92,9 @@ public class TestDateTimeSlot
     assertThat(match.isMatched(), is(true));
     assertThat(match.getSlotMatches().size(), is(1));
 
-    SlotMatch slotMatch = match.getSlotMatches().get(slot);
+    SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOrginalValue(), is("last week"));
+    assertThat(slotMatch.getOriginalValue(), is("last week"));
 
     LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
 

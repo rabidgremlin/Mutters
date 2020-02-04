@@ -1,11 +1,10 @@
 buildscript {
     repositories {
-        //jcenter()
         mavenCentral()
     }
     dependencies { 
-        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$rootProject.ext.pegdownDocletVersion"
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:$rootProject.ext.spotlessVersion"
+        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$pegdownDocletVersion"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotlessVersion"
     }
 }
 
@@ -19,10 +18,10 @@ repositories {
 dependencies {
     compile project(':mutters-core')    
     
-    compile "com.joestelmach:natty:$rootProject.ext.nattyVersion"
-    compile "org.apache.commons:commons-lang3:$rootProject.ext.commonsLang3Version"
+    compile "com.joestelmach:natty:$nattyVersion"
+    compile "org.apache.commons:commons-lang3:$commonsLang3Version"
         
-    testCompile "junit:junit:$rootProject.ext.junitVersion"    
-    testCompile "org.slf4j:slf4j-simple:$rootProject.ext.slf4jVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestAllVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestAllVersion"
 }

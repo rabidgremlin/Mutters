@@ -24,7 +24,7 @@ import com.rabidgremlin.mutters.core.Tokenizer;
 public class SimpleTokenizer implements Tokenizer
 {
   /** Are we forcing tokens to lower case ? */
-  private boolean forceLowerCase;
+  private final boolean forceLowerCase;
 
   /**
    * Constructor. Defaults to not lowercasing tokens.

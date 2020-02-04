@@ -12,7 +12,7 @@ import java.util.Map;
 public class FunctionDetails
 {
   /** The data string. */
-  private String functionData;
+  private final String functionData;
 
   /** The data string parsed into params. */
   private Map<String, String> functionParams;
@@ -41,7 +41,7 @@ public class FunctionDetails
   {
     if (functionParams == null)
     {
-      functionParams = new HashMap<String, String>();
+      functionParams = new HashMap<>();
     }
 
     functionParams.put(name, value);

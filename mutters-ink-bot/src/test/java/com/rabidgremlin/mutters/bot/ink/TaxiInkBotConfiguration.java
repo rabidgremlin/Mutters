@@ -102,7 +102,7 @@ public class TaxiInkBotConfiguration implements InkBotConfiguration
   @Override
   public List<GlobalIntent> getGlobalIntents()
   {
-    List<GlobalIntent> globalIntents = new ArrayList<GlobalIntent>();
+    List<GlobalIntent> globalIntents = new ArrayList<>();
 
     globalIntents.add(new GlobalIntent("Stop", "stop"));
     globalIntents.add(new GlobalIntent("Help", "help"));

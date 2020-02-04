@@ -1,11 +1,15 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -14,23 +18,20 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class CustomSlot extends Slot
+public class CustomSlot extends AbstractSlot<String>
 {
-  /** Name of the slot. */
-  private String name;
-
   /** Map of options. */
-  private HashMap<String, String> options = new HashMap<String, String>();
+  private final Map<String, String> options = new HashMap<>();
 
   /**
    * Constructor.
-   * 
+   *
    * @param name    The name of the slot.
    * @param options The list of expected options.
    */
-  public CustomSlot(String name, String[] options)
+  public CustomSlot(String name, List<String> options)
   {
-    this.name = name;
+    super(name);
     for (String option : options)
     {
       this.options.put(option.toLowerCase(), option);
@@ -40,40 +41,39 @@ public class CustomSlot extends Slot
   /**
    * Constructor.
    * 
+   * @param name    The name of the slot.
+   * @param options The list of expected options.
+   */
+  public CustomSlot(String name, String... options)
+  {
+    this(name, Arrays.asList(options));
+  }
+
+  /**
+   * Constructor.
+   * 
    * @param name           The name of the slot.
    * @param optionValueMap A map of possible input values mapped to output values.
    */
-  public CustomSlot(String name, HashMap<String, String> optionValueMap)
+  public CustomSlot(String name, Map<String, String> optionValueMap)
   {
-    this.name = name;
-
+    super(name);
     for (Entry<String, String> entry : optionValueMap.entrySet())
     {
-      this.options.put(entry.getKey().toLowerCase(), entry.getValue());
+      options.put(entry.getKey().toLowerCase(), entry.getValue());
     }
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<String>> match(String token, Context context)
   {
     String id = token.toLowerCase();
-
-    if (options.containsKey(id))
-    {
-      return new SlotMatch(this, token, options.get(id));
-    }
-    return null;
-  }
-
-  public String getName()
-  {
-    return name;
+    return Optional.ofNullable(options.get(id)).map(option -> new SlotMatch<>(this, token, option));
   }
 
   @Override
   public String toString()
   {
-    return "CustomSlot [name=" + name + ", options=" + options + "]";
+    return "CustomSlot [name=" + getName() + ", options=" + options + "]";
   }
-
 }

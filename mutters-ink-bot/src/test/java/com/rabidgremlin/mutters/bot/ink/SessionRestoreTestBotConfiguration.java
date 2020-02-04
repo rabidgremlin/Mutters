@@ -10,7 +10,7 @@ import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 
 public class SessionRestoreTestBotConfiguration implements InkBotConfiguration
 {
-  private String inkJsonFileName;
+  private final String inkJsonFileName;
 
   public SessionRestoreTestBotConfiguration(String inkJsonFileName)
   {

@@ -1,14 +1,15 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -19,13 +20,31 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class FuzzySlot extends Slot
+public class FuzzySlot extends AbstractSlot<String>
 {
-  private String name;
+  private static final double DEFAULT_TOLERANCE = 0.95d;
 
-  private double tolerance;
+  private final double tolerance;
 
-  private List<String> options = new ArrayList<String>();
+  private final List<String> options;
+
+  /**
+   * Constructor.
+   *
+   * @param name      The name of the slot.
+   * @param options   The list of options to match on.
+   * @param tolerance The fuzzy matching tolerance (0.1 to 1.0).
+   */
+  public FuzzySlot(String name, List<String> options, double tolerance)
+  {
+    super(name);
+    if (tolerance < 0.1 || tolerance > 1)
+    {
+      throw new IllegalArgumentException("Invalid tolerance: " + tolerance);
+    }
+    this.options = Objects.requireNonNull(options);
+    this.tolerance = tolerance;
+  }
 
   /**
    * Constructor.
@@ -36,24 +55,33 @@ public class FuzzySlot extends Slot
    */
   public FuzzySlot(String name, String[] options, double tolerance)
   {
-    this.name = name;
-    this.options = Arrays.asList(options);
-    this.tolerance = tolerance;
+    this(name, Arrays.asList(options), tolerance);
   }
 
   /**
-   * Constructor. Defaults to a fuzzy matching tolerance of 0.98.
+   * Constructor. Defaults to a fuzzy matching tolerance of 0.95.
+   *
+   * @param name    The name of the slot.
+   * @param options The list of options to match on.
+   */
+  public FuzzySlot(String name, List<String> options)
+  {
+    this(name, options, DEFAULT_TOLERANCE);
+  }
+
+  /**
+   * Constructor. Defaults to a fuzzy matching tolerance of 0.95.
    * 
    * @param name    The name of the slot.
    * @param options The list of options to match on.
    */
-  public FuzzySlot(String name, String[] options)
+  public FuzzySlot(String name, String... options)
   {
-    this(name, options, 0.98);
+    this(name, options, DEFAULT_TOLERANCE);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<String>> match(String token, Context context)
   {
     String lowerToken = token.toLowerCase();
     double bestMatchScore = 0;
@@ -71,23 +99,17 @@ public class FuzzySlot extends Slot
 
     if (bestMatchScore > tolerance && bestMatch != null)
     {
-      return new SlotMatch(this, token, bestMatch);
+      return Optional.of(new SlotMatch<>(this, token, bestMatch));
     }
     else
     {
-      return null;
+      return Optional.empty();
     }
-  }
-
-  public String getName()
-  {
-    return name;
   }
 
   @Override
   public String toString()
   {
-    return "FuzzySlot [name=" + name + ", options=" + options + "]";
+    return "FuzzySlot [name=" + getName() + ", options=" + options + ", tolerance=" + tolerance + "]";
   }
-
 }

@@ -29,7 +29,7 @@ import com.rabidgremlin.mutters.state.StateMachine;
 public abstract class StateMachineBot<T extends StateMachineBotConfiguration> implements IntentBot
 {
   /** Logger for the bot. */
-  private Logger log = LoggerFactory.getLogger(StateMachineBot.class);
+  private final Logger log = LoggerFactory.getLogger(StateMachineBot.class);
 
   /** The intent matcher for the bot. */
   protected IntentMatcher matcher;

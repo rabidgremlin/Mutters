@@ -27,7 +27,7 @@ public class TestThreadLocal
 
   private static TaxiInkBot taxiBot;
 
-  private List<Runnable> testCases = new ArrayList<>();
+  private final List<Runnable> testCases = new ArrayList<>();
 
   @BeforeClass
   public static void setUpBot()
@@ -70,8 +70,8 @@ public class TestThreadLocal
   private void addInteractiveCases()
   {
     List<Pair<String, String>> phrasesAndResponses = new ArrayList<>();
-    phrasesAndResponses.add(new ImmutablePair<String, String>("Order me a taxi", "What is the pick up address ?"));
-    phrasesAndResponses.add(new ImmutablePair<String, String>("136 River Road", "Taxi 1983 is on its way"));
+    phrasesAndResponses.add(new ImmutablePair<>("Order me a taxi", "What is the pick up address ?"));
+    phrasesAndResponses.add(new ImmutablePair<>("136 River Road", "Taxi 1983 is on its way"));
     testCases.add(new TestCase(taxiBot, phrasesAndResponses));
   }
 }
@@ -79,7 +79,7 @@ public class TestThreadLocal
 class TestCase implements Runnable
 {
 
-  private TaxiInkBot bot;
+  private final TaxiInkBot bot;
 
   private List<Pair<String, String>> phrasesAndResponses = new ArrayList<>();
 

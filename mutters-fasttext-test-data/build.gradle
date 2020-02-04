@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies { 
-    fastTextCompile "com.github.vinhkhuc:jfasttext:$rootProject.ext.jFastTextVersion"
+    fastTextCompile "com.github.vinhkhuc:jfasttext:$jFastTextVersion"
     groovyScript localGroovy()
     groovyScript project(':mutters-templated-intent')
 }

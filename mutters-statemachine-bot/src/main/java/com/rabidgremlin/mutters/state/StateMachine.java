@@ -17,15 +17,15 @@ import com.rabidgremlin.mutters.core.session.Session;
 public class StateMachine
 {
 
-  private HashMap<String, State> states = new HashMap<String, State>();
+  private final HashMap<String, State> states = new HashMap<>();
 
   private State startState;
 
-  private HashMap<String, List<Transition>> transitionMap = new HashMap<String, List<Transition>>();
+  private final HashMap<String, List<Transition>> transitionMap = new HashMap<>();
 
-  private HashSet<String> handledIntents = new HashSet<String>();
+  private final HashSet<String> handledIntents = new HashSet<>();
 
-  private HashMap<String, PreEventAction> preEventActions = new HashMap<String, PreEventAction>();
+  private final HashMap<String, PreEventAction> preEventActions = new HashMap<>();
 
   static class Transition
   {
@@ -111,7 +111,7 @@ public class StateMachine
     List<Transition> transitionList = transitionMap.get(key);
     if (transitionList == null)
     {
-      transitionList = new ArrayList<Transition>();
+      transitionList = new ArrayList<>();
       transitionMap.put(key, transitionList);
     }
 
@@ -137,7 +137,7 @@ public class StateMachine
     List<Transition> transitionList = transitionMap.get(key);
     if (transitionList == null)
     {
-      transitionList = new ArrayList<Transition>();
+      transitionList = new ArrayList<>();
       transitionMap.put(key, transitionList);
     }
 

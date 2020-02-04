@@ -95,7 +95,7 @@ public class CurrentResponse
   {
     if (responseAttachments == null)
     {
-      responseAttachments = new ArrayList<BotResponseAttachment>();
+      responseAttachments = new ArrayList<>();
     }
 
     responseAttachments.add(attachment);
@@ -105,7 +105,7 @@ public class CurrentResponse
   {
     if (responseQuickReplies == null)
     {
-      responseQuickReplies = new ArrayList<String>();
+      responseQuickReplies = new ArrayList<>();
     }
 
     responseQuickReplies.add(quickReply);

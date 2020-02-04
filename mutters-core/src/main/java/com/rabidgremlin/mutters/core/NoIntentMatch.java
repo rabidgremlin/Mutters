@@ -19,7 +19,7 @@ public class NoIntentMatch extends IntentMatch
    */
   public NoIntentMatch(String utterance)
   {
-    super(Intent.none(), new HashMap<Slot, SlotMatch>(), utterance, new MatcherScores());
+    super(Intent.none(), new HashMap<>(), utterance, new MatcherScores());
   }
 
   /**
@@ -31,6 +31,6 @@ public class NoIntentMatch extends IntentMatch
    */
   public NoIntentMatch(String utterance, MatcherScores matcherScores)
   {
-    super(Intent.none(), new HashMap<Slot, SlotMatch>(), utterance, matcherScores);
+    super(Intent.none(), new HashMap<>(), utterance, matcherScores);
   }
 }

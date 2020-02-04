@@ -3,8 +3,8 @@ package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +28,11 @@ import com.rabidgremlin.mutters.slots.DefaultValueSlot;
  */
 public class TemplatedIntent extends Intent
 {
-  private Logger log = LoggerFactory.getLogger(TemplatedIntent.class);
+  private final Logger log = LoggerFactory.getLogger(TemplatedIntent.class);
 
-  private List<TemplatedUtterance> utterances = new ArrayList<TemplatedUtterance>();
+  private final List<TemplatedUtterance> utterances = new ArrayList<>();
 
-  private Tokenizer tokenizer;
+  private final Tokenizer tokenizer;
 
   /**
    * Constructor.
@@ -98,18 +98,18 @@ public class TemplatedIntent extends Intent
         if (match.getSlotMatches().size() != slots.getSlots().size())
         {
           // grab all the matched slots
-          HashMap<Slot, SlotMatch> matchedSlots = match.getSlotMatches();
+          Map<Slot<?>, SlotMatch<?>> matchedSlots = match.getSlotMatches();
 
           // loop through each slot
-          for (Slot slot : slots.getSlots())
+          for (Slot<?> slot : slots.getSlots())
           {
             // does slot have default value and no match ?
             if (!matchedSlots.containsKey(slot) && slot instanceof DefaultValueSlot)
             {
               // yep create a slot match with default value
-              Object defaultValue = ((DefaultValueSlot) slot).getDefaultValue();
-              matchedSlots.put(slot,
-                  new SlotMatch(slot, defaultValue == null ? "" : defaultValue.toString(), defaultValue));
+              DefaultValueSlot<?> defaultValueSlot = (DefaultValueSlot<?>) slot;
+              // capture wildcard with helper method
+              matchedSlots.put(slot, newSlotMatch(defaultValueSlot));
             }
           }
         }
@@ -124,5 +124,11 @@ public class TemplatedIntent extends Intent
   public List<TemplatedUtterance> getUtterances()
   {
     return Collections.unmodifiableList(utterances);
+  }
+
+  private static <T> SlotMatch<T> newSlotMatch(DefaultValueSlot<T> defaultValueSlot)
+  {
+    T defaultValue = defaultValueSlot.getDefaultValue();
+    return new SlotMatch<>(defaultValueSlot, defaultValue == null ? "" : defaultValue.toString(), defaultValue);
   }
 }

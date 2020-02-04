@@ -16,7 +16,7 @@ import com.rabidgremlin.mutters.core.session.Session;
 
 public class TestLongTermFunctions
 {
-  private static OrderInkBot orderBot = new OrderInkBot(new OrderInkBotConfiguration());
+  private static final OrderInkBot orderBot = new OrderInkBot(new OrderInkBotConfiguration());
 
   @Test
   public void testSetLongTermFunctionInScript() throws Exception

@@ -1,7 +1,7 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the interface implemented by any slot matcher. It should take an
@@ -24,5 +24,5 @@ public interface SlotMatcher
    * @param utterance The user's utterance to extract slots from.
    * @return A map of slot matches or an empty map if there were no matches.
    */
-  public HashMap<Slot, SlotMatch> match(Context context, Intent intent, String utterance);
+  public Map<Slot<?>, SlotMatch<?>> match(Context context, Intent intent, String utterance);
 }

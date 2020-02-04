@@ -1,8 +1,10 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
+import java.util.Optional;
+
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -10,28 +12,17 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * matches.
  *
  */
-public class LiteralSlot extends Slot
+public class LiteralSlot extends AbstractSlot<String>
 {
-
-  private String name;
 
   public LiteralSlot(String name)
   {
-    this.name = name;
+    super(name);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<String>> match(String token, Context context)
   {
-
-    return new SlotMatch(this, token, token.toLowerCase());
-
+    return Optional.of(new SlotMatch<>(this, token, token.toLowerCase()));
   }
-
-  @Override
-  public String getName()
-  {
-    return name;
-  }
-
 }

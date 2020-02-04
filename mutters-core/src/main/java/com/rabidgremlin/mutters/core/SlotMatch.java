@@ -5,32 +5,32 @@ import java.util.Objects;
 
 /**
  * This class holds the details of a slot match.
- * 
- * @author rabidgremlin
  *
+ * @param <T> the type of the value held by this slot match
+ * @author rabidgremlin
  */
-public class SlotMatch
+public final class SlotMatch<T>
 {
   /** The slot that was matched. */
-  private Slot slot;
+  private final Slot<T> slot;
 
   /** The original value that was used to matched on. */
-  private String orginalValue;
+  private final String originalValue;
 
   /** The value that was matched. */
-  private Object value;
+  private final T value;
 
   /**
    * Constructor.
    * 
-   * @param slot         The slot that was matched.
-   * @param orginalValue The original value that was used to match on.
-   * @param value        The value that was matched.
+   * @param slot          The slot that was matched.
+   * @param originalValue The original value that was used to match on.
+   * @param value         The value that was matched.
    */
-  public SlotMatch(Slot slot, String orginalValue, Object value)
+  public SlotMatch(Slot<T> slot, String originalValue, T value)
   {
     this.slot = Objects.requireNonNull(slot);
-    this.orginalValue = Objects.requireNonNull(orginalValue);
+    this.originalValue = Objects.requireNonNull(originalValue);
     this.value = Objects.requireNonNull(value);
   }
 
@@ -39,7 +39,7 @@ public class SlotMatch
    * 
    * @return The slot that was matched on.
    */
-  public Slot getSlot()
+  public Slot<T> getSlot()
   {
     return slot;
   }
@@ -49,9 +49,9 @@ public class SlotMatch
    * 
    * @return The original value that was matched on.
    */
-  public String getOrginalValue()
+  public String getOriginalValue()
   {
-    return orginalValue;
+    return originalValue;
   }
 
   /**
@@ -59,21 +59,36 @@ public class SlotMatch
    * 
    * @return the value that was matched on.
    */
-  public Object getValue()
+  public T getValue()
   {
     return value;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.String#toString()
-   * 
-   */
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass())
+    {
+      return false;
+    }
+    SlotMatch<?> slotMatch = (SlotMatch<?>) o;
+    return Objects.equals(slot, slotMatch.slot) && Objects.equals(originalValue, slotMatch.originalValue)
+        && Objects.equals(value, slotMatch.value);
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return Objects.hash(slot, originalValue, value);
+  }
+
   @Override
   public String toString()
   {
-    return "SlotMatch [slot=" + slot + ", orginalValue=" + orginalValue + ", value=" + value + "]";
+    return "SlotMatch [slot=" + slot + ", originalValue=" + originalValue + ", value=" + value + "]";
   }
-
 }

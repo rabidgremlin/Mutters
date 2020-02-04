@@ -33,9 +33,9 @@ import com.rabidgremlin.mutters.core.ml.AbstractMachineLearningIntentMatcher;
 public class FastTextIntentMatcher extends AbstractMachineLearningIntentMatcher
 {
   /** Logger. */
-  private Logger log = LoggerFactory.getLogger(FastTextIntentMatcher.class);
+  private final Logger log = LoggerFactory.getLogger(FastTextIntentMatcher.class);
 
-  private JFastText jft = new JFastText();
+  private final JFastText jft = new JFastText();
 
   /** Default minimum match score. */
   private static final float MIN_MATCH_SCORE = 0.85f;
@@ -124,7 +124,7 @@ public class FastTextIntentMatcher extends AbstractMachineLearningIntentMatcher
     // get the first 10 labels
     List<JFastText.ProbLabel> probLabels = jft.predictProba(StringUtils.join(utteranceTokens, " "), 10);
 
-    SortedMap<Double, SortedSet<String>> scoreMap = new TreeMap<Double, SortedSet<String>>();
+    SortedMap<Double, SortedSet<String>> scoreMap = new TreeMap<>();
 
     // populate the scor map
     for (JFastText.ProbLabel probLabel : probLabels)

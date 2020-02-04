@@ -1,8 +1,10 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
+import java.util.Optional;
+
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -12,28 +14,23 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class NumberSlot extends Slot
+public class NumberSlot extends AbstractSlot<Number>
 {
   // TODO clean up very rough code
 
-  private String name;
-
   public NumberSlot(String name)
   {
-    super();
-    this.name = name;
+    super(name);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<Number>> match(String token, Context context)
   {
-
     // try parse as integer
     try
     {
       Long value = Long.parseLong(token);
-
-      return new SlotMatch(this, token, value);
+      return Optional.of(new SlotMatch<>(this, token, value));
     }
     catch (NumberFormatException de)
     {
@@ -41,31 +38,22 @@ public class NumberSlot extends Slot
       try
       {
         Double value = Double.parseDouble(token);
-
-        return new SlotMatch(this, token, value);
+        return Optional.of(new SlotMatch<>(this, token, value));
       }
       catch (NumberFormatException le)
       {
         // try parse as word String
-
         Number value = wordStringToNumber(token);
         if (value != null)
         {
-          return new SlotMatch(this, token, value);
+          return Optional.of(new SlotMatch<>(this, token, value));
         }
         else
         {
-
-          return null;
+          return Optional.empty();
         }
       }
     }
-  }
-
-  @Override
-  public String getName()
-  {
-    return name;
   }
 
   // based on
@@ -236,7 +224,6 @@ public class NumberSlot extends Slot
     }
 
     finalResult += result;
-    result = 0;
     return finalResult;
   }
   // CHECKSTYLE:ON

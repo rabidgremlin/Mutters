@@ -31,7 +31,7 @@ public final class FunctionHelper
       if (trimmedLine.contains("::"))
       {
         // spit by ::
-        ArrayList<String> tokens = new ArrayList<String>(Arrays.asList(trimmedLine.split("::")));
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(trimmedLine.split("::")));
 
         // while we have tokens
         while (!tokens.isEmpty())
@@ -44,7 +44,7 @@ public final class FunctionHelper
           tokens.remove(0);
           tokens.remove(0);
 
-          // doe svalue have word on end ? and we are not at end of tokens ?
+          // does value have word on end ? and we are not at end of tokens ?
           int lastSpace = value.lastIndexOf(" ");
           if (lastSpace != -1 && tokens.size() > 0)
           {

@@ -12,11 +12,12 @@ import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
+import com.rabidgremlin.mutters.core.AbstractSlot;
 import com.rabidgremlin.mutters.core.Context;
-import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
 
 /**
@@ -26,18 +27,16 @@ import com.rabidgremlin.mutters.core.SlotMatch;
  * @author rabidgremlin
  *
  */
-public class DateSlot extends Slot
+public class DateSlot extends AbstractSlot<LocalDate>
 {
-
-  private final String name;
 
   public DateSlot(String name)
   {
-    this.name = name;
+    super(name);
   }
 
   @Override
-  public SlotMatch match(String token, Context context)
+  public Optional<SlotMatch<LocalDate>> match(String token, Context context)
   {
     // grab current year to use as default year
     int currentYear = LocalDate.now().getYear();
@@ -47,7 +46,7 @@ public class DateSlot extends Slot
         DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(context.getLocale()));
     if (date != null)
     {
-      return new SlotMatch(this, token, date);
+      return Optional.of(new SlotMatch<>(this, token, date));
     }
 
     // try parse in medium format for locale
@@ -55,7 +54,7 @@ public class DateSlot extends Slot
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(context.getLocale()));
     if (date != null)
     {
-      return new SlotMatch(this, token, date);
+      return Optional.of(new SlotMatch<>(this, token, date));
     }
 
     // try parse in long format for locale
@@ -63,7 +62,7 @@ public class DateSlot extends Slot
         DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(context.getLocale()));
     if (date != null)
     {
-      return new SlotMatch(this, token, date);
+      return Optional.of(new SlotMatch<>(this, token, date));
     }
 
     // try other formats
@@ -71,7 +70,7 @@ public class DateSlot extends Slot
         DateTimeFormatter.ofPattern("d[/][-][.][ ]M[/][-][.][ ][yyyy][yy]").withLocale(context.getLocale()));
     if (date != null)
     {
-      return new SlotMatch(this, token, date);
+      return Optional.of(new SlotMatch<>(this, token, date));
     }
 
     // try parse with natty
@@ -95,11 +94,11 @@ public class DateSlot extends Slot
           ZonedDateTime theDateTime = ZonedDateTime.ofInstant(dates.get(0).toInstant(),
               context.getTimeZone().toZoneId());
           LocalDate localDate = theDateTime.toLocalDate();
-          return new SlotMatch(this, token, localDate);
+          return Optional.of(new SlotMatch<>(this, token, localDate));
         }
       }
     }
-    return null;
+    return Optional.empty();
   }
 
   private LocalDate tryParse(String token, int currentYear, DateTimeFormatter fmt)
@@ -129,11 +128,5 @@ public class DateSlot extends Slot
     {
       return null;
     }
-  }
-
-  @Override
-  public String getName()
-  {
-    return name;
   }
 }

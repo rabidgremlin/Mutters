@@ -2,6 +2,7 @@
 package com.rabidgremlin.mutters.templated;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.rabidgremlin.mutters.core.Slot;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -15,10 +16,10 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 public class TemplatedUtteranceMatch
 {
   /** Flag to indicate if template was matched. */
-  private boolean matched;
+  private final boolean matched;
 
   /** Map of slots that were matched. */
-  private HashMap<Slot, SlotMatch> slotMatches;
+  private final Map<Slot<?>, SlotMatch<?>> slotMatches;
 
   /**
    * Constructor.
@@ -28,7 +29,7 @@ public class TemplatedUtteranceMatch
   public TemplatedUtteranceMatch(boolean matched)
   {
     this.matched = matched;
-    this.slotMatches = new HashMap<Slot, SlotMatch>();
+    slotMatches = new HashMap<>();
   }
 
   /**
@@ -37,7 +38,7 @@ public class TemplatedUtteranceMatch
    * @param matched     Indicates if template was matched or not.
    * @param slotMatches Map of slot matches.
    */
-  public TemplatedUtteranceMatch(boolean matched, HashMap<Slot, SlotMatch> slotMatches)
+  public TemplatedUtteranceMatch(boolean matched, Map<Slot<?>, SlotMatch<?>> slotMatches)
   {
     this.matched = matched;
     this.slotMatches = slotMatches;
@@ -58,7 +59,7 @@ public class TemplatedUtteranceMatch
    * 
    * @return Map of slot matches. Will be empty if no slot matches.
    */
-  public HashMap<Slot, SlotMatch> getSlotMatches()
+  public Map<Slot<?>, SlotMatch<?>> getSlotMatches()
   {
     return slotMatches;
   }

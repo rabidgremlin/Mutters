@@ -2,8 +2,10 @@
 package com.rabidgremlin.mutters.templated;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -55,11 +57,11 @@ public class TemplatedUtterance
     }
   }
 
-  private String template;
+  private final String template;
 
-  private HashSet<String> slotNames = new HashSet<String>();
+  private final HashSet<String> slotNames = new HashSet<>();
 
-  private MatchPart[] templateParts;
+  private final MatchPart[] templateParts;
 
   public TemplatedUtterance(String[] tokenizedTemplate)
   {
@@ -73,7 +75,7 @@ public class TemplatedUtterance
       {
         String slotName = token.substring(1, token.length() - 1);
         templateParts[i] = new MatchPart(PartType.SLOT, slotName);
-        slotNames.add(slotName);
+        slotNames.add(slotName.toLowerCase());
       }
       else
       {
@@ -99,7 +101,7 @@ public class TemplatedUtterance
 
     for (SlotMatchRegion region : slotMatches)
     {
-      Slot slot = slots.getSlot(region.slotName);
+      Slot<?> slot = slots.getSlot(region.slotName);
 
       if (slot == null)
       {
@@ -113,11 +115,11 @@ public class TemplatedUtterance
         orginalTokens.add(tokenizedUtterance[loop]);
       }
 
-      SlotMatch slotMatch = slot.match(StringUtils.join(orginalTokens, ' '), context);
+      Optional<? extends SlotMatch<?>> slotMatch = slot.match(StringUtils.join(orginalTokens, ' '), context);
 
-      if (slotMatch != null)
+      if (slotMatch.isPresent())
       {
-        theMatch.getSlotMatches().put(slot, slotMatch);
+        theMatch.getSlotMatches().put(slot, slotMatch.get());
       }
       else
       {
@@ -176,4 +178,14 @@ public class TemplatedUtterance
     return "Utterance [template=" + template + "]";
   }
 
+  /**
+   * Returns the list of expected slot names for this templated utterance. These
+   * will be in lower case.
+   * 
+   * @return The list of slot names.
+   */
+  public List<String> getExpectedSlotNames()
+  {
+    return Collections.unmodifiableList(new ArrayList<String>(slotNames));
+  }
 }

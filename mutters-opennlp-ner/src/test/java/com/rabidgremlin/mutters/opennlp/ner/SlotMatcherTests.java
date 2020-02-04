@@ -4,7 +4,7 @@ package com.rabidgremlin.mutters.opennlp.ner;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import opennlp.tools.tokenize.SimpleTokenizer;
 
@@ -26,9 +26,9 @@ public class SlotMatcherTests
     Intent testIntent = new Intent("testIntent");
     TestSlot testSlot = new TestSlot("testSlot");
     testIntent.addSlot(testSlot);
-    HashMap<Slot, SlotMatch> slotSlotMatchHashMap = slotMatcher.match(new Context(), testIntent, "testUtterance");
+    Map<Slot<?>, SlotMatch<?>> slotSlotMatchHashMap = slotMatcher.match(new Context(), testIntent, "testUtterance");
 
-    SlotMatch slotMatch = slotSlotMatchHashMap.get(testSlot);
+    SlotMatch<?> slotMatch = slotSlotMatchHashMap.get(testSlot);
     assertThat(slotMatch.getValue(), is("Default value"));
   }
 }

@@ -1,11 +1,10 @@
 buildscript {
     repositories {
-        //jcenter()
         mavenCentral()
     }
     dependencies { 
-        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$rootProject.ext.pegdownDocletVersion"
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:$rootProject.ext.spotlessVersion"
+        classpath "ch.raffael.pegdown-doclet:pegdown-doclet:$pegdownDocletVersion"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotlessVersion"
     }
 }
 
@@ -19,13 +18,13 @@ repositories {
 dependencies {
     compile project(':mutters-core')    
     
-    compile "com.github.vinhkhuc:jfasttext:$rootProject.ext.jFastTextVersion"
-    compile "commons-io:commons-io:$rootProject.ext.commonsIoVersion"
+    compile "com.github.vinhkhuc:jfasttext:$jFastTextVersion"
+    compile "commons-io:commons-io:$commonsIoVersion"
         
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.slf4j:slf4j-api:$rootProject.ext.slf4jVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestAllVersion"
-    testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.slf4j:slf4j-api:$slf4jVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestAllVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile project(':mutters-templated-intent')
     testCompile project(':mutters-fasttext-test-data')
 }
