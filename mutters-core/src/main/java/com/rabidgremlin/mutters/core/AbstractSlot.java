@@ -34,7 +34,7 @@ public abstract class AbstractSlot<T> implements Slot<T>
     {
       return true;
     }
-    if (o == null || getClass() != o.getClass())
+    if (!(o instanceof Slot))
     {
       return false;
     }

@@ -30,6 +30,20 @@ public class AbstractSlotTest
     }
   }
 
+  private static final class TestSlot2 extends AbstractSlot<String>
+  {
+    protected TestSlot2(String name)
+    {
+      super(name);
+    }
+
+    @Override
+    public Optional<SlotMatch<String>> match(String token, Context context)
+    {
+      return Optional.empty();
+    }
+  }
+
   @Test
   public void testGetName()
   {
@@ -50,8 +64,12 @@ public class AbstractSlotTest
     Slot<String> slot = new TestSlot("my-slot");
     Slot<String> slotWithSameName = new TestSlot("my-slot");
     Slot<String> slotWithDifferentName = new TestSlot("my-slot-2");
+    Slot<String> slotWithSameNameDifferentClass = new TestSlot2("my-slot");
     assertEquals(slot, slotWithSameName);
     assertNotEquals(slot, slotWithDifferentName);
+    assertEquals(slot, slotWithSameNameDifferentClass);
+    assertEquals(slot, slot);
+    assertNotEquals(slot, 1);
   }
 
   @Test
