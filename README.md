@@ -224,10 +224,10 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:7.0.0'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:7.0.0'        
-        compile 'com.rabidgremlin:mutters-opennlp-ner:7.0.0'
-        compile 'com.rabidgremlin:mutters-slots:7.0.0'
+        compile 'com.rabidgremlin:mutters-ink-bot:7.1.0'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:7.1.0'        
+        compile 'com.rabidgremlin:mutters-opennlp-ner:7.1.0'
+        compile 'com.rabidgremlin:mutters-slots:7.1.0'
 }
 ```
 
@@ -245,10 +245,10 @@ repositories {
 }
 
 dependencies {
-        compile 'com.rabidgremlin:mutters-ink-bot:7.0.0-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-opennlp-intent:7.0.0-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-opennlp-ner:7.0.0-SNAPSHOT'
-        compile 'com.rabidgremlin:mutters-slots:7.0.0-SNAPSHOT'        
+        compile 'com.rabidgremlin:mutters-ink-bot:7.1.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-intent:7.1.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-opennlp-ner:7.1.0-SNAPSHOT'
+        compile 'com.rabidgremlin:mutters-slots:7.1.0-SNAPSHOT'        
 }        
 ```
 
