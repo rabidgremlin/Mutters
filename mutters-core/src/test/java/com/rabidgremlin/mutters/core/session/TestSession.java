@@ -2,8 +2,11 @@
 package com.rabidgremlin.mutters.core.session;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -59,5 +62,37 @@ public class TestSession
 
     assertThat(session.getLongTermAttribute("bob"), is(nullValue()));
     assertThat(session.getLongTermAttribute("bobLT"), is(nullValue()));
+  }
+
+  public void testGettingAttributeKeys()
+  {
+    Session session = new Session();
+    session.setAttribute("bob", "alice");
+
+    // check attribute keys are as expected
+    Set<String> attributeKeys = session.getAttributeKeys();
+    assertThat(attributeKeys, is(not(nullValue())));
+    assertThat(attributeKeys.size(), is(1));
+    assertThat(attributeKeys.contains("bob"), is(true));
+
+    // make sure nothing has leaked into long term attributes
+    assertThat(session.getLongTermAttributeKeys(), is(not(nullValue())));
+    assertThat(session.getLongTermAttributeKeys().size(), is(1));
+  }
+
+  public void testGettingLongTermAttributeKeys()
+  {
+    Session session = new Session();
+    session.setLongTermAttribute("smith", "jones");
+
+    // check long term attribute keys are as expected
+    Set<String> attributeKeys = session.getLongTermAttributeKeys();
+    assertThat(attributeKeys, is(not(nullValue())));
+    assertThat(attributeKeys.size(), is(1));
+    assertThat(attributeKeys.contains("smith"), is(true));
+
+    // make sure nothing has leaked into long term attributes
+    assertThat(session.getAttributeKeys(), is(not(nullValue())));
+    assertThat(session.getAttributeKeys().size(), is(1));
   }
 }

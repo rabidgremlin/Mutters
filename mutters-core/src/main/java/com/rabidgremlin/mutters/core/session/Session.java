@@ -3,6 +3,7 @@ package com.rabidgremlin.mutters.core.session;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This class represents a user's session with the bot. It maintains the any
@@ -106,6 +107,26 @@ public class Session implements Serializable
   {
     attributes = new HashMap<>();
     longTermAttributes = new HashMap<>();
+  }
+
+  /**
+   * Returns the set of all attribute keys.
+   * 
+   * @return Set of attribute keys.
+   */
+  public Set<String> getAttributeKeys()
+  {
+    return attributes.keySet();
+  }
+
+  /**
+   * Returns the set of all long term attribute keys.
+   * 
+   * @return Set of long term attribute keys.
+   */
+  public Set<String> getLongTermAttributeKeys()
+  {
+    return longTermAttributes.keySet();
   }
 
   /*
