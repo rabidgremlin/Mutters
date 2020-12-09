@@ -20,6 +20,6 @@ ext {
     commonsIoVersion = '2.6'
     mockitoVersion = '3.1.0'
     bladeInkVersion = '0.7.3'
-    openNlpVersion = '1.9.1'
+    openNlpVersion = '1.9.2'
     nattyVersion = '0.13'
 }
