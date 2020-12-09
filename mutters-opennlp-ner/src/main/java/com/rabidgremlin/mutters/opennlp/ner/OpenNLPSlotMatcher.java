@@ -69,6 +69,7 @@ public class OpenNLPSlotMatcher implements SlotMatcher
       {
         URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(nerModel);
         tnfModel = new TokenNameFinderModel(modelUrl);
+        nerModels.put(nerModel, tnfModel);
       }
       catch (Exception e)
       {
