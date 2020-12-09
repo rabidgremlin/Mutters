@@ -21,10 +21,12 @@ dependencies {
     compile "com.github.vinhkhuc:jfasttext:$jFastTextVersion"
     compile "commons-io:commons-io:$commonsIoVersion"
         
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.slf4j:slf4j-api:$slf4jVersion"
-    testCompile "org.hamcrest:hamcrest-all:$hamcrestAllVersion"
+    testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testCompile "com.google.truth:truth:$truthVersion"
+    testCompile "com.google.truth.extensions:truth-java8-extension:$truthVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testCompile "org.slf4j:slf4j-api:$slf4jVersion"
     testCompile project(':mutters-templated-intent')
     testCompile project(':mutters-fasttext-test-data')
 }

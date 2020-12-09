@@ -22,9 +22,10 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "org.apache.commons:commons-lang3:$commonsLang3Version"
         
-    testCompile "junit:junit:$junitVersion"
+    testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testCompile "com.google.truth:truth:$truthVersion"
+    testCompile "com.google.truth.extensions:truth-java8-extension:$truthVersion"
     testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-    testCompile "org.hamcrest:hamcrest-all:$hamcrestAllVersion"
     testCompile project(':mutters-opennlp-test-data')
     testCompile project(':mutters-slots') 
     testCompile project(':mutters-templated-intent')

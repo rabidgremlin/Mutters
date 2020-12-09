@@ -1,43 +1,40 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core.session;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TestSession
+class TestSession
 {
   @Test
-  public void testAttributeLifeCycle()
+  void testAttributeLifeCycle()
   {
     Session session = new Session();
 
     session.setAttribute("bob", "alice");
-    assertThat(session.getAttribute("bob"), is("alice"));
+    assertThat(session.getAttribute("bob")).isEqualTo("alice");
 
     session.removeAttribute("bob");
-    assertThat(session.getAttribute("bob"), is(nullValue()));
+    assertThat(session.getAttribute("bob")).isNull();
   }
 
   @Test
-  public void testLongTermAttributeLifeCycle()
+  void testLongTermAttributeLifeCycle()
   {
     Session session = new Session();
 
     session.setLongTermAttribute("bobLT", "aliceLT");
-    assertThat(session.getLongTermAttribute("bobLT"), is("aliceLT"));
+    assertThat(session.getLongTermAttribute("bobLT")).isEqualTo("aliceLT");
 
     session.removeLongTermAttribute("bobLT");
-    assertThat(session.getLongTermAttribute("bobLT"), is(nullValue()));
+    assertThat(session.getLongTermAttribute("bobLT")).isNull();
   }
 
   @Test
-  public void testReset()
+  void testReset()
   {
     Session session = new Session();
 
@@ -46,12 +43,12 @@ public class TestSession
 
     session.reset();
 
-    assertThat(session.getLongTermAttribute("bob"), is(nullValue()));
-    assertThat(session.getLongTermAttribute("bobLT"), is("aliceLT"));
+    assertThat(session.getLongTermAttribute("bob")).isNull();
+    assertThat(session.getLongTermAttribute("bobLT")).isEqualTo("aliceLT");
   }
 
   @Test
-  public void testResetAll()
+  void testResetAll()
   {
     Session session = new Session();
 
@@ -60,8 +57,8 @@ public class TestSession
 
     session.resetAll();
 
-    assertThat(session.getLongTermAttribute("bob"), is(nullValue()));
-    assertThat(session.getLongTermAttribute("bobLT"), is(nullValue()));
+    assertThat(session.getLongTermAttribute("bob")).isNull();
+    assertThat(session.getLongTermAttribute("bobLT")).isNull();
   }
 
   public void testGettingAttributeKeys()
@@ -71,13 +68,13 @@ public class TestSession
 
     // check attribute keys are as expected
     Set<String> attributeKeys = session.getAttributeKeys();
-    assertThat(attributeKeys, is(not(nullValue())));
-    assertThat(attributeKeys.size(), is(1));
-    assertThat(attributeKeys.contains("bob"), is(true));
+    assertThat(attributeKeys).isNotNull();
+    assertThat(attributeKeys.size()).isEqualTo(1);
+    assertThat(attributeKeys.contains("bob")).isTrue();
 
     // make sure nothing has leaked into long term attributes
-    assertThat(session.getLongTermAttributeKeys(), is(not(nullValue())));
-    assertThat(session.getLongTermAttributeKeys().size(), is(1));
+    assertThat(session.getAttributeKeys()).isNotNull();
+    assertThat(session.getAttributeKeys()).isEqualTo(1);
   }
 
   public void testGettingLongTermAttributeKeys()
@@ -87,12 +84,12 @@ public class TestSession
 
     // check long term attribute keys are as expected
     Set<String> attributeKeys = session.getLongTermAttributeKeys();
-    assertThat(attributeKeys, is(not(nullValue())));
-    assertThat(attributeKeys.size(), is(1));
-    assertThat(attributeKeys.contains("smith"), is(true));
+    assertThat(attributeKeys).isNotNull();
+    assertThat(attributeKeys.size()).isEqualTo(1);
+    assertThat(attributeKeys.contains("smith")).isTrue();
 
     // make sure nothing has leaked into long term attributes
-    assertThat(session.getAttributeKeys(), is(not(nullValue())));
-    assertThat(session.getAttributeKeys().size(), is(1));
+    assertThat(session.getAttributeKeys()).isNotNull();
+    assertThat(session.getAttributeKeys()).isEqualTo(1);
   }
 }

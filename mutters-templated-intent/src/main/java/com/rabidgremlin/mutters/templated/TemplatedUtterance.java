@@ -22,34 +22,32 @@ import com.rabidgremlin.mutters.core.Slots;
  * 
  * @author rabidgremlin
  * @author dmap
- *
  */
 public class TemplatedUtterance
 {
-  private static enum PartType
+  private enum PartType
   {
     SIMPLE, SLOT
   }
 
-  private static class MatchPart
+  private static final class MatchPart
   {
     private final PartType type;
     private final String value;
 
-    public MatchPart(final PartType type, final String value)
+    private MatchPart(PartType type, String value)
     {
       this.type = type;
       this.value = value;
     }
-
   }
 
-  private static class SlotMatchRegion
+  private static final class SlotMatchRegion
   {
     private final String slotName;
     private final int from, to;
 
-    public SlotMatchRegion(final String slotName, final int from, final int to)
+    private SlotMatchRegion(String slotName, int from, int to)
     {
       this.slotName = slotName;
       this.from = from;
@@ -63,14 +61,14 @@ public class TemplatedUtterance
 
   private final MatchPart[] templateParts;
 
-  public TemplatedUtterance(String[] tokenizedTemplate)
+  public TemplatedUtterance(String... tokenizedTemplate)
   {
-    this.template = StringUtils.join(tokenizedTemplate, ' ');
+    template = StringUtils.join(tokenizedTemplate, ' ');
 
-    this.templateParts = new MatchPart[tokenizedTemplate.length];
+    templateParts = new MatchPart[tokenizedTemplate.length];
     for (int i = 0; i < tokenizedTemplate.length; i++)
     {
-      final String token = tokenizedTemplate[i];
+      String token = tokenizedTemplate[i];
       if (token.startsWith("{") && token.endsWith("}"))
       {
         String slotName = token.substring(1, token.length() - 1);
@@ -91,8 +89,8 @@ public class TemplatedUtterance
 
   public TemplatedUtteranceMatch matches(String[] tokenizedUtterance, Slots slots, Context context)
   {
-    final List<SlotMatchRegion> slotMatches = new ArrayList<>();
-    if (!match(tokenizedUtterance, 0, this.templateParts, 0, slotMatches))
+    List<SlotMatchRegion> slotMatches = new ArrayList<>();
+    if (!match(tokenizedUtterance, 0, templateParts, 0, slotMatches))
     {
       return new TemplatedUtteranceMatch(false);
     }
@@ -131,7 +129,7 @@ public class TemplatedUtterance
   }
 
   private boolean match(String[] tokens, int tokenIndex, MatchPart[] parts, int partIndex,
-      final List<SlotMatchRegion> slotMatches)
+      List<SlotMatchRegion> slotMatches)
   {
     if (partIndex == parts.length)
     {
@@ -144,7 +142,7 @@ public class TemplatedUtterance
       return false;
     }
 
-    final MatchPart part = parts[partIndex];
+    MatchPart part = parts[partIndex];
     switch (part.type)
     {
       case SIMPLE:
@@ -186,6 +184,6 @@ public class TemplatedUtterance
    */
   public List<String> getExpectedSlotNames()
   {
-    return Collections.unmodifiableList(new ArrayList<String>(slotNames));
+    return Collections.unmodifiableList(new ArrayList<>(slotNames));
   }
 }

@@ -1,12 +1,10 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink.functions;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for parsing of function strings.
@@ -14,59 +12,59 @@ import org.junit.Test;
  * @author rabidgremlin
  *
  */
-public class TestFunctionHelper
+class TestFunctionHelper
 {
 
   @Test
-  public void testParameterParsing() throws Exception
+  void testParameterParsing()
   {
     FunctionDetails details = FunctionHelper
         .parseFunctionString("type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot title::Here is the link");
 
-    assertThat(details, is(notNullValue()));
+    assertThat(details).isNotNull();
 
-    assertThat(details.getFunctionData(),
-        is("type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot title::Here is the link"));
+    assertThat(details.getFunctionData())
+        .isEqualTo("type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot title::Here is the link");
 
-    assertThat(details.getFunctionParams(), is(notNullValue()));
-    assertThat(details.getFunctionParams().get("type"), is("link"));
-    assertThat(details.getFunctionParams().get("url"), is("https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot"));
-    assertThat(details.getFunctionParams().get("title"), is("Here is the link"));
+    assertThat(details.getFunctionParams()).isNotNull();
+    assertThat(details.getFunctionParams().get("type")).isEqualTo("link");
+    assertThat(details.getFunctionParams().get("url")).isEqualTo("https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot");
+    assertThat(details.getFunctionParams().get("title")).isEqualTo("Here is the link");
   }
 
   @Test
-  public void testParameterParsingValueWithSpaces() throws Exception
+  void testParameterParsingValueWithSpaces()
   {
     FunctionDetails details = FunctionHelper
         .parseFunctionString("title::Here is the link type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot ");
 
-    assertThat(details, is(notNullValue()));
+    assertThat(details).isNotNull();
 
-    assertThat(details.getFunctionData(),
-        is("title::Here is the link type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot"));
+    assertThat(details.getFunctionData())
+        .isEqualTo("title::Here is the link type::link url::https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot");
 
-    assertThat(details.getFunctionParams(), is(notNullValue()));
-    assertThat(details.getFunctionParams().get("type"), is("link"));
-    assertThat(details.getFunctionParams().get("url"), is("https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot"));
-    assertThat(details.getFunctionParams().get("title"), is("Here is the link"));
+    assertThat(details.getFunctionParams()).isNotNull();
+    assertThat(details.getFunctionParams().get("type")).isEqualTo("link");
+    assertThat(details.getFunctionParams().get("url")).isEqualTo("https:\\\\/\\\\/en.wikipedia.org/wiki/Chatbot");
+    assertThat(details.getFunctionParams().get("title")).isEqualTo("Here is the link");
   }
 
   @Test
-  public void testParameterNoParams()
+  void testParameterNoParams()
   {
     FunctionDetails details = FunctionHelper.parseFunctionString(" dd/mm or next friday ");
 
-    assertThat(details, is(notNullValue()));
+    assertThat(details).isNotNull();
 
-    assertThat(details.getFunctionData(), is("dd/mm or next friday"));
+    assertThat(details.getFunctionData()).isEqualTo("dd/mm or next friday");
 
-    assertThat(details.getFunctionParams(), is(nullValue()));
+    assertThat(details.getFunctionParams()).isNull();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testBadParams() throws Exception
+  @Test
+  void testBadParams()
   {
-    FunctionHelper.parseFunctionString("junk::ob:::");
+    assertThrows(IllegalArgumentException.class, () -> FunctionHelper.parseFunctionString("junk::ob:::"));
   }
 
 }

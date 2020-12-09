@@ -1,12 +1,9 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -16,12 +13,12 @@ import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
-public class TestNumberSlot
+class TestNumberSlot
 {
   private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
-  public void testBasicWordMatch()
+  void testBasicWordMatch()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
@@ -34,31 +31,31 @@ public class TestNumberSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-    assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
+    assertThat(match.getSlotMatches()).hasSize(1);
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
-    assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOriginalValue(), is("One hundred two thousand and thirty four"));
-    assertThat(slotMatch.getValue(), is(102034L));
+    assertThat(slotMatch).isNotNull();
+    assertThat(slotMatch.getOriginalValue()).isEqualTo("One hundred two thousand and thirty four");
+    assertThat(slotMatch.getValue()).isEqualTo(102034L);
   }
 
   @Test
-  public void testWordStringToNumber()
+  void testWordStringToNumber()
   {
     NumberSlot slot = new NumberSlot("test");
     Number result = slot.wordStringToNumber("Three hundred fifty two thousand two hundred and sixty one");
 
-    assertThat(result, is(notNullValue()));
-    assertThat(result, is(352261L));
+    assertThat(result).isNotNull();
+    assertThat(result).isEqualTo(352261L);
 
     result = slot.wordStringToNumber("Three hundred and bad");
-    assertThat(result, is(nullValue()));
+    assertThat(result).isNull();
   }
 
   @Test
-  public void testBasicNumberMatch()
+  void testBasicNumberMatch()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
@@ -71,18 +68,18 @@ public class TestNumberSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-    assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
+    assertThat(match.getSlotMatches()).hasSize(1);
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
-    assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOriginalValue(), is("123"));
-    assertThat(slotMatch.getValue(), is(123L));
+    assertThat(slotMatch).isNotNull();
+    assertThat(slotMatch.getOriginalValue()).isEqualTo("123");
+    assertThat(slotMatch.getValue()).isEqualTo(123L);
   }
 
   @Test
-  public void testBasicDecimalMatch()
+  void testBasicDecimalMatch()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("The balance is {number}"));
 
@@ -95,14 +92,14 @@ public class TestNumberSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-    assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
+    assertThat(match.getSlotMatches()).hasSize(1);
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
-    assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOriginalValue(), is("546.12"));
-    assertThat(slotMatch.getValue(), is(546.12));
+    assertThat(slotMatch).isNotNull();
+    assertThat(slotMatch.getOriginalValue()).isEqualTo("546.12");
+    assertThat(slotMatch.getValue()).isEqualTo(546.12);
   }
 
 }

@@ -1,15 +1,13 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatcher;
@@ -24,7 +22,7 @@ import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
  * @author rabidgremlin
  *
  */
-public class TestDefaultResponses
+class TestDefaultResponses
 {
   private InkBot<BotWithDefaultDefaultResponses> testBotWithDefaultDefaultPhrases;
   private InkBot<BotWithDefaultDefaultResponses> testBotWithTestDefaultPhrases;
@@ -77,40 +75,40 @@ public class TestDefaultResponses
     @Override
     public RepromptGenerator getRepromptGenerator()
     {
-      return new DefaultResponseRepromptGenerator(new String[] { "Response A", "Response B", "Response C" });
+      return new DefaultResponseRepromptGenerator("Response A", "Response B", "Response C");
     }
   }
 
   static class TestBot extends InkBot<BotWithDefaultDefaultResponses>
   {
-    public TestBot(BotWithDefaultDefaultResponses configuration)
+    TestBot(BotWithDefaultDefaultResponses configuration)
     {
       super(configuration);
     }
   }
 
-  @Before
-  public void setUpBot()
+  @BeforeEach
+  void setUpBot()
   {
     testBotWithDefaultDefaultPhrases = new TestBot(new BotWithDefaultDefaultResponses());
     testBotWithTestDefaultPhrases = new TestBot(new BotWithTestDefaultResponses());
   }
 
   @Test
-  public void testDefaultDefaultResponse() throws Exception
+  void testDefaultDefaultResponse() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
 
     BotResponse response = testBotWithDefaultDefaultPhrases.respond(session, context, "Why is the sky blue ?");
 
-    assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("Pardon?"));
-    assertThat(response.isAskResponse(), is(true));
+    assertThat(response).isNotNull();
+    assertThat(response.getResponse()).isEqualTo("Pardon?");
+    assertThat(response.isAskResponse()).isTrue();
   }
 
   @Test
-  public void testCustomDefaultResponse() throws Exception
+  void testCustomDefaultResponse() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
@@ -123,8 +121,8 @@ public class TestDefaultResponses
     {
       BotResponse response = testBotWithTestDefaultPhrases.respond(session, context, "Why is the sky blue ?");
 
-      assertThat(response, is(notNullValue()));
-      assertThat(response.isAskResponse(), is(true));
+      assertThat(response).isNotNull();
+      assertThat(response.isAskResponse()).isTrue();
 
       if (response.getResponse().equals("Response A"))
       {
@@ -142,9 +140,8 @@ public class TestDefaultResponses
       }
     }
 
-    assertTrue("Did not get any Response As", responseACount > 0);
-    assertTrue("Did not get any Response Bs", responseBCount > 0);
-    assertTrue("Did not get any Response Cs", responseCCount > 0);
+    assertWithMessage("Did not get any Response As").that(responseACount).isAtLeast(1);
+    assertWithMessage("Did not get any Response Bs").that(responseBCount).isAtLeast(1);
+    assertWithMessage("Did not get any Response Cs").that(responseCCount).isAtLeast(1);
   }
-
 }

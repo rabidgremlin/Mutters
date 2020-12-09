@@ -1,15 +1,13 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.fasttext.intent;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.net.URL;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.Intent;
@@ -19,19 +17,17 @@ import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 
 // based on training data from https://github.com/mlehman/nlp-intent-toolkit
 
-public class TestFastTextIntentMatcher
+class TestFastTextIntentMatcher
 {
   private static FastTextIntentMatcher intentMatcher;
 
-  @BeforeClass
-  public static void setUp()
+  @BeforeAll
+  static void setUp()
   {
-    SlotMatcher slotMatcher = mock(SlotMatcher.class);
-
     URL modelUrl = Thread.currentThread().getContextClassLoader().getResource("models/fasttext-weather-model.bin");
-    assertThat(modelUrl, is(notNullValue()));
+    assertThat(modelUrl).isNotNull();
 
-    intentMatcher = new FastTextIntentMatcher(modelUrl, new SimpleTokenizer(true), slotMatcher, 0.85f, -1);
+    intentMatcher = new FastTextIntentMatcher(modelUrl, new SimpleTokenizer(true), mock(SlotMatcher.class), 0.85f, -1);
 
     Intent intent = new Intent("CurrentWeatherIntent");
     intentMatcher.addIntent(intent);
@@ -44,39 +40,39 @@ public class TestFastTextIntentMatcher
   }
 
   @Test
-  public void testMatchingOfPhraseInTestData()
+  void testMatchingOfPhraseInTestData()
   {
     Context context = new Context();
     IntentMatch intentMatch = intentMatcher.match("how hot is it", context, null);
 
-    assertThat(intentMatch, is(notNullValue()));
+    assertThat(intentMatch).isNotNull();
 
     Intent intent = intentMatch.getIntent();
-    assertThat(intent, is(notNullValue()));
-    assertThat(intent.getName(), is("CurrentWeatherIntent"));
+    assertThat(intent).isNotNull();
+    assertThat(intent.getName()).isEqualTo("CurrentWeatherIntent");
   }
 
   @Test
-  public void testBasicMatching()
+  void testBasicMatching()
   {
     Context context = new Context();
     IntentMatch intentMatch = intentMatcher.match("will it rain tomorrow", context, null);
 
-    assertThat(intentMatch, is(notNullValue()));
+    assertThat(intentMatch).isNotNull();
 
     Intent intent = intentMatch.getIntent();
-    assertThat(intent, is(notNullValue()));
-    assertThat(intent.getName(), is("FiveDayForecastIntent"));
+    assertThat(intent).isNotNull();
+    assertThat(intent.getName()).isEqualTo("FiveDayForecastIntent");
   }
 
   @Test
-  public void testNoMatch()
+  void testNoMatch()
   {
     Context context = new Context();
     IntentMatch intentMatch = intentMatcher.match("the hovercraft is full of eels", context, null);
 
-    assertThat(intentMatch, is(notNullValue()));
-    assertThat(intentMatch.matched(), is(false));
+    assertThat(intentMatch).isNotNull();
+    assertThat(intentMatch.matched()).isFalse();
   }
 
 }

@@ -1,14 +1,12 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.util.HashSet;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.IntentMatch;
@@ -16,13 +14,13 @@ import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedIntent;
 import com.rabidgremlin.mutters.templated.TemplatedIntentMatcher;
 
-public class TestTemplatedIntentFiltering
+class TestTemplatedIntentFiltering
 {
   private final SimpleTokenizer tokenizer = new SimpleTokenizer();
-  TemplatedIntentMatcher matcher;
+  private TemplatedIntentMatcher matcher;
 
-  @Before
-  public void setUpMatcher()
+  @BeforeEach
+  void setUpMatcher()
   {
     matcher = new TemplatedIntentMatcher(tokenizer);
 
@@ -37,25 +35,25 @@ public class TestTemplatedIntentFiltering
   }
 
   @Test
-  public void testNoFiltering()
+  void testNoFiltering()
   {
     // should match on hello intent
     IntentMatch intentMatch = matcher.match("hello", new Context(), null);
 
-    assertThat(intentMatch, is(notNullValue()));
-    assertThat(intentMatch.getIntent(), is(notNullValue()));
-    assertThat(intentMatch.getIntent().getName(), is("HelloIntent"));
+    assertThat(intentMatch).isNotNull();
+    assertThat(intentMatch.getIntent()).isNotNull();
+    assertThat(intentMatch.getIntent().getName()).isEqualTo("HelloIntent");
 
     // should match on goodbye intent
     intentMatch = matcher.match("bye", new Context(), null);
 
-    assertThat(intentMatch, is(notNullValue()));
-    assertThat(intentMatch.getIntent(), is(notNullValue()));
-    assertThat(intentMatch.getIntent().getName(), is("GoodbyeIntent"));
+    assertThat(intentMatch).isNotNull();
+    assertThat(intentMatch.getIntent()).isNotNull();
+    assertThat(intentMatch.getIntent().getName()).isEqualTo("GoodbyeIntent");
   }
 
   @Test
-  public void testFiltering()
+  void testFiltering()
   {
     HashSet<String> expectedIntents = new HashSet<>();
     expectedIntents.add("HelloIntent");
@@ -63,14 +61,14 @@ public class TestTemplatedIntentFiltering
     // should match on hello intent
     IntentMatch intentMatch = matcher.match("hello", new Context(), expectedIntents);
 
-    assertThat(intentMatch, is(notNullValue()));
-    assertThat(intentMatch.getIntent(), is(notNullValue()));
-    assertThat(intentMatch.getIntent().getName(), is("HelloIntent"));
+    assertThat(intentMatch).isNotNull();
+    assertThat(intentMatch.getIntent()).isNotNull();
+    assertThat(intentMatch.getIntent().getName()).isEqualTo("HelloIntent");
 
     // should not match on goodbye intent (its not in expected intents)
     intentMatch = matcher.match("bye", new Context(), expectedIntents);
 
-    assertThat(intentMatch, is(notNullValue()));
-    assertThat(intentMatch.matched(), is(false));
+    assertThat(intentMatch).isNotNull();
+    assertThat(intentMatch.matched()).isFalse();
   }
 }

@@ -1,9 +1,7 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +10,15 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.bot.BotException;
 import com.rabidgremlin.mutters.core.bot.BotResponse;
 import com.rabidgremlin.mutters.core.session.Session;
 
-public class TestThreadLocal
+class TestThreadLocal
 {
 
   private static final int TEST_ROUNDS = 20;
@@ -29,14 +27,14 @@ public class TestThreadLocal
 
   private final List<Runnable> testCases = new ArrayList<>();
 
-  @BeforeClass
-  public static void setUpBot()
+  @BeforeAll
+  static void setUpBot()
   {
     taxiBot = new TaxiInkBot(new TaxiInkBotConfiguration());
   }
 
   @Test
-  public void testThreadLocal()
+  void testThreadLocal()
   {
     addSimpleCases();
     addInteractiveCases();
@@ -74,47 +72,46 @@ public class TestThreadLocal
     phrasesAndResponses.add(new ImmutablePair<>("136 River Road", "Taxi 1983 is on its way"));
     testCases.add(new TestCase(taxiBot, phrasesAndResponses));
   }
-}
 
-class TestCase implements Runnable
-{
-
-  private final TaxiInkBot bot;
-
-  private List<Pair<String, String>> phrasesAndResponses = new ArrayList<>();
-
-  public TestCase(TaxiInkBot bot, String phrase, String expectedResponse)
+  private static final class TestCase implements Runnable
   {
-    this.bot = bot;
-    Pair<String, String> pair = new ImmutablePair<>(phrase, expectedResponse);
-    phrasesAndResponses.add(pair);
-  }
+    private final TaxiInkBot bot;
 
-  public TestCase(TaxiInkBot bot, List<Pair<String, String>> phrasesAndResponses)
-  {
-    this.bot = bot;
-    this.phrasesAndResponses = phrasesAndResponses;
-  }
+    private List<Pair<String, String>> phrasesAndResponses = new ArrayList<>();
 
-  @Override
-  public void run()
-  {
-    Session session = new Session();
-    Context context = new Context();
-
-    BotResponse response;
-    try
+    private TestCase(TaxiInkBot bot, String phrase, String expectedResponse)
     {
-      for (Pair<String, String> pair : phrasesAndResponses)
-      {
-        response = bot.respond(session, context, pair.getKey());
-        assertThat(response, is(notNullValue()));
-        assertThat(response.getResponse(), is(pair.getValue()));
-      }
+      this.bot = bot;
+      Pair<String, String> pair = new ImmutablePair<>(phrase, expectedResponse);
+      phrasesAndResponses.add(pair);
     }
-    catch (BotException e)
+
+    private TestCase(TaxiInkBot bot, List<Pair<String, String>> phrasesAndResponses)
     {
-      e.printStackTrace();
+      this.bot = bot;
+      this.phrasesAndResponses = phrasesAndResponses;
+    }
+
+    @Override
+    public void run()
+    {
+      Session session = new Session();
+      Context context = new Context();
+
+      BotResponse response;
+      try
+      {
+        for (Pair<String, String> pair : phrasesAndResponses)
+        {
+          response = bot.respond(session, context, pair.getKey());
+          assertThat(response).isNotNull();
+          assertThat(response.getResponse()).isEqualTo(pair.getValue());
+        }
+      }
+      catch (BotException e)
+      {
+        e.printStackTrace();
+      }
     }
   }
 }

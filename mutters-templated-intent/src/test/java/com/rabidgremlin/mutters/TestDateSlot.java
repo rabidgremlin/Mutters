@@ -1,15 +1,13 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -19,12 +17,12 @@ import com.rabidgremlin.mutters.templated.SimpleTokenizer;
 import com.rabidgremlin.mutters.templated.TemplatedUtterance;
 import com.rabidgremlin.mutters.templated.TemplatedUtteranceMatch;
 
-public class TestDateSlot
+class TestDateSlot
 {
   private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   @Test
-  public void testBasicMatch()
+  void testBasicMatch()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {date}"));
 
@@ -37,18 +35,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-    assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
+    assertThat(match.getSlotMatches()).hasSize(1);
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
-    assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOriginalValue(), is("30th May 1974"));
-    assertThat(slotMatch.getValue(), is(LocalDate.of(1974, 5, 30)));
+    assertThat(slotMatch).isNotNull();
+    assertThat(slotMatch.getOriginalValue()).isEqualTo("30th May 1974");
+    assertThat(slotMatch.getValue()).isEqualTo(LocalDate.of(1974, 5, 30));
   }
 
   @Test
-  public void testMatchWithTimeZone()
+  void testMatchWithTimeZone()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("for the {date}"));
 
@@ -62,18 +60,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
-    assertThat(match.getSlotMatches().size(), is(1));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
+    assertThat(match.getSlotMatches()).hasSize(1);
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
-    assertThat(slotMatch, is(notNullValue()));
-    assertThat(slotMatch.getOriginalValue(), is("30th May 1974"));
-    assertThat(slotMatch.getValue(), is(LocalDate.of(1974, 5, 30)));
+    assertThat(slotMatch).isNotNull();
+    assertThat(slotMatch.getOriginalValue()).isEqualTo("30th May 1974");
+    assertThat(slotMatch.getValue()).isEqualTo(LocalDate.of(1974, 5, 30));
   }
 
   @Test
-  public void testDontMatchOnJustTime()
+  void testDontMatchOnJustTime()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -86,12 +84,12 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(false));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isFalse();
   }
 
   @Test
-  public void testNZDateFullNumeric()
+  void testNZDateFullNumeric()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -105,18 +103,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
-    assertThat(dateMatch.getDayOfMonth(), is(20));
-    assertThat(dateMatch.getMonth().getValue(), is(5));
-    assertThat(dateMatch.getYear(), is(2016));
+    assertThat(dateMatch.getDayOfMonth()).isEqualTo(20);
+    assertThat(dateMatch.getMonth().getValue()).isEqualTo(5);
+    assertThat(dateMatch.getYear()).isEqualTo(2016);
   }
 
   @Test
-  public void testNZDateShortYear()
+  void testNZDateShortYear()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -130,18 +128,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
-    assertThat(dateMatch.getDayOfMonth(), is(20));
-    assertThat(dateMatch.getMonth().getValue(), is(5));
-    assertThat(dateMatch.getYear(), is(2016));
+    assertThat(dateMatch.getDayOfMonth()).isEqualTo(20);
+    assertThat(dateMatch.getMonth().getValue()).isEqualTo(5);
+    assertThat(dateMatch.getYear()).isEqualTo(2016);
   }
 
   @Test
-  public void testNZDateDayMonthOnly()
+  void testNZDateDayMonthOnly()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -155,18 +153,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
-    assertThat(dateMatch.getDayOfMonth(), is(20));
-    assertThat(dateMatch.getMonth().getValue(), is(5));
-    assertThat(dateMatch.getYear(), is(LocalDate.now().getYear()));
+    assertThat(dateMatch.getDayOfMonth()).isEqualTo(20);
+    assertThat(dateMatch.getMonth().getValue()).isEqualTo(5);
+    assertThat(dateMatch.getYear()).isEqualTo(LocalDate.now().getYear());
   }
 
   @Test
-  public void testNZDateDayMonthAsTextOnly()
+  void testNZDateDayMonthAsTextOnly()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -180,19 +178,19 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
-    assertThat(dateMatch.getDayOfMonth(), is(1));
-    assertThat(dateMatch.getMonth().getValue(), is(12));
-    assertThat(dateMatch.getYear(), is(LocalDate.now().getYear()));
+    assertThat(dateMatch.getDayOfMonth()).isEqualTo(1);
+    assertThat(dateMatch.getMonth().getValue()).isEqualTo(12);
+    assertThat(dateMatch.getYear()).isEqualTo(LocalDate.now().getYear());
   }
 
   // TODO handle different TZ in context
   @Test
-  public void testToday()
+  void testToday()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -205,19 +203,19 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
 
     LocalDate today = LocalDate.now();
-    assertThat(dateMatch, is(today));
+    assertThat(dateMatch).isEqualTo(today);
   }
 
   // TODO handle different TZ in context
   @Test
-  public void testTomorrow()
+  void testTomorrow()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -230,18 +228,18 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isTrue();
 
     SlotMatch<?> slotMatch = match.getSlotMatches().get(slot);
     LocalDate dateMatch = (LocalDate) slotMatch.getValue();
 
     LocalDate tommorrow = LocalDate.now().plusDays(1);
-    assertThat(dateMatch, is(tommorrow));
+    assertThat(dateMatch).isEqualTo(tommorrow);
   }
 
   @Test
-  public void testMismatch()
+  void testMismatch()
   {
     TemplatedUtterance utterance = new TemplatedUtterance(tokenizer.tokenize("{date}"));
 
@@ -254,8 +252,8 @@ public class TestDateSlot
 
     TemplatedUtteranceMatch match = utterance.matches(input, slots, context);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.isMatched(), is(false));
+    assertThat(match).isNotNull();
+    assertThat(match.isMatched()).isFalse();
   }
 
 }

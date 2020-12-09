@@ -1,14 +1,13 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.slots;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.SlotMatch;
@@ -16,11 +15,11 @@ import com.rabidgremlin.mutters.core.SlotMatch;
 /**
  * @author wilmol
  */
-public class DefaultValueSlotTest
+class DefaultValueSlotTest
 {
 
   @Test
-  public void testDefaultStringSlot()
+  void testDefaultStringSlot()
   {
     DefaultValueSlot<String> defaultValueSlot = new DefaultValueSlot.DefaultStringSlot()
     {
@@ -37,11 +36,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(""));
+    assertThat(defaultValueSlot.getDefaultValue()).isEmpty();
   }
 
   @Test
-  public void testDefaultNumberSlot()
+  void testDefaultNumberSlot()
   {
     DefaultValueSlot<Number> defaultValueSlot = new DefaultValueSlot.DefaultNumberSlot()
     {
@@ -58,11 +57,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(-1));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(-1);
   }
 
   @Test
-  public void testDefaultLongSlot()
+  void testDefaultLongSlot()
   {
     DefaultValueSlot<Long> defaultValueSlot = new DefaultValueSlot.DefaultLongSlot()
     {
@@ -79,11 +78,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(-1L));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(-1L);
   }
 
   @Test
-  public void testDefaultIntegerSlot()
+  void testDefaultIntegerSlot()
   {
     DefaultValueSlot<Integer> defaultValueSlot = new DefaultValueSlot.DefaultIntegerSlot()
     {
@@ -100,11 +99,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(-1));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(-1);
   }
 
   @Test
-  public void testDefaultDoubleSlot()
+  void testDefaultDoubleSlot()
   {
     DefaultValueSlot<Double> defaultValueSlot = new DefaultValueSlot.DefaultDoubleSlot()
     {
@@ -121,11 +120,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(-1d));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(-1d);
   }
 
   @Test
-  public void testDefaultDateSlot()
+  void testDefaultDateSlot()
   {
     DefaultValueSlot<LocalDate> defaultValueSlot = new DefaultValueSlot.DefaultDateSlot()
     {
@@ -142,11 +141,11 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(LocalDate.MIN));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(LocalDate.MIN);
   }
 
   @Test
-  public void testDefaultTimeSlot()
+  void testDefaultTimeSlot()
   {
     DefaultValueSlot<LocalTime> defaultValueSlot = new DefaultValueSlot.DefaultTimeSlot()
     {
@@ -163,6 +162,6 @@ public class DefaultValueSlotTest
       }
     };
 
-    assertThat(defaultValueSlot.getDefaultValue(), is(LocalTime.MIN));
+    assertThat(defaultValueSlot.getDefaultValue()).isEqualTo(LocalTime.MIN);
   }
 }

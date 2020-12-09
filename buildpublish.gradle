@@ -115,3 +115,25 @@ jacocoTestReport {
     csv.enabled = false
   }
 }
+
+// Tests
+tasks.withType(Test) {
+  // run tests in parallel, assumes they're threadsafe
+  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+  // use JUnit 5 engine
+  useJUnitPlatform()
+  testLogging {
+    events = ['failed', 'skipped']
+    // log the full failure messages
+    exceptionFormat = 'full'
+    showExceptions = true
+    showCauses = true
+    showStackTraces = true
+    // log the overall results (based on https://stackoverflow.com/a/36130467/6122976)
+    afterSuite { desc, result ->
+      if (!desc.parent) { // will match the outermost suite
+        println("Results: ${result.resultType} (${result.testCount} test${result.testCount > 1 ? "s" : ""}, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)")
+      }
+    }
+  }
+}

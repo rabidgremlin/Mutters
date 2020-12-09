@@ -1,12 +1,9 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.bot.ink.functions;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.rabidgremlin.mutters.bot.ink.functions.orderbot.OrderInkBot;
 import com.rabidgremlin.mutters.bot.ink.functions.orderbot.OrderInkBotConfiguration;
@@ -14,25 +11,25 @@ import com.rabidgremlin.mutters.core.Context;
 import com.rabidgremlin.mutters.core.bot.BotResponse;
 import com.rabidgremlin.mutters.core.session.Session;
 
-public class TestLongTermFunctions
+class TestLongTermFunctions
 {
   private static final OrderInkBot orderBot = new OrderInkBot(new OrderInkBotConfiguration());
 
   @Test
-  public void testSetLongTermFunctionInScript() throws Exception
+  void testSetLongTermFunctionInScript() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
 
     BotResponse response = orderBot.respond(session, context, "Order a widget");
 
-    assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("Your order 123456 has been created!"));
-    assertThat(session.getLongTermAttribute("currentorder"), is("123456"));
+    assertThat(response).isNotNull();
+    assertThat(response.getResponse()).isEqualTo("Your order 123456 has been created!");
+    assertThat(session.getLongTermAttribute("currentorder")).isEqualTo("123456");
   }
 
   @Test
-  public void testGetLongTermFunctionInScript() throws Exception
+  void testGetLongTermFunctionInScript() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
@@ -42,13 +39,13 @@ public class TestLongTermFunctions
 
     // ask for status which should use long term current order as context
     response = orderBot.respond(session, context, "What is the status of my order");
-    assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("For order 123456 ?"));
-    assertThat(session.getLongTermAttribute("currentorder"), is("123456"));
+    assertThat(response).isNotNull();
+    assertThat(response.getResponse()).isEqualTo("For order 123456 ?");
+    assertThat(session.getLongTermAttribute("currentorder")).isEqualTo("123456");
   }
 
   @Test
-  public void testDeleteLongTermFunctionInScript() throws Exception
+  void testDeleteLongTermFunctionInScript() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
@@ -60,13 +57,14 @@ public class TestLongTermFunctions
 
     // check that we are prompted for order number and that long term current order
     // has been unset
-    assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("What is the order number of the order you want to check the status of ?"));
-    assertThat(session.getLongTermAttribute("currentorder"), is(nullValue()));
+    assertThat(response).isNotNull();
+    assertThat(response.getResponse())
+        .isEqualTo("What is the order number of the order you want to check the status of ?");
+    assertThat(session.getLongTermAttribute("currentorder")).isNull();
   }
 
   @Test
-  public void testGetLongTermFunctionInScriptNoValue() throws Exception
+  void testGetLongTermFunctionInScriptNoValue() throws Exception
   {
     Session session = new Session();
     Context context = new Context();
@@ -75,8 +73,9 @@ public class TestLongTermFunctions
     BotResponse response = orderBot.respond(session, context, "What is the status of my order");
 
     // should go down route of prompting for order number
-    assertThat(response, is(notNullValue()));
-    assertThat(response.getResponse(), is("What is the order number of the order you want to check the status of ?"));
-    assertThat(session.getLongTermAttribute("currentorder"), is(nullValue()));
+    assertThat(response).isNotNull();
+    assertThat(response.getResponse())
+        .isEqualTo("What is the order number of the order you want to check the status of ?");
+    assertThat(session.getLongTermAttribute("currentorder")).isNull();
   }
 }

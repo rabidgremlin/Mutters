@@ -1,11 +1,8 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,9 +13,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.function.BinaryOperator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CompoundIntentMatcherTest
+class CompoundIntentMatcherTest
 {
 
   /**
@@ -92,7 +89,7 @@ public class CompoundIntentMatcherTest
   }
 
   @Test
-  public void shouldIgnoreSecondMatcherIfFirstMatcherMatches()
+  void shouldIgnoreSecondMatcherIfFirstMatcherMatches()
   {
     AlwaysMatcher alwaysMatcher = new AlwaysMatcher();
     NeverMatcher neverMatcher = new NeverMatcher();
@@ -101,12 +98,12 @@ public class CompoundIntentMatcherTest
 
     IntentMatch match = compoundMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
   }
 
   @Test
-  public void shouldUseSecondMatcherIfFirstFailsToMatch()
+  void shouldUseSecondMatcherIfFirstFailsToMatch()
   {
     AlwaysMatcher alwaysMatcher = new AlwaysMatcher();
     NeverMatcher neverMatcher = new NeverMatcher();
@@ -115,12 +112,12 @@ public class CompoundIntentMatcherTest
 
     IntentMatch match = compoundMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
   }
 
   @Test
-  public void shouldReturnNoMatchIfBothMatchersFail()
+  void shouldReturnNoMatchIfBothMatchersFail()
   {
     NeverMatcher neverMatcher1 = new NeverMatcher();
     NeverMatcher neverMatcher2 = new NeverMatcher();
@@ -129,12 +126,12 @@ public class CompoundIntentMatcherTest
 
     IntentMatch match = compoundMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(false));
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isFalse();
   }
 
   @Test
-  public void shouldReturnOnlyMatchedScoresIfLastMatcherMatches()
+  void shouldReturnOnlyMatchedScoresIfLastMatcherMatches()
   {
     // Given
     AbcNeverMatcher abcMatcher = new AbcNeverMatcher();
@@ -145,13 +142,13 @@ public class CompoundIntentMatcherTest
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
     // Then
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
-    assertEquals(new MatcherScores().addScore("AlwaysIntent", 1.0), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("AlwaysIntent", 1.0));
   }
 
   @Test
-  public void shouldReturnOnlyMatchedScoresIfFirstMatcherMatches()
+  void shouldReturnOnlyMatchedScoresIfFirstMatcherMatches()
   {
     // Given
     AlwaysMatcher alwaysMatcher = new AlwaysMatcher();
@@ -162,13 +159,13 @@ public class CompoundIntentMatcherTest
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
     // Then
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
-    assertEquals(new MatcherScores().addScore("AlwaysIntent", 1.0), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("AlwaysIntent", 1.0));
   }
 
   @Test
-  public void testComposeMoreThan2Matchers()
+  void testComposeMoreThan2Matchers()
   {
     // Given
     AlwaysMatcher alwaysMatcher = new AlwaysMatcher();
@@ -180,13 +177,13 @@ public class CompoundIntentMatcherTest
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
     // Then
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
-    assertEquals(new MatcherScores().addScore("AlwaysIntent", 1.0), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("AlwaysIntent", 1.0));
   }
 
   @Test
-  public void testComposeMoreThan2MatchersWithCustomNoMatchScoreMergingBehaviour()
+  void testComposeMoreThan2MatchersWithCustomNoMatchScoreMergingBehaviour()
   {
     // Given
     AbcNeverMatcher abcMatcher = new AbcNeverMatcher();
@@ -199,14 +196,14 @@ public class CompoundIntentMatcherTest
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
 
     // Then
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(false));
-    assertEquals(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4).addScore("IntentB", 0.3)
-        .addScore("IntentC", 0.2).addScore("IntentD", 0.1), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isFalse();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4)
+        .addScore("IntentB", 0.3).addScore("IntentC", 0.2).addScore("IntentD", 0.1));
   }
 
   @Test
-  public void testConstructWithListOfMatchers()
+  void testConstructWithListOfMatchers()
   {
     // Given
     List<IntentMatcher> intentMatchers = Arrays.asList(new AbcNeverMatcher(), new AbdNeverMatcher(),
@@ -217,13 +214,13 @@ public class CompoundIntentMatcherTest
 
     // Then
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
-    assertThat(match.getIntent().getName(), is("AlwaysIntent"));
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
+    assertThat(match.getIntent().getName()).isEqualTo("AlwaysIntent");
   }
 
   @Test
-  public void testConstructWithArrayOfMatchers()
+  void testConstructWithArrayOfMatchers()
   {
     // Given
     IntentMatcher[] intentMatchers = { new AbcNeverMatcher(), new AbdNeverMatcher(), new AlwaysMatcher() };
@@ -233,13 +230,13 @@ public class CompoundIntentMatcherTest
 
     // Then
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(true));
-    assertThat(match.getIntent().getName(), is("AlwaysIntent"));
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isTrue();
+    assertThat(match.getIntent().getName()).isEqualTo("AlwaysIntent");
   }
 
   @Test
-  public void testConstructWithListOfMatchersCustomNoMatchMergeStrategy()
+  void testConstructWithListOfMatchersCustomNoMatchMergeStrategy()
   {
     // Given
     List<IntentMatcher> intentMatchers = Arrays.asList(new AbcNeverMatcher(), new AbdNeverMatcher(),
@@ -251,14 +248,14 @@ public class CompoundIntentMatcherTest
 
     // Then
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(false));
-    assertEquals(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4).addScore("IntentB", 0.3)
-        .addScore("IntentC", 0.2).addScore("IntentD", 0.1), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isFalse();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4)
+        .addScore("IntentB", 0.3).addScore("IntentC", 0.2).addScore("IntentD", 0.1));
   }
 
   @Test
-  public void testConstructWithArrayOfMatchersCustomNoMatchMergeStrategy()
+  void testConstructWithArrayOfMatchersCustomNoMatchMergeStrategy()
   {
     // Given
     IntentMatcher[] intentMatchers = { new AbcNeverMatcher(), new AbdNeverMatcher(), new NeverMatcher() };
@@ -269,49 +266,37 @@ public class CompoundIntentMatcherTest
 
     // Then
     IntentMatch match = intentMatcher.match("The rain stays mainly in the plains", new Context(), null);
-    assertThat(match, is(notNullValue()));
-    assertThat(match.matched(), is(false));
-    assertEquals(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4).addScore("IntentB", 0.3)
-        .addScore("IntentC", 0.2).addScore("IntentD", 0.1), match.getMatcherScores());
+    assertThat(match).isNotNull();
+    assertThat(match.matched()).isFalse();
+    assertThat(match.getMatcherScores()).isEqualTo(new MatcherScores().addScore("IntentA", 0.5).addScore("IntentB", 0.4)
+        .addScore("IntentB", 0.3).addScore("IntentC", 0.2).addScore("IntentD", 0.1));
   }
 
   @Test
-  public void testConstructWithListOfMatchersRejectsEmptyList()
+  void testConstructWithListOfMatchersRejectsEmptyList()
   {
-    try
-    {
-      // Given
-      List<IntentMatcher> intentMatchers = Collections.emptyList();
+    // Given
+    List<IntentMatcher> intentMatchers = Collections.emptyList();
 
-      // When
-      CompoundIntentMatcher.compose(intentMatchers);
+    // When
+    IllegalArgumentException expected = assertThrows(IllegalArgumentException.class,
+        () -> CompoundIntentMatcher.compose(intentMatchers));
 
-      // Then
-      fail();
-    }
-    catch (IllegalArgumentException expected)
-    {
-      assertThat(expected.getMessage(), is("No intent matchers provided."));
-    }
+    // Then
+    assertThat(expected).hasMessageThat().isEqualTo("No intent matchers provided.");
   }
 
   @Test
-  public void testConstructWithArrayOfMatchersRejectsEmptyArray()
+  void testConstructWithArrayOfMatchersRejectsEmptyArray()
   {
-    try
-    {
-      // Given
-      IntentMatcher[] intentMatchers = {};
+    // Given
+    IntentMatcher[] intentMatchers = {};
 
-      // When
-      CompoundIntentMatcher.compose(intentMatchers);
+    // When
+    IllegalArgumentException expected = assertThrows(IllegalArgumentException.class,
+        () -> CompoundIntentMatcher.compose(intentMatchers));
 
-      // Then
-      fail();
-    }
-    catch (IllegalArgumentException expected)
-    {
-      assertThat(expected.getMessage(), is("No intent matchers provided."));
-    }
+    // Then
+    assertThat(expected).hasMessageThat().isEqualTo("No intent matchers provided.");
   }
 }

@@ -1,150 +1,147 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.templated;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TestSimpleTokenizer
+class TestSimpleTokenizer
 {
   private final SimpleTokenizer tokenizer = new SimpleTokenizer();
 
   private final SimpleTokenizer tokenizerLower = new SimpleTokenizer(true);
 
-  private void checkResult(String inputText, String[] expectedTokens)
+  private void checkResult(String inputText, String... expectedTokens)
   {
     String[] tokenizedInput = tokenizer.tokenize(inputText);
-    assertThat(tokenizedInput, is(notNullValue()));
+    assertThat(tokenizedInput).isNotNull();
 
-    assertThat(tokenizedInput.length, is(expectedTokens.length));
-    assertThat(tokenizedInput, is(expectedTokens));
+    assertThat(tokenizedInput).hasLength(expectedTokens.length);
+    assertThat(tokenizedInput).isEqualTo(expectedTokens);
   }
 
-  private void checkResultWithLower(String inputText, String[] expectedTokens)
+  private void checkResultWithLower(String inputText, String... expectedTokens)
   {
     String[] tokenizedInput = tokenizerLower.tokenize(inputText);
-    assertThat(tokenizedInput, is(notNullValue()));
+    assertThat(tokenizedInput).isNotNull();
 
-    assertThat(tokenizedInput.length, is(expectedTokens.length));
-    assertThat(tokenizedInput, is(expectedTokens));
+    assertThat(tokenizedInput).hasLength(expectedTokens.length);
+    assertThat(tokenizedInput).isEqualTo(expectedTokens);
   }
 
   @Test
-  public void testRemoveQuestionMarks()
+  void testRemoveQuestionMarks()
   {
-    checkResult("Whats the time?", new String[] { "Whats", "the", "time" });
-    checkResult("Whats the time ?", new String[] { "Whats", "the", "time" });
-    checkResult("Whats the time ????", new String[] { "Whats", "the", "time" });
-    checkResult("Whats the time????", new String[] { "Whats", "the", "time" });
-    checkResult("Is this a test? Im not sure", new String[] { "Is", "this", "a", "test", "Im", "not", "sure" });
+    checkResult("Whats the time?", "Whats", "the", "time");
+    checkResult("Whats the time ?", "Whats", "the", "time");
+    checkResult("Whats the time ????", "Whats", "the", "time");
+    checkResult("Whats the time????", "Whats", "the", "time");
+    checkResult("Is this a test? Im not sure", "Is", "this", "a", "test", "Im", "not", "sure");
   }
 
   @Test
-  public void testRemoveSingleQuotes()
+  void testRemoveSingleQuotes()
   {
-    checkResult("What's the time", new String[] { "Whats", "the", "time" });
-    checkResult("What's the time", new String[] { "Whats", "the", "time" });
-    checkResult("What's the time", new String[] { "Whats", "the", "time" });
-    checkResult("What's the time", new String[] { "Whats", "the", "time" });
-    checkResult("Is this a test? Im not sure", new String[] { "Is", "this", "a", "test", "Im", "not", "sure" });
+    checkResult("What's the time", "Whats", "the", "time");
+    checkResult("What's the time", "Whats", "the", "time");
+    checkResult("What's the time", "Whats", "the", "time");
+    checkResult("What's the time", "Whats", "the", "time");
+    checkResult("Is this a test? Im not sure", "Is", "this", "a", "test", "Im", "not", "sure");
   }
 
   @Test
-  public void testRemoveExclamationMarks()
+  void testRemoveExclamationMarks()
   {
-    checkResult("Hello there!", new String[] { "Hello", "there" });
-    checkResult("Hello there !", new String[] { "Hello", "there" });
-    checkResult("Hello there !!!!", new String[] { "Hello", "there" });
-    checkResult("Hello there!!!!", new String[] { "Hello", "there" });
-    checkResult("Hello! there!", new String[] { "Hello", "there" });
+    checkResult("Hello there!", "Hello", "there");
+    checkResult("Hello there !", "Hello", "there");
+    checkResult("Hello there !!!!", "Hello", "there");
+    checkResult("Hello there!!!!", "Hello", "there");
+    checkResult("Hello! there!", "Hello", "there");
   }
 
   @Test
-  public void testRemoveCommaMarks()
+  void testRemoveCommaMarks()
   {
-    checkResult("Hello, there", new String[] { "Hello", "there" });
-    checkResult("Hello there,", new String[] { "Hello", "there" });
-    checkResult("Hello,, there", new String[] { "Hello", "there" });
-    checkResult("Hello ,, there", new String[] { "Hello", "there" });
-    checkResult("Hello, there,", new String[] { "Hello", "there" });
+    checkResult("Hello, there", "Hello", "there");
+    checkResult("Hello there,", "Hello", "there");
+    checkResult("Hello,, there", "Hello", "there");
+    checkResult("Hello ,, there", "Hello", "there");
+    checkResult("Hello, there,", "Hello", "there");
   }
 
   @Test
-  public void testRemoveFullStops()
+  void testRemoveFullStops()
   {
-    checkResult("Hello.", new String[] { "Hello" });
-    checkResult("Hello there.", new String[] { "Hello", "there" });
-    checkResult("Hello.. there", new String[] { "Hello", "there" });
-    checkResult(".Hello . there", new String[] { "Hello", "there" });
-    checkResult("Hello. there,", new String[] { "Hello", "there" });
+    checkResult("Hello.", "Hello");
+    checkResult("Hello there.", "Hello", "there");
+    checkResult("Hello.. there", "Hello", "there");
+    checkResult(".Hello . there", "Hello", "there");
+    checkResult("Hello. there,", "Hello", "there");
   }
 
   @Test
-  public void testPreserveNumbers()
+  void testPreserveNumbers()
   {
-    checkResult("1.7889", new String[] { "1.7889" });
-    checkResult("1.", new String[] { "1." });
-    checkResult("200.12", new String[] { "200.12" });
-    checkResult(".57", new String[] { ".57" });
-    checkResult("-100", new String[] { "-100" });
-    checkResult("-1.45", new String[] { "-1.45" });
+    checkResult("1.7889", "1.7889");
+    checkResult("1.", "1.");
+    checkResult("200.12", "200.12");
+    checkResult(".57", ".57");
+    checkResult("-100", "-100");
+    checkResult("-1.45", "-1.45");
   }
 
   @Test
-  public void testPreserveDollars()
+  void testPreserveDollars()
   {
-    checkResult("$23.89", new String[] { "$23.89" });
-    checkResult("$12", new String[] { "$12" });
-    checkResult("12$", new String[] { "12" });
+    checkResult("$23.89", "$23.89");
+    checkResult("$12", "$12");
+    checkResult("12$", "12");
   }
 
   @Test
-  public void testPreserveDateAndTimes()
+  void testPreserveDateAndTimes()
   {
-    checkResult("30/05/1974", new String[] { "30/05/1974" });
-    checkResult("23:13", new String[] { "23:13" });
+    checkResult("30/05/1974", "30/05/1974");
+    checkResult("23:13", "23:13");
   }
 
   @Test
-  public void testPreserveEmailAddress()
+  void testPreserveEmailAddress()
   {
-    checkResult("bob@test.com", new String[] { "bob@test.com" });
-    checkResult("bob@test.com.", new String[] { "bob@test.com" });
-    checkResult("bob@test.com,", new String[] { "bob@test.com" });
-    checkResult("bob.o'reily@test.com", new String[] { "bob.o'reily@test.com" });
-    checkResult("@home", new String[] { "home" });
+    checkResult("bob@test.com", "bob@test.com");
+    checkResult("bob@test.com.", "bob@test.com");
+    checkResult("bob@test.com,", "bob@test.com");
+    checkResult("bob.o'reily@test.com", "bob.o'reily@test.com");
+    checkResult("@home", "home");
   }
 
   @Test
-  public void testTrimming()
+  void testTrimming()
   {
-    checkResult(" Hi  there ", new String[] { "Hi", "there" });
-    checkResult(" Hi", new String[] { "Hi" });
+    checkResult(" Hi  there ", "Hi", "there");
+    checkResult(" Hi", "Hi");
   }
 
   @Test
-  public void testSlots()
+  void testSlots()
   {
-    checkResult("I like {Color} and {Food}", new String[] { "I", "like", "{Color}", "and", "{Food}" });
+    checkResult("I like {Color} and {Food}", "I", "like", "{Color}", "and", "{Food}");
   }
 
   @Test
-  public void testLowerCasing()
+  void testLowerCasing()
   {
-    checkResultWithLower("I like {Color} and {Food}", new String[] { "i", "like", "{Color}", "and", "{Food}" });
-    checkResultWithLower(".Hello . there", new String[] { "hello", "there" });
-    checkResultWithLower("Is this a test? I'm not sure",
-        new String[] { "is", "this", "a", "test", "im", "not", "sure" });
+    checkResultWithLower("I like {Color} and {Food}", "i", "like", "{Color}", "and", "{Food}");
+    checkResultWithLower(".Hello . there", "hello", "there");
+    checkResultWithLower("Is this a test? I'm not sure", "is", "this", "a", "test", "im", "not", "sure");
   }
 
   @Test
-  public void testOrdinalsParseOk()
+  void testOrdinalsParseOk()
   {
-    checkResult("the 3rd of November", new String[] { "the", "3rd", "of", "November" });
-    checkResult("I came 5th", new String[] { "I", "came", "5th" });
-    checkResult("We are in 1st place", new String[] { "We", "are", "in", "1st", "place" });
+    checkResult("the 3rd of November", "the", "3rd", "of", "November");
+    checkResult("I came 5th", "I", "came", "5th");
+    checkResult("We are in 1st place", "We", "are", "in", "1st", "place");
   }
 
 }

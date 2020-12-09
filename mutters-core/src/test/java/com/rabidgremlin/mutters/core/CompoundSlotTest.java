@@ -1,24 +1,21 @@
 /* Licensed under Apache-2.0 */
 package com.rabidgremlin.mutters.core;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by wilmol on 2019-08-19 at 12:35.
  */
-public class CompoundSlotTest
+class CompoundSlotTest
 {
 
   private static final Slot<String> stringSlot = new Slot<String>()
@@ -67,111 +64,93 @@ public class CompoundSlotTest
   };
 
   @Test
-  public void canConstructWithSameType()
+  void canConstructWithSameType()
   {
     CompoundSlot<String> compoundSlot = new CompoundSlot<>("compound", stringSlot, stringSlot);
     Optional<SlotMatch<String>> match = compoundSlot.match("hi", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), "hi");
-    assertEquals(match.get().getSlot(), stringSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo("hi");
+    assertThat(match.get().getSlot()).isEqualTo(stringSlot);
   }
 
   @Test
-  public void canConstructWithDifferentTypes()
+  void canConstructWithDifferentTypes()
   {
     CompoundSlot<Number> compoundSlot = new CompoundSlot<>("compound", integerSlot, doubleSlot);
     Optional<SlotMatch<Number>> match = compoundSlot.match("123", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), 123);
-    assertEquals(match.get().getSlot(), integerSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo(123);
+    assertThat(match.get().getSlot()).isEqualTo(integerSlot);
   }
 
   @Test
-  public void mustTrySecondSlotIfFirstFailsToMatch()
+  void mustTrySecondSlotIfFirstFailsToMatch()
   {
     CompoundSlot<Number> compoundSlot = new CompoundSlot<>("compound", doubleSlot, integerSlot);
     Optional<SlotMatch<Number>> match = compoundSlot.match("123", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), 123);
-    assertEquals(match.get().getSlot(), integerSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo(123);
+    assertThat(match.get().getSlot()).isEqualTo(integerSlot);
   }
 
   @Test
-  public void testComposeStaticFactoryVarargs()
+  void testComposeStaticFactoryVarargs()
   {
     Slot<?> composed = CompoundSlot.compose("composed", doubleSlot, integerSlot, stringSlot);
-    assertNotNull(composed);
+    assertThat(composed).isNotNull();
     Optional<? extends SlotMatch<?>> match = composed.match("123", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), 123);
-    assertEquals(match.get().getSlot(), integerSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo(123);
+    assertThat(match.get().getSlot()).isEqualTo(integerSlot);
   }
 
   @Test
-  public void testComposeStaticFactoryArray()
+  void testComposeStaticFactoryArray()
   {
     Slot<?>[] slots = { doubleSlot, integerSlot, stringSlot };
     Slot<?> composed = CompoundSlot.compose("composed", slots);
-    assertNotNull(composed);
+    assertThat(composed).isNotNull();
     Optional<? extends SlotMatch<?>> match = composed.match("123", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), 123);
-    assertEquals(match.get().getSlot(), integerSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo(123);
+    assertThat(match.get().getSlot()).isEqualTo(integerSlot);
   }
 
   @Test
-  public void testComposeStaticFactoryList()
+  void testComposeStaticFactoryList()
   {
     List<Slot<?>> slots = Arrays.asList(doubleSlot, integerSlot, stringSlot);
     Slot<?> composed = CompoundSlot.compose("composed", slots);
-    assertNotNull(composed);
+    assertThat(composed).isNotNull();
     Optional<? extends SlotMatch<?>> match = composed.match("123", null);
-    assertTrue(match.isPresent());
-    assertEquals(match.get().getValue(), 123);
-    assertEquals(match.get().getSlot(), integerSlot);
+    assertThat(match).isPresent();
+    assertThat(match.get().getValue()).isEqualTo(123);
+    assertThat(match.get().getSlot()).isEqualTo(integerSlot);
   }
 
   @Test
-  public void testComposeStaticFactoryRejectsEmptyVarargs()
+  void testComposeStaticFactoryRejectsEmptyVarargs()
   {
-    try
-    {
-      Slot<?> composed = CompoundSlot.compose("composed");
-      fail();
-    }
-    catch (IllegalArgumentException expected)
-    {
-      assertThat(expected.getMessage(), is("No slots provided."));
-    }
+    IllegalArgumentException expected = assertThrows(IllegalArgumentException.class,
+        () -> CompoundSlot.compose("composed"));
+    assertThat(expected).hasMessageThat().isEqualTo("No slots provided.");
   }
 
   @Test
-  public void testComposeStaticFactoryRejectsEmptyArray()
+  void testComposeStaticFactoryRejectsEmptyArray()
   {
-    try
-    {
-      Slot<?>[] slots = {};
-      CompoundSlot.compose("composed", slots);
-      fail();
-    }
-    catch (IllegalArgumentException expected)
-    {
-      assertThat(expected.getMessage(), is("No slots provided."));
-    }
+    Slot<?>[] slots = {};
+    IllegalArgumentException expected = assertThrows(IllegalArgumentException.class,
+        () -> CompoundSlot.compose("composed", slots));
+    assertThat(expected).hasMessageThat().isEqualTo("No slots provided.");
   }
 
   @Test
-  public void testComposeStaticFactoryRejectsEmptyList()
+  void testComposeStaticFactoryRejectsEmptyList()
   {
-    try
-    {
-      List<Slot<?>> slots = Collections.emptyList();
-      CompoundSlot.compose("composed", slots);
-      fail();
-    }
-    catch (IllegalArgumentException expected)
-    {
-      assertThat(expected.getMessage(), is("No slots provided."));
-    }
+    List<Slot<?>> slots = Collections.emptyList();
+    IllegalArgumentException expected = assertThrows(IllegalArgumentException.class,
+        () -> CompoundSlot.compose("composed", slots));
+    assertThat(expected).hasMessageThat().isEqualTo("No slots provided.");
   }
 }
